@@ -1,5 +1,10 @@
 ### USER API
 
+
+### Architecture Design
+```
+https://www.lucidchart.com/documents/edit/9ef14b7a-53ea-44da-bb61-fb7b1038d453/0
+```
 ### TechStack
 ```
 Go
