@@ -1,8 +1,8 @@
 
 all: clean
 
-clean: 
-	find . -name 'goapi' -type f -exec rm -f {} \; 
+clean:
+	find . -name 'userapi' -type f -exec rm -f {} \;
 	go clean
 
 run:
@@ -21,20 +21,17 @@ build:
 	go build goapi
 
 start:
-	./goapi 
+	./goapi
 
 test-ping:
 	curl localhost:3000/ping
 
-test-gumball:
-	curl localhost:3000/gumball
-
-docker-build: 
-	docker build -t goapi .
+docker-build:
+	docker build -t userapi .
 	docker images
 
 docker-run:
-	docker run --name goapi -td -p 3000:3000 goapi
+	docker run --name userapi -td -p 3000:3000 userapi
 	docker ps
 
 docker-network:
@@ -44,12 +41,12 @@ docker-network-inspect:
 	docker network inspect host
 
 docker-shell:
-	docker exec -it goapi bash 
+	docker exec -it userapi bash
 
 docker-clean:
-	docker stop goapi
-	docker rm goapi
-	docker rmi goapi
+	docker stop userapi
+	docker rm userapi
+	docker rmi userapi
 
 docker-ip:
 	docker-machine ip
@@ -59,4 +56,3 @@ docker-ps:
 
 docker-ps-ports:
 	 docker ps --all --format "table {{.Names}}\t{{.Ports}}\t"
-
