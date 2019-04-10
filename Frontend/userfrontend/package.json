@@ -1,0 +1,58 @@
+{
+  "name": "userfrontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "2.1.8",
+    "async-await": "^0.1.40",
+    "axios": "^0.18.0",
+    "canvasjs": "^1.8.1",
+    "firebase": "^5.6.0",
+    "mui-datatables": "^2.0.0-beta-41",
+    "muicss": "^0.9.41",
+    "node-sass": "^4.10.0",
+    "prop-types": "^15.6.2",
+    "react-alert": "^4.0.4",
+    "react-alert-template-basic": "^1.0.0",
+    "react-bootstrap": "^0.32.4",
+    "react-combo-select": "^1.3.22",
+    "react-cookies": "^0.1.0",
+    "react-facebook-login": "^4.1.1",
+    "react-filter-search": "^1.0.8",
+    "react-firebase": "^2.2.8",
+    "react-firebaseui": "^3.1.2",
+    "react-google-charts": "^3.0.10",
+    "react-google-login": "^3.2.1",
+    "react-js-pagination": "^3.0.2",
+    "react-onclickoutside": "^6.7.1",
+    "react-redux": "^5.1.0",
+    "react-router-dom": "^4.3.1",
+    "react-speech-recognition": "^1.0.7",
+    "react-star-rating-component": "^1.4.1",
+    "react-table": "^6.8.6",
+    "react-ui-cards": "^1.4.0",
+    "react-voice-input": "0.0.4",
+    "react-youtube": "^7.8.0",
+    "redux": "^4.0.1",
+    "redux-persist": "^5.10.0",
+    "redux-promise": "^0.6.0",
+    "semantic-ui-react": "^0.83.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
