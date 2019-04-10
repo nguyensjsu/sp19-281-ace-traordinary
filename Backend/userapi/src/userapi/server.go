@@ -46,6 +46,14 @@ func userRegistrationHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
+//API User Login
+func userRegistrationHandler(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+
+		formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
+	}
+}
+
 //Get User
 
 //APISend and Resend Confirmation Email
