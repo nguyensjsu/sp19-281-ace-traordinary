@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Card, Button, Checkbox, Form } from 'semantic-ui-react'
 import connect from "react-redux/es/connect/connect";
-import '../css/registration.css';
+import '../css/login.css';
 import {userregestration,userlogin} from '../actions/UserAction'
 
 
@@ -18,7 +18,7 @@ class Login extends Component {
     }
 
     handlechange=(event)=>{
-        this.setState([event.target.name]=event.target.value)
+        this.setState({[event.target.name]:event.target.value})
     }
     loginuser=()=>{
 
@@ -29,19 +29,21 @@ class Login extends Component {
     render(){
         return(
             <div className={"Login"}>
-                <Card className={"Login-Card"}>
+                <div className={"Login-Card"}>
                     <Form>
                         <Form.Field>
                             <label>Email</label>
-                            <input placeholder='Email' name="email" onChange={this.handlechange} required={true} maxLength={40} />
+                            <input placeholder='Email' name="userid" onChange={this.handlechange} required={true} maxLength={40} />
                         </Form.Field>
                         <Form.Field>
                             <label>Password</label>
-                            <input placeholder='Please enter password' name="password" onChange={this.handlechange} required={true} maxLength={20}/>
+                            <input placeholder='Please enter password' type={"password"} name="password" onChange={this.handlechange} required={true} maxLength={20}/>
                         </Form.Field>
-                        <Button type='submit' onClick={this.loginuser} negative>Login</Button>
+                        <Button type='submit'  negative>Login</Button>
                         <a><b>Forgot password</b></a>
-                    </Form></Card>
+                        <br/>
+                        <p><span>Not a Member?</span><b onClick={this.props.showRegister} >SignUP</b></p>
+                    </Form></div>
             </div>
         );
     }

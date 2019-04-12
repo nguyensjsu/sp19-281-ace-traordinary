@@ -21,7 +21,7 @@ class Registration extends Component {
     }
 
     handlechange=(event)=>{
-        this.setState([event.target.name]=event.target.value)
+        this.setState({[event.target.name]:event.target.value})
     }
     registeruser=()=>{
 
@@ -36,11 +36,11 @@ class Registration extends Component {
                 <Form>
                     <Form.Field>
                         <label>Email</label>
-                        <input placeholder='Email' name="email" onChange={this.handlechange} required={true} maxLength={40} />
+                        <input placeholder='Email' name="userid" onChange={this.handlechange} required={true} maxLength={40} />
                     </Form.Field>
                     <Form.Field>
                         <label>Password</label>
-                        <input placeholder='Please enter password' name="password" onChange={this.handlechange} required={true} maxLength={20}/>
+                        <input placeholder='Please enter password' name="password" onChange={this.handlechange} required={true} maxLength={20} type={"password"}/>
                     </Form.Field>
                     <Form.Field>
                         <label>First Name</label>
@@ -51,6 +51,7 @@ class Registration extends Component {
                         <input placeholder='Last Name' name="lastname"  onChange={this.handlechange} required={true} maxLength={20}/>
                     </Form.Field>
                     <Button type='submit' onClick={this.registeruser} negative>Register</Button>
+                    <p><span>Already a Member?</span><b onClick={this.props.showLogin}>Login</b></p>
                 </Form></Card>
             </div>
         );
