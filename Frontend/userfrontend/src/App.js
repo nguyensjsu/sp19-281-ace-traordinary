@@ -3,15 +3,13 @@ import Registration from "./components/Registration";
 
 import './App.css';
 import BrowserRouter from "react-router-dom/es/BrowserRouter";
-import Login from "./components/Login";
-
+import WebRouter from "./components/WebRouter"
 class App extends Component {
   render() {
     return (
         <BrowserRouter>
       <div className="App">
-<Registration/>
-          <Login/>
+          <WebRouter/>
       </div>
         </BrowserRouter>
     );

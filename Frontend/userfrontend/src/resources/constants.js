@@ -1,1 +1,1 @@
-export const USER_ROOTURL=""
+export const USER_ROOTURL="localhost:8080/users"
