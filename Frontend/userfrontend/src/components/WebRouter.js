@@ -4,12 +4,13 @@ import {Redirect, Route} from 'react-router-dom';
 import ImagesDashBoard from "./ImagesDashBoard";
 import Registration from "./Registration";
 import Navigation from "./Navigation"
+import BuyImage from "./BuyImage";
 class WebRouter extends Component {
 
 constructor(props){
     super(props);
     this.state={
-        isloggedin:true,
+        isAuthenticated:true,
         showlogin_page:true,
         showregister_page:false
     }
@@ -31,7 +32,7 @@ constructor(props){
     }
     landPage=()=>{
         let land_page=""
-        if(this.state.isloggedin){
+        if(this.state.isAuthenticated){
             land_page =  <><Navigation/><ImagesDashBoard/></>
         }else if(this.state.showlogin_page) {
            land_page = <Login showRegister={this.showRegister}/>
@@ -40,11 +41,21 @@ constructor(props){
         }
         return land_page;
     }
+
+    buyImage =()=>{
+        return <div>
+            <Navigation/>
+            <BuyImage/>
+        </div>
+    }
     render() {
         return (
             <div className="WebRouter">
                 <Route exact path="/" >
                     {this.landPage()}
+                </Route>
+                <Route  exact path="images/buy"  >
+                    {this.buyImage()}
                 </Route>
             </div>
         );
