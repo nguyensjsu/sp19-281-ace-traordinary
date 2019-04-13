@@ -30,7 +30,7 @@ type registration struct {
 	timestamp        string
 }
 
-func DBConnection() {
+func InitialMigration() {
 	db, err = gorm.Open("sqlite", "test.db")
 	if err != nil {
 		log.Panic(err)
