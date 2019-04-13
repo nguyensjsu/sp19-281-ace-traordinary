@@ -3,12 +3,13 @@ import Login from "./Login";
 import {Redirect, Route} from 'react-router-dom';
 import ImagesDashBoard from "./ImagesDashBoard";
 import Registration from "./Registration";
+import Navigation from "./Navigation"
 class WebRouter extends Component {
 
 constructor(props){
     super(props);
     this.state={
-        isloggedin:false,
+        isloggedin:true,
         showlogin_page:true,
         showregister_page:false
     }
@@ -31,7 +32,7 @@ constructor(props){
     landPage=()=>{
         let land_page=""
         if(this.state.isloggedin){
-            land_page =  <ImagesDashBoard/>
+            land_page =  <><Navigation/><ImagesDashBoard/></>
         }else if(this.state.showlogin_page) {
            land_page = <Login showRegister={this.showRegister}/>
         }else if(this.state.showregister_page){

@@ -1,0 +1,51 @@
+$red: #e50914;
+$black: #221f1f;
+$blackblack: #000000;
+$grey: #f5f5f1;
+$white: #ffffff;
+
+.Imagecard:hover {
+  background-color: rgba(192,192,192,0.3);
+  .buy-button{
+display: inline-block;
+  }
+}
+
+.Header {
+  display: flex;
+  padding-left: 40px ;
+  padding-right: 40px ;
+  padding-top: 20px ;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  box-sizing: border-box;
+  z-index: 5;
+}
+.Navigation {
+  width: 100%;
+  ul {
+    display: flex;
+    height: 37px;
+    align-items: center;
+    padding: 0 10px;
+    list-style-type: none;
+
+    li {
+      font-weight: bold;
+      padding: 7px 10px;
+      font-size: 14px;
+      transition: background .125s ease;
+      border-radius: 25px;
+      &:hover {
+        background-color: rgba(192,192,192,0.3);
+        cursor: pointer;
+      }
+    }
+    Link{
+      text-decoration: none;
+      color: inherit;
+    }
+  }
+}
