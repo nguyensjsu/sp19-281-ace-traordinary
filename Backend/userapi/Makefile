@@ -6,22 +6,22 @@ clean:
 	go clean
 
 run:
-	go run src/app/$(app).go
+	go run src/userapi/$(app).go
 
 main:
-	go run src/app/main.go
+	go run src/userapi/main.go
 
 format:
-	go fmt goapi
+	go fmt ./src/userapi
 
 install:
-	go install goapi
+	go install ./src/*/
 
 build:
-	go build goapi
+	go build userapi
 
 start:
-	./goapi
+	./userapi
 
 test-ping:
 	curl localhost:3000/ping

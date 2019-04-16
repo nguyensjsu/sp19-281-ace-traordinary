@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Registration from "./components/Registration";
-
+import "./scss/Picasso.scss"
 import './App.css';
 import BrowserRouter from "react-router-dom/es/BrowserRouter";
 import WebRouter from "./components/WebRouter"

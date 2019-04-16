@@ -6,9 +6,15 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
+	"log"
+	"github.com/jinzhu/gorm"
+	_"github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 //MongoDB Configuration
+
+var db *gorm.DB
+
 var mongodb_server = "mongodb://127.0.0.1:27017"
 var mongodb_database = "cmpe281"
 var user_collection = "user"
@@ -27,8 +33,8 @@ func NewServer() *negroni.Negroni {
 
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
-	mx.HandleFunc("/users", pingHandler(formatter)).Methods("POST")
-
+	mx.HandleFunc("/users", userRegistrationHandler(formatter)).Methods("POST")
+ lo
 }
 
 // API Ping Handler
@@ -47,7 +53,7 @@ func userRegistrationHandler(formatter *render.Render) http.HandlerFunc {
 }
 
 //API User Login
-func userRegistrationHandler(formatter *render.Render) http.HandlerFunc {
+func userLoginHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
 		formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
