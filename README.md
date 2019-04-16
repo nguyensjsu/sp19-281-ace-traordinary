@@ -9,6 +9,7 @@ This is the GitHub repository for the final project of CMPE-281 Cloud Technologi
 
 
 ## Architecture
+![Picasso Architecture](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Design%20architecture/Picasso-Architecture.png)
 
 
 ## Tools
