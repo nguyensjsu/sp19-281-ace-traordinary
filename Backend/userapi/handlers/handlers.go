@@ -3,9 +3,10 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"sp19-281-ace-traordinary/Backend/userapi/src/dao"
 
 	"github.com/gorilla/mux"
+	"github.com/sp19-281-ace-traordinary/Backend/userapi/dao"
+	"github.com/sp19-281-ace-traordinary/Backend/userapi/models"
 )
 
 var user []models.User
@@ -29,26 +30,25 @@ func GetAllUserEndpoint(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(payload)
 }
 
-// CreateUserEndpoint creta a user
-func CreateUserEndpoint(w http.ResponseWriter, r *http.Request) {
-	var person models.Person
-	_ = json.NewDecoder(r.Body).Decode(&person)
-	dao.InsertOneValue(person)
-	json.NewEncoder(w).Encode(person)
+// RegisterUserEndpoint creta a user
+func RegisterUserEndpoint(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	_ = json.NewDecoder(r.Body).Decode(&user)
+	dao.InsertOneValue(user)
+	json.NewEncoder(w).Encode(user)
 }
 
 // DeleteUserEndpoint delets a user
 func DeleteUserEndpoint(w http.ResponseWriter, r *http.Request) {
-	var person models.Person
-	_ = json.NewDecoder(r.Body).Decode(&person)
-	dao.DeletePerson(person)
+	var user models.User
+	_ = json.NewDecoder(r.Body).Decode(&user)
+	dao.DeleteUser(user)
 }
 
-// UpdateUserEndpoint updates a user
-func UpdateUserEndpoint(w http.ResponseWriter, r *http.Request) {
+/**func UpdateUserEndpoint(w http.ResponseWriter, r *http.Request) {
 	personID := mux.Vars(r)["id"]
-	var person models.Person
+	var user models.User
 	_ = json.NewDecoder(r.Body).Decode(&person)
 	dao.UpdatePerson(person, personID)
 
-}
+}**/

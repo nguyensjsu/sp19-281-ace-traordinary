@@ -5,13 +5,13 @@ import (
 	"log"
 	"net/http"
 
-	"./userapi/handlers"
 	"github.com/gorilla/mux"
+	"github.com/sp19-281-ace-traordinary/Backend/userapi/handlers"
 )
 
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/users", handlers.GetAllPeopleEndpoint).Methods("GET")
+	router.HandleFunc("/users", handlers.CreateUserEndpoint).Methods("GET")
 	router.HandleFunc("/users/{id}", handlers.GetPersonEndpoint).Methods("GET")
 	router.HandleFunc("/users", handlers.CreatePersonEndpoint).Methods("POST")
 	router.HandleFunc("/users", handlers.DeletePersonEndpoint).Methods("DELETE")

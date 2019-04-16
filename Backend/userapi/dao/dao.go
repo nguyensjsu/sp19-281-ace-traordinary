@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"sp19-281-ace-traordinary/Backend/userapi/src/models"
 
-	"github.com/mongodb/mongo-go-driver/bson"
-	"github.com/mongodb/mongo-go-driver/mongo"
+	"github.com/sp19-281-ace-traordinary/Backend/userapi/models"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // CONNECTIONSTRING DB connection string
@@ -23,7 +23,7 @@ var db *mongo.Database
 
 // Connect establish a connection to database
 func init() {
-	client, err := mongo.NewClient(CONNECTIONSTRING)
+	client, err := mongo.NewClient(options.Client().ApplyURI(CONNECTIONSTRING))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,9 +36,9 @@ func init() {
 }
 
 // InsertManyValues inserts many items from byte slice
-func InsertManyValues(people []models.Person) {
+func InsertManyValues(user []models.User) {
 	var ppl []interface{}
-	for _, p := range people {
+	for _, p := range user {
 		ppl = append(ppl, p)
 	}
 	_, err := db.Collection(COLLNAME).InsertMany(context.Background(), ppl)
@@ -48,22 +48,22 @@ func InsertManyValues(people []models.Person) {
 }
 
 // InsertOneValue inserts one item from Person model
-func InsertOneValue(person models.Person) {
-	fmt.Println(person)
-	_, err := db.Collection(COLLNAME).InsertOne(context.Background(), person)
+func InsertOneValue(user models.User) {
+	fmt.Println(user)
+	_, err := db.Collection(COLLNAME).InsertOne(context.Background(), user)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-// GetAllPeople returns all people from DB
-func GetAllPeople() []models.Person {
+// GetAllUsers returns all users from DB
+func GetAllUsers() []models.User {
 	cur, err := db.Collection(COLLNAME).Find(context.Background(), nil, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	var elements []models.Person
-	var elem models.Person
+	var elements []models.User
+	var elem models.User
 	// Get the next result from the cursor
 	for cur.Next(context.Background()) {
 		err := cur.Decode(&elem)
@@ -79,29 +79,12 @@ func GetAllPeople() []models.Person {
 	return elements
 }
 
-// DeletePerson deletes an existing person
-func DeletePerson(person models.Person) {
-	_, err := db.Collection(COLLNAME).DeleteOne(context.Background(), person, nil)
+// DeletePerson deletes an existing user
+func DeleteUser(user models.User) {
+	_, err := db.Collection(COLLNAME).DeleteOne(context.Background(), user, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 // UpdatePerson updates an existing person
-func UpdatePerson(person models.Person, personID string) {
-	doc := db.Collection(COLLNAME).FindOneAndUpdate(
-		context.Background(),
-		bson.NewDocument(
-			bson.EC.String("id", personID),
-		),
-		bson.NewDocument(
-			bson.EC.SubDocumentFromElements("$set",
-				bson.EC.String("firstname", person.Firstname),
-				bson.EC.String("lastname", person.Lastname),
-				bson.EC.String("contactinfo.city", person.City),
-				bson.EC.String("contactinfo.zipcode", person.Zipcode),
-				bson.EC.String("contactinfo.phone", person.Phone)),
-		),
-		nil)
-	fmt.Println(doc)
-}
