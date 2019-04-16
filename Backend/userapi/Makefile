@@ -15,7 +15,7 @@ format:
 	go fmt ./src/userapi
 
 install:
-	go install userapi
+	go install ./src/*/
 
 build:
 	go build userapi
