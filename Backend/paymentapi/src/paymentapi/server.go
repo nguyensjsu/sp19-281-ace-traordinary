@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/codegangsta/negroni"
-
+	//"encoding/json"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -64,6 +64,7 @@ func init() {
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/orders", allOrdersHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/order", allOrdersHandler(formatter)).Methods("POST")
 
 }
 
@@ -108,25 +109,32 @@ func allOrdersHandler(formatter *render.Render) http.HandlerFunc {
 				if err != nil {
 					log.Fatal(err)
 				}
-				orders = []order{
-					order{
+				orders = append(orders, order {
+					
 						Id:        id,
 						userid:    userid,
 						imageid:   imageid,
 						paymentid: paymentid,
 						amount:    amount,
 					},
-				}
+				)
 
 				//log.Println(id, userid, imageid, paymentid, amount)
 			}
 
 		}
 
-		result := orders
+		
+		//ordersJson, err := json.Marshal(orders)
+    	//if err != nil {
+       	 //log.Fatal("Cannot encode to JSON ", err)
+   		 //}
+         //fmt.Println(ordersJson)
 
-		fmt.Println("All Orders:", result)
-		formatter.JSON(w, http.StatusOK, result)
+		fmt.Println("All Orders:", orders)
+		formatter.JSON(w, http.StatusOK, orders)
+		
 	}
-
 }
+
+
