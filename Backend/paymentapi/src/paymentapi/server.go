@@ -4,17 +4,15 @@ import (
 	"fmt"
 	"github.com/codegangsta/negroni"
 
-	"net/http"
 	"database/sql"
-    _ "github.com/go-sql-driver/mysql"
-   "github.com/gorilla/mux"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
 	"log"
-
+	"net/http"
 )
 
 var mysql_connect = "root:cmpe281@tcp(localhost:3306)/cmpe281"
-
 
 // NewServer configures and returns a Server.
 func NewServer() *negroni.Negroni {
@@ -35,12 +33,11 @@ func init() {
 		log.Fatal(err)
 	} else {
 		var (
-			id int
-			userid string
-			imageid int
+			id        int
+			userid    string
+			imageid   int
 			paymentid int
 			amount    float64
-
 		)
 		rows, err := db.Query("select id, userid, imageid, paymentid, amount from orders where id = ?", 1)
 		if err != nil {
@@ -76,22 +73,20 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
-
-
 // API get all orders
 func allOrdersHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		
-		var orders [] order
-		
+
+		var orders []order
+
 		//var orderRow order
 		var (
-			id             	int 	
-			userid		    string   	
-			imageid 		int
-			paymentid       int	    
-			amount 			float64
-			created_on      string
+			id         int
+			userid     string
+			imageid    int
+			paymentid  int
+			amount     float64
+			created_on string
 		)
 		db, err := sql.Open("mysql", mysql_connect)
 		defer db.Close()
@@ -99,7 +94,7 @@ func allOrdersHandler(formatter *render.Render) http.HandlerFunc {
 			log.Fatal(err)
 		} else {
 			rows, err := db.Query("select id, userid, imageid, paymentid, amount, created_on from orders")
-			
+
 			fmt.Println(rows)
 			if err != nil {
 				log.Fatal(err)
@@ -107,37 +102,31 @@ func allOrdersHandler(formatter *render.Render) http.HandlerFunc {
 
 			defer rows.Close()
 			for rows.Next() {
-				
+
 				err := rows.Scan(&id, &userid, &imageid, &paymentid, &amount, &created_on)
-				
+
 				if err != nil {
 					log.Fatal(err)
-				}	
-				orders  = []order {
-						order {
-							Id: id, 	
-							userid: userid,   	
-							imageid: imageid,
-							paymentid: paymentid,    
-							amount: amount,
-						},
-			    }
+				}
+				orders = []order{
+					order{
+						Id:        id,
+						userid:    userid,
+						imageid:   imageid,
+						paymentid: paymentid,
+						amount:    amount,
+					},
+				}
 
-			   
 				//log.Println(id, userid, imageid, paymentid, amount)
 			}
-			
+
 		}
-		
 
 		result := orders
 
-        fmt.Println("All Orders:", result )
+		fmt.Println("All Orders:", result)
 		formatter.JSON(w, http.StatusOK, result)
 	}
 
-		
-
-	
 }
-
