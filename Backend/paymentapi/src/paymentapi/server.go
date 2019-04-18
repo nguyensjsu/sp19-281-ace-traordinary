@@ -31,7 +31,7 @@ func init() {
 	db, err := sql.Open("mysql", mysql_connect)
 	if err != nil {
 		log.Fatal(err)
-	} else {
+	}/* else {
 		var (
 			id        int
 			userid    string
@@ -55,7 +55,7 @@ func init() {
 		if err != nil {
 			log.Fatal(err)
 		}
-	}
+	}*/
 	defer db.Close()
 
 }
@@ -64,7 +64,7 @@ func init() {
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/orders", allOrdersHandler(formatter)).Methods("GET")
-	mx.HandleFunc("/order", allOrdersHandler(formatter)).Methods("POST")
+	mx.HandleFunc("/placeorder", placeorderHandler(formatter)).Methods("POST")
 
 }
 
@@ -96,7 +96,7 @@ func allOrdersHandler(formatter *render.Render) http.HandlerFunc {
 		} else {
 			rows, err := db.Query("select id, userid, imageid, paymentid, amount, created_on from orders")
 
-			fmt.Println(rows)
+			//fmt.Println(rows)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -110,31 +110,43 @@ func allOrdersHandler(formatter *render.Render) http.HandlerFunc {
 					log.Fatal(err)
 				}
 				orders = append(orders, order {
-					
-						Id:        id,
-						userid:    userid,
-						imageid:   imageid,
-						paymentid: paymentid,
-						amount:    amount,
+
+					Id:        id,
+					Userid:    userid,
+					Imageid:   imageid,
+					Paymentid: paymentid,
+					Amount:    amount,
 					},
 				)
-
+				//fmt.Println(id, userid, imageid, paymentid, amount)
 				//log.Println(id, userid, imageid, paymentid, amount)
 			}
 
 		}
 
 		
-		//ordersJson, err := json.Marshal(orders)
-    	//if err != nil {
-       	 //log.Fatal("Cannot encode to JSON ", err)
-   		 //}
-         //fmt.Println(ordersJson)
 
 		fmt.Println("All Orders:", orders)
 		formatter.JSON(w, http.StatusOK, orders)
 		
 	}
+
 }
 
 
+
+func placeorderHandler(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		decoder := json.NewDecoder(req.Body)
+
+		var data orderData
+		err := decoder.Decode(&data)
+		if err != nil {
+			panic(err)
+		}
+
+
+		params := mux.Vars(req)
+		fmt.Println(params)
+	}
+}
