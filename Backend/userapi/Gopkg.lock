@@ -125,7 +125,7 @@
   name = "golang.org/x/crypto"
   packages = ["pbkdf2"]
   pruneopts = "UT"
-  revision = "88737f569e3a9c7ab309cdc09a07fe7fc87233c3"
+  revision = "df01cb2cc480549d72034218dd98bf97671450ac"
 
 [[projects]]
   branch = "master"
@@ -155,7 +155,6 @@
   analyzer-version = 1
   input-imports = [
     "github.com/gorilla/mux",
-    "github.com/mongodb/mongo-go-driver/bson",
     "github.com/mongodb/mongo-go-driver/mongo",
     "go.mongodb.org/mongo-driver/mongo",
   ]
