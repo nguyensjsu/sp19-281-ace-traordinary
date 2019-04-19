@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/sp19-281-ace-traordinary/Backend/userapi/dao"
@@ -14,11 +15,11 @@ var user []models.User
 
 // RegisterUserHandler creta a user
 func RegisterUserHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Entered the function RegisterUserEndpoint")
+	log.Printf("Entered the function RegisterUserEndpoint")
 	var user models.Registration
 	_ = json.NewDecoder(r.Body).Decode(&user)
 	//Need to Remove unecessary Comments
-	fmt.Println("Incoming user Data")
+	log.Printf("Entered the function RegisterUserEndpoint")
 	fmt.Println(user)
 	user.Verificationcode = utils.GenerateVerificationTocken()
 	res, Message := dao.RegisterUserDao(user)
@@ -28,6 +29,31 @@ func RegisterUserHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		json.NewEncoder(w).Encode(user)
 	}
+}
+
+//ConfirmRegistrationrHandler will return all users
+func ConfirmRegistrationrHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//ResendConfirmHandler wsends confirmation mail again
+func ResendConfirmHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//LoginUserHandler login specific user
+func LoginUserHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//ForgotPasswordrHandler will return all users
+func ForgotPasswordrHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//DeleteUserHandler Deletes the specific user from Database
+func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
+
 }
 
 //GetAllUsersHandler will return all users

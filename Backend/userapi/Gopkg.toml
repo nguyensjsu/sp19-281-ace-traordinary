@@ -32,7 +32,9 @@
 [[constraint]]
   name = "github.com/mongodb/mongo-go-driver"
   version = "0.3.0"
-
+[[constraint]]
+  name = "github.com/aws/aws-sdk-go"
+  version = "1.15.26"
 [prune]
   go-tests = true
   unused-packages = true

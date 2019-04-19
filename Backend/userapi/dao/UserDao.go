@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/sp19-281-ace-traordinary/Backend/userapi/models"
+	"github.com/sp19-281-ace-traordinary/Backend/userapi/services"
 	"github.com/sp19-281-ace-traordinary/Backend/userapi/utils"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -53,6 +54,7 @@ func RegisterUserDao(user models.Registration) (bool, string) {
 			if errin != nil {
 				log.Fatal(errin)
 			}
+			services.SendRegistrationEmail(user)
 			fmt.Println("Successfully Regestered")
 		} else {
 			return false, "Already In Registration Table"
@@ -136,7 +138,7 @@ func createUserDao(newuser models.Registration) (bool, models.User) {
 }
 
 //LoginDao validates weather uaer is valid or not
-func LoginDao(user models.User) models.User {
+func LoginDao(user models.User) (bool, models.User) {
 	fmt.Println("Entered LoginDao function  ")
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
@@ -147,72 +149,21 @@ func LoginDao(user models.User) models.User {
 	c := session.DB(mongodbDatabase).C(USERSCOLLECTION)
 
 	var result models.User
+	query := bson.M{"userid": user.Userid}
 	//Checking if the new user is already present in user table
-	err = c.Find(bson.M{"userid": user.Userid}).One(&result)
+	err = c.Find(query).One(&result)
 	if err != nil {
 		log.Println("No User Found")
 	}
-	return result
+	res := validatePassword(user.Password, result.Password)
+	if !res {
+		return false, result
+	}
+	return true, result
 }
-
-/**
-// InsertManyValues inserts many items from byte slice
-func InsertManyValues(user []models.User) {
-	var ppl []interface{}
-	for _, p := range user {
-		ppl = append(ppl, p)
+func validatePassword(in string, dbpassword string) bool {
+	if in == dbpassword {
+		return true
 	}
-	_, err := db.C(COLLNAME).InsertMany(context.Background(), ppl)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return false
 }
-
-// InsertOneValue inserts one item from Person model
-func InsertOneValue(user models.User) {
-	fmt.Println("In InsertOneValue")
-	fmt.Println(db)
-	collection := db.Collection(COLLNAME)
-	fmt.Println(collection)
-	fmt.Println("Successfully go collection")
-	insertResult, err := collection.InsertOne(context.TODO(), user)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
-
-}
-
-// GetAllUsers returns all users from DB
-func GetAllUsers() []models.User {
-	cur, err := db.Collection(COLLNAME).Find(context.Background(), nil, nil)
-	if err != nil {
-		log.Fatal("Exception in GetAllUsers")
-		log.Fatal(err)
-	}
-	var elements []models.User
-	var elem models.User
-	// Get the next result from the cursor
-	for cur.Next(context.Background()) {
-		err := cur.Decode(&elem)
-		if err != nil {
-			log.Fatal(err)
-		}
-		elements = append(elements, elem)
-	}
-	if err := cur.Err(); err != nil {
-		log.Fatal(err)
-	}
-	cur.Close(context.Background())
-	return elements
-}
-
-// DeletePerson deletes an existing user
-func DeleteUser(user models.User) {
-	_, err := db.Collection(COLLNAME).DeleteOne(context.Background(), user, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-**/
-// UpdatePerson updates an existing person
