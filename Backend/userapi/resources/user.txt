@@ -1,0 +1,7 @@
+db.users.insert({
+  userid: "1ra4vi3@gmail.com",
+  password: "password",
+  firstname: "Raviteja",
+  lastname:"Kommalapati",
+  phonenumber:"4082073907"
+})

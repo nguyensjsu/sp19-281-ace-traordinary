@@ -11,13 +11,23 @@ import (
 
 var user []models.User
 
-// RegisterUserEndpoint creta a user
-func RegisterUserEndpoint(w http.ResponseWriter, r *http.Request) {
+// RegisterUserHandler creta a user
+func RegisterUserHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Entered the function RegisterUserEndpoint")
 	var user models.User
-	fmt.Println("In RegisterUserEndpoint")
 	_ = json.NewDecoder(r.Body).Decode(&user)
-	dao.InsertOneValue(user)
+	//Need to Remove unecessary Comments
+	fmt.Println("Incoming user Data")
+	fmt.Println(user)
+	dao.RegisterUserDao(user)
 	json.NewEncoder(w).Encode(user)
+
+}
+
+//GetAllUsersHandler will return all users
+func GetAllUsersHandler(w http.ResponseWriter, r *http.Request) {
+	payload := dao.GetAllUsersDao()
+	json.NewEncoder(w).Encode(payload)
 }
 
 /**
