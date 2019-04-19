@@ -16,6 +16,8 @@ constructor(props){
     }
     this.showLogin = this.showLogin.bind(this);
     this.showRegister = this.showRegister.bind(this);
+    this.landPageRoute =this.landPageRoute.bind(this);
+    this.buyImageRoute=this.buyImageRoute.bind(this);
 }
      showLogin=()=>{
     this.setState({
@@ -30,33 +32,32 @@ constructor(props){
             showregister_page:true
         })
     }
-    landPage=()=>{
-        let land_page=""
+    landPageRoute=()=>{
+        let land_page=(<div></div>)
         if(this.state.isAuthenticated){
-            land_page =  <><Navigation/><ImagesDashBoard/></>
+            land_page = ( <>
+                <Route exact path="/" component={Navigation}/>
+                <Route exact path="/" component={ImagesDashBoard}/>
+               </>)
         }else if(this.state.showlogin_page) {
-           land_page = <Login showRegister={this.showRegister}/>
+           land_page = (<Login showRegister={this.showRegister}/>)
         }else if(this.state.showregister_page){
-            land_page =<Registration showLogin={this.showLogin}/>
+            land_page =(<Registration showLogin={this.showLogin}/>)
         }
         return land_page;
     }
 
-    buyImage =()=>{
-        return <div>
-            <Navigation/>
-            <BuyImage/>
-        </div>
+    buyImageRoute =()=>{
+        return (<>
+            <Route exact path="/images/buy" component={Navigation}/>
+            <Route exact path="/images/buy" component={BuyImage}/>
+        </>)
     }
     render() {
         return (
             <div className="WebRouter">
-                <Route exact path="/" >
-                    {this.landPage()}
-                </Route>
-                <Route  exact path="images/buy"  >
-                    {this.buyImage()}
-                </Route>
+                {this.landPageRoute()}
+                {this.buyImageRoute()}
             </div>
         );
     }
