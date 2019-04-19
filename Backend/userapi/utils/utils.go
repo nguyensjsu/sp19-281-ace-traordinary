@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"math/rand"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -26,7 +28,12 @@ func DecodePassword(password string) string {
 
 //GenerateVerificationTocken for Registration
 func GenerateVerificationTocken() string {
-	return ""
+	const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	b := make([]byte, 15)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
 }
 
 //GenerateTemporaryPassword if Password is forgot
