@@ -6,6 +6,7 @@ import (
 
 	"github.com/sp19-281-ace-traordinary/Backend/userapi/models"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 var mongodbServer = "52.11.201.189"
@@ -28,23 +29,36 @@ func init() {
 }
 
 //RegisterUserDao inserts many items from byte slice
-func RegisterUserDao(user models.User) {
+func RegisterUserDao(user models.Registration) (bool, string) {
 	fmt.Println("Entered RegisterUserDao function  ")
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
 		panic(err)
 	}
 	defer session.Close()
+	var result bson.M
 	session.SetMode(mgo.Monotonic, true)
+	/**	c := session.DB(mongodbDatabase).C(USERSCOLLECTION)
+	err = c.Find(bson.M{"userid": user.Userid}).One(&result)
+	if err != nil {
+		return false, "User is Already Available"
+	} else {**/
 	c := session.DB(mongodbDatabase).C(REGISTRATIONCOLLECTION)
 	//hash, err := utils.EncodePassword(user.Password)
-	fmt.Println(user)
-	errin := c.Insert(user)
-	if errin != nil {
-		log.Fatal(errin)
+	fmt.Println(user.Userid)
+	err = c.Find(bson.M{"userid": user.Userid}).One(&result)
+	if err != nil {
+		fmt.Println(user)
+		errin := c.Insert(user)
+		if errin != nil {
+			log.Fatal(errin)
+		}
+		fmt.Println("Inserted a single document: ")
+	} else {
+		return false, "Already In Registration Table"
 	}
-	fmt.Println("Inserted a single document: ")
-
+	//}
+	return true, "Inserted a single document"
 }
 
 //GetAllUsersDao returns all users in the database

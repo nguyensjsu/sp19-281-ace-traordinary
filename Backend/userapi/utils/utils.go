@@ -23,3 +23,13 @@ func DecodePassword(password string) string {
 	decpassword := ""
 	return decpassword
 }
+
+//GenerateVerificationTocken for Registration
+func GenerateVerificationTocken() string {
+	return ""
+}
+
+//GenerateTemporaryPassword if Password is forgot
+func GenerateTemporaryPassword() string {
+	return ""
+}

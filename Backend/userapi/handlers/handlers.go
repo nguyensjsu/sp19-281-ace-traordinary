@@ -14,14 +14,17 @@ var user []models.User
 // RegisterUserHandler creta a user
 func RegisterUserHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Entered the function RegisterUserEndpoint")
-	var user models.User
+	var user models.Registration
 	_ = json.NewDecoder(r.Body).Decode(&user)
 	//Need to Remove unecessary Comments
 	fmt.Println("Incoming user Data")
 	fmt.Println(user)
-	dao.RegisterUserDao(user)
-	json.NewEncoder(w).Encode(user)
-
+	res, Message := dao.RegisterUserDao(user)
+	if res == false {
+		w.Write([]byte("501" + Message))
+	} else {
+		json.NewEncoder(w).Encode(user)
+	}
 }
 
 //GetAllUsersHandler will return all users
