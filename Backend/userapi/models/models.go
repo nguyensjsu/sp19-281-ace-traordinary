@@ -20,3 +20,12 @@ type Registration struct {
 	Verificationcode string `json:"verificationcode,omitempty"`
 	Timestamp        string `json:"timestamp,omitempty"`
 }
+
+//Email service data
+type Email struct {
+	From     string `json:"from,omitempty"`
+	To       string `json:"to,omitempty"`
+	Subject  string `json:"subject,omitempty"`
+	HTMLBody string `json:"htmlbody,omitempty"`
+	TextBody string `json:"textbody,omitempty"`
+}
