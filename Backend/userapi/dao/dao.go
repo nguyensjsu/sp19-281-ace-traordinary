@@ -1,38 +1,21 @@
 package dao
 
 import (
-	"crypto/tls"
 	"fmt"
 	"log"
-	"net"
 
 	"github.com/sp19-281-ace-traordinary/Backend/userapi/models"
 	"gopkg.in/mgo.v2"
 )
 
-// CONNECTIONSTRING DB connection string
-const CONNECTIONSTRING = "mongodb://cmpe281:cmpe281@ds139896.mlab.com:39896/cmpe281"
-
-var mongodbServer = "mongodb+srv://cmpe281:cmpe281@cluster0-p8lxi.mongodb.net/test?retryWrites=true"
+var mongodbServer = "52.11.201.189"
 var mongodbDatabase = "cmpe281"
-var mongodbCollection = "user"
-
-// DBNAME Database name
-const DBNAME = "cmpe281"
-
-// COLLNAME Collection name
-const COLLNAME = "User"
-
-var db *mgo.Database
+var USERSCOLLECTION = "User"
+var REGISTRATIONCOLLECTION = "Registration"
 
 // Connect establish a connection to database
 func init() {
-	dialInfo, err := mgo.ParseURL(mongodbServer)
-	tlsConfig := &tls.Config{}
-	dialInfo.DialServer = func(addr *mgo.ServerAddr) (net.Conn, error) {
-		conn, err := tls.Dial("tcp", addr.String(), tlsConfig)
-		return conn, err
-	}
+	/**
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
 		panic(err)
@@ -41,21 +24,54 @@ func init() {
 	session.SetMode(mgo.Monotonic, true)
 	db = session.DB(mongodbDatabase)
 	fmt.Println("Connected to MongoDB!")
+	**/
+}
+
+//RegisterUserDao inserts many items from byte slice
+func RegisterUserDao(user models.User) {
+	fmt.Println("Entered RegisterUserDao function  ")
+	session, err := mgo.Dial(mongodbServer)
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	c := session.DB(mongodbDatabase).C(REGISTRATIONCOLLECTION)
+	//hash, err := utils.EncodePassword(user.Password)
+	fmt.Println(user)
+	errin := c.Insert(user)
+	if errin != nil {
+		log.Fatal(errin)
+	}
+	fmt.Println("Inserted a single document: ")
 
 }
 
-// InsertOneValue inserts many items from byte slice
-func InsertOneValue(user models.User) {
-	fmt.Println("In InsertOneValue")
-	fmt.Println(db)
-	collection := db.C(COLLNAME)
-	fmt.Println(collection)
-	fmt.Println("Successfully go collection")
-	err := collection.Insert(user)
+//GetAllUsersDao returns all users in the database
+func GetAllUsersDao() []models.User {
+	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	fmt.Println("Inserted a single document: ")
+	defer session.Close()
+	var results []models.User
+	session.SetMode(mgo.Monotonic, true)
+	c := session.DB(mongodbDatabase).C(USERSCOLLECTION)
+	err = c.Find(nil).All(&results)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Results All: ", results)
+	return results
+}
+
+//ConfirmRegistrationDao once user confirms remove data from Registration and insert data to User Collection
+func ConfirmRegistrationDao() {
+
+}
+
+//LoginDao validates weather uaer is valid or not
+func LoginDao() {
 
 }
 

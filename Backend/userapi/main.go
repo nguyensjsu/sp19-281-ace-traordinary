@@ -12,8 +12,8 @@ import (
 func main() {
 	router := mux.NewRouter()
 	//router.HandleFunc("/users", handlers.GetUserEndpoint).Methods("GET")
-	router.HandleFunc("/users", handlers.RegisterUserEndpoint).Methods("POST")
-	//router.HandleFunc("/users", handlers.CreatePersonEndpoint).Methods("POST")
+	router.HandleFunc("/users", handlers.RegisterUserHandler).Methods("POST")
+	router.HandleFunc("/users", handlers.GetAllUsersHandler).Methods("GET")
 	//router.HandleFunc("/users", handlers.DeletePersonEndpoint).Methods("DELETE")
 	//router.HandleFunc("/users/{id}", handlers.UpdateUserEndpoint).Methods("PUT")
 	fmt.Println("Starting server on port 8000...")
