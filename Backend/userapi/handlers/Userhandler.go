@@ -7,6 +7,7 @@ import (
 
 	"github.com/sp19-281-ace-traordinary/Backend/userapi/dao"
 	"github.com/sp19-281-ace-traordinary/Backend/userapi/models"
+	"github.com/sp19-281-ace-traordinary/Backend/userapi/services"
 	"github.com/sp19-281-ace-traordinary/Backend/userapi/utils"
 )
 
@@ -80,3 +81,10 @@ func DeleteUserEndpoint(w http.ResponseWriter, r *http.Request) {
 	dao.UpdatePerson(person, personID)
 
 }**/
+
+//TestHandler testing
+func TestHandler(w http.ResponseWriter, r *http.Request) {
+	services.SendConfirmationemail()
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Sent"))
+}

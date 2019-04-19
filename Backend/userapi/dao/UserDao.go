@@ -136,7 +136,7 @@ func createUserDao(newuser models.Registration) (bool, models.User) {
 }
 
 //LoginDao validates weather uaer is valid or not
-func LoginDao(user models.User) models.User {
+func LoginDao(user models.User) (bool, models.User) {
 	fmt.Println("Entered LoginDao function  ")
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
@@ -147,12 +147,23 @@ func LoginDao(user models.User) models.User {
 	c := session.DB(mongodbDatabase).C(USERSCOLLECTION)
 
 	var result models.User
+	query := bson.M{"userid": user.Userid}
 	//Checking if the new user is already present in user table
-	err = c.Find(bson.M{"userid": user.Userid}).One(&result)
+	err = c.Find(query).One(&result)
 	if err != nil {
 		log.Println("No User Found")
 	}
-	return result
+	res := validatePassword(user.Password, result.Password)
+	if !res {
+		return false, result
+	}
+	return true, result
+}
+func validatePassword(in string, dbpassword string) bool {
+	if in == dbpassword {
+		return true
+	}
+	return false
 }
 
 /**
