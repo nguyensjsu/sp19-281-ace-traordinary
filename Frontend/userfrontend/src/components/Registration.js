@@ -31,8 +31,11 @@ class Registration extends Component {
 
     render(){
         return(
+            <div>
             <div className={"Registration"}>
-                <Card className={"Registration-Card"}>
+                <div className={"Registration-Card"}>
+                    <h3>Registration</h3>
+                    <hr/>
                 <Form>
                     <Form.Field>
                         <label>Email</label>
@@ -50,9 +53,14 @@ class Registration extends Component {
                         <label>Last Name</label>
                         <input placeholder='Last Name' name="lastname"  onChange={this.handlechange} required={true} maxLength={20}/>
                     </Form.Field>
+                    <Form.Field>
+                        <label>Phone Number</label>
+                        <input placeholder='Phone Number' name="phonenumber"  onChange={this.handlechange} required={true} maxLength={20}/>
+                    </Form.Field>
                     <Button type='submit' onClick={this.registeruser} negative>Register</Button>
-                    <p><span>Already a Member?</span><b onClick={this.props.showLogin}>Login</b></p>
-                </Form></Card>
+                    <p><span>Already a Member?</span><b className={"rb"} onClick={this.props.showLogin}>Login</b></p>
+                </Form></div>
+            </div>
             </div>
         );
     }

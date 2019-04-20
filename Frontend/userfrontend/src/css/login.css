@@ -1,5 +1,25 @@
-.Login{
-    background-color: rgba(192,192,192,0.1);
-    height: 100vh;
 
+.videobaground{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 90%;
+}
+.Login-Card{
+    padding: 15px;
+    width: 25%;
+    background-color: rgba(192,192,192,0.8);;
+    margin-top: 20vh;
+    display: inline-block;
+    z-index: 1;
+}
+.Login{
+    display: flex;
+    justify-content: center;
+}
+h3{
+    text-align: center;
+    font-weight: bold;
+    color: white;
 }

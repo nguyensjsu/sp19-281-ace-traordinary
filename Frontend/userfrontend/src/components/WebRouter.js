@@ -5,12 +5,13 @@ import ImagesDashBoard from "./ImagesDashBoard";
 import Registration from "./Registration";
 import Navigation from "./Navigation"
 import BuyImage from "./BuyImage";
+import MyImages from "./MyImages"
 class WebRouter extends Component {
 
 constructor(props){
     super(props);
     this.state={
-        isAuthenticated:true,
+        isAuthenticated:false,
         showlogin_page:true,
         showregister_page:false
     }
@@ -40,9 +41,13 @@ constructor(props){
                 <Route exact path="/" component={ImagesDashBoard}/>
                </>)
         }else if(this.state.showlogin_page) {
-           land_page = (<Login showRegister={this.showRegister}/>)
+           land_page = (<><video autoPlay muted loop className={"videobaground"}>
+               <source src={require('./LandPageBaground.mp4')} type="video/mp4"/>
+           </video><Login showRegister={this.showRegister}/></>)
         }else if(this.state.showregister_page){
-            land_page =(<Registration showLogin={this.showLogin}/>)
+            land_page =(<><video autoPlay muted loop className={"videobaground"}>
+                <source src={require('./LandPageBaground.mp4')} type="video/mp4"/>
+            </video><Registration showLogin={this.showLogin}/></>)
         }
         return land_page;
     }
@@ -53,11 +58,18 @@ constructor(props){
             <Route exact path="/images/buy" component={BuyImage}/>
         </>)
     }
+    myImagesRoute =()=>{
+        return (<>
+            <Route exact path="/myimages" component={Navigation}/>
+            <Route exact path="/myimages" component={MyImages}/>
+        </>)
+    }
     render() {
         return (
             <div className="WebRouter">
                 {this.landPageRoute()}
                 {this.buyImageRoute()}
+                {this.myImagesRoute()}
             </div>
         );
     }

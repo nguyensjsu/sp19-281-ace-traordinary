@@ -28,8 +28,13 @@ class Login extends Component {
 
     render(){
         return(
+            <div>
+
             <div className={"Login"}>
+
                 <div className={"Login-Card"}>
+                    <h3>Login</h3>
+                    <hr/>
                     <Form>
                         <Form.Field>
                             <label>Email</label>
@@ -40,11 +45,12 @@ class Login extends Component {
                             <input placeholder='Please enter password' type={"password"} name="password" onChange={this.handlechange} required={true} maxLength={20}/>
                         </Form.Field>
                         <Button type='submit'  negative>Login</Button>
-                        <a><b>Forgot password</b></a>
+                        <a><b className={"rb"}>Forgot password</b></a>
                         <br/>
-                        <p><span>Not a Member?</span><b onClick={this.props.showRegister} >SignUP</b></p>
+                        <p><span>Not a Member?</span><b className={"rb"}onClick={this.props.showRegister} >SignUP</b></p>
                     </Form></div>
             </div>
+        </div>
         );
     }
 }
