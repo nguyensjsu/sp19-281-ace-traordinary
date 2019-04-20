@@ -145,6 +145,7 @@ func placeorderHandler(formatter *render.Render) http.HandlerFunc {
 			panic(err)
 		}
 
+	    fmt.Println("Successfuly inserted")
 
 		params := mux.Vars(req)
 		fmt.Println(params)
