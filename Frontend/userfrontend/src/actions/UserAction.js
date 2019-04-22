@@ -6,27 +6,31 @@ export const USER_LOGOUT="USER_LOGOUT"
 export const USER_FORGOT_PASSWORD="USER_FORGOT_PASSWORD"
 
 
-export const userregestration= async (user)=>{
 
+const USERURL  = "http://localhost:8000";
+
+export const userregestration= async (inuser)=>{
+    const response = await axios.post(`${USERURL}/users`, inuser);
+let user =response.data;
     const action={
         type:USER_REGESTRATION,
         user
     }
     return action;
 }
-export const userlogin= async (user)=>{
-
+export const userlogin= async (inuser)=>{
+    const response = await axios.post(`${USERURL}/user`, inuser);
+    let user =response.data;
     const action={
         type:USER_LOGIN,
         user
     }
     return action;
 }
-export const userlogout= async (user)=>{
+export const userlogout= async ()=>{
 
     const action={
         type:USER_LOGOUT,
-        user
     }
     return action;
 }

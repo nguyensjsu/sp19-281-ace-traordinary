@@ -12,7 +12,11 @@ class ImageCard extends Component {
             <div className="Imagecard">
                 <div>
                 <Image classNmae='card-image' src={this.props.imagesrc} size='medium' rounded />
-                <Link to={"/images/buy"}> <div className={"buy-button"}>Buy</div></Link>
+                <Link to={{pathname:'/images/buy',
+                state:{
+                    imageurl:this.props.imagesrc
+                }
+                }}> <div className={"buy-button"}>Buy</div></Link>
                 </div>
                 <div className={"lc-container"}>
                 <div className={"like-container"}><span>Like {this.props.likecount}</span></div>
