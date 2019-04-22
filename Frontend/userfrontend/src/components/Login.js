@@ -44,7 +44,7 @@ class Login extends Component {
                             <label>Password</label>
                             <input placeholder='Please enter password' type={"password"} name="password" onChange={this.handlechange} required={true} maxLength={20}/>
                         </Form.Field>
-                        <Button type='submit'  negative>Login</Button>
+                        <Button type='submit' onClick={this.loginuser} negative>Login</Button>
                         <a><b className={"rb"}>Forgot password</b></a>
                         <br/>
                         <p><span>Not a Member?</span><b className={"rb"}onClick={this.props.showRegister} >SignUP</b></p>

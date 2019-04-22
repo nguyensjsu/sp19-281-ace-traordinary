@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import USER_ROOTURL from '../resources/constants'
 export const USER_REGESTRATION ="USER_REGESTRATION"
 export const USER_LOGIN="USER_LOGIN"
 export const USER_LOGOUT="USER_LOGOUT"

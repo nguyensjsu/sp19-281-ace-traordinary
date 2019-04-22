@@ -6,6 +6,7 @@ import Registration from "./Registration";
 import Navigation from "./Navigation"
 import BuyImage from "./BuyImage";
 import MyImages from "./MyImages"
+import ViewImage from "./ViewImage"
 class WebRouter extends Component {
 
 constructor(props){
@@ -18,6 +19,7 @@ constructor(props){
                 <Navigation/>
                 <Route exact path="/" component={ImagesDashBoard}/>
                 <Route path="/images/buy" component={BuyImage}/>
+                <Route path="/images/comment" component={ViewImage}/>
                 <Route exact path="/myimages" component={MyImages}/>
             </div>
         );

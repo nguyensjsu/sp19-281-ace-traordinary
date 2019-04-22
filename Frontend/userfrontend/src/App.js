@@ -5,6 +5,7 @@ import './App.css';
 import BrowserRouter from "react-router-dom/es/BrowserRouter";
 import WebRouter from "./components/WebRouter"
 import Login from "./components/Login";
+import connect from "react-redux/es/connect/connect";
 
 class App extends Component {
 
@@ -35,8 +36,7 @@ class App extends Component {
     
 
   render() {
-      console.log(this.props)
-    if(this.state.isAuthenticated){
+    if(this.props.user.userid){
         return (
             <BrowserRouter>
                 <div className="App">
@@ -55,5 +55,10 @@ class App extends Component {
     }
   }
 }
-
-export default App;
+function mapStateToProps(state) {
+  console.log(JSON.stringify(state.user))
+    return{
+        user:state.user,
+    }
+}
+export default connect(mapStateToProps,{})(App);
