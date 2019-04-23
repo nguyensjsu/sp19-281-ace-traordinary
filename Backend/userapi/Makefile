@@ -6,42 +6,42 @@ clean:
 	go clean
 
 run:
-	go run src/userapi/$(app).go
+	go run $(app).go
 
 main:
-	go run src/userapi/main.go
+	go run main.go
 
 format:
-	go fmt ./src/userapi
+	go fmt userapi
 
 install:
-	go install ./src/*/
+	go install userapi
 
 build:
 	go build userapi
-
 start:
-	./userapi
-
-test-ping:
-	curl localhost:3000/ping
+		./userapi
 
 docker-build:
 	docker build -t userapi .
 	docker images
 
+network-create:
+	docker network create --driver bridge userapi
+
 docker-run:
-	docker run --name userapi -td -p 3000:3000 userapi
+	docker run --network userapi \
+				--name userapi -p 3000:3000 -td userapi
 	docker ps
 
 docker-network:
 	docker network ls
 
+docker-network-prune:
+	docker network prune
+
 docker-network-inspect:
 	docker network inspect host
-
-docker-shell:
-	docker exec -it userapi bash
 
 docker-clean:
 	docker stop userapi
@@ -50,9 +50,11 @@ docker-clean:
 
 docker-ip:
 	docker-machine ip
-
+	
 docker-ps:
-	 docker ps --all --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t"
-
+	docker ps --all --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t"
 docker-ps-ports:
-	 docker ps --all --format "table {{.Names}}\t{{.Ports}}\t"
+		 docker ps --all --format "table {{.Names}}\t{{.Ports}}\t"
+
+test-ping:
+		 	curl localhost:3000/ping

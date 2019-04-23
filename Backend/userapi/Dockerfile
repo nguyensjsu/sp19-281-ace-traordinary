@@ -1,8 +1,8 @@
 FROM golang:latest
-EXPOSE 3000
+EXPOSE 8000
 RUN mkdir /app
-ADD . /app/
+ADD . /app/src/github.com/sp19-281-ace-traordinary/Backend/userapi
 WORKDIR /app
 ENV GOPATH /app
-RUN cd /app ; go install userapi
+RUN cd /app ; go install github.com/sp19-281-ace-traordinary/Backend/userapi
 CMD ["/app/bin/userapi"]

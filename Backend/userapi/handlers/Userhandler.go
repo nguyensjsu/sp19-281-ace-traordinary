@@ -110,5 +110,10 @@ func TestHandler(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewDecoder(r.Body).Decode(&user)
 	user.Verificationcode = utils.GenerateVerificationTocken()
 	services.SendRegistrationEmail(user, r.Host)
+	json.NewEncoder(w).Encode(struct{ Test string }{"User API version 1.0 alive!"})
+}
+
+//PingHandler for testing mailservices
+func PingHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"result": "success"})
 }

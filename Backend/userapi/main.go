@@ -23,6 +23,7 @@ func main() {
 	router.HandleFunc("/users/{userid}", handlers.ForgotPasswordrHandler).Methods("GET")
 	router.HandleFunc("/users", handlers.DeleteUserHandler).Methods("DELETE")
 	router.HandleFunc("/users/test", handlers.TestHandler).Methods("POST")
+	router.HandleFunc("/ping", handlers.PingHandler).Methods("GET")
 
 	fmt.Println("Starting server on port 8000...")
 	log.Fatal(http.ListenAndServe(":8000", h.CORS(headersOk, methodsOk, originsOk)(router)))
