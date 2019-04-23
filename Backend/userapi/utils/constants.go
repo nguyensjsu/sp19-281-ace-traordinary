@@ -26,11 +26,23 @@ var REGIONSES = "us-west-2"
 //REGISTRATIONEMAIL mail sent before confirming user registration
 var REGISTRATIONEMAIL = "Registration Email From Picassa"
 
+//REGISTRATIONCONFIRMATIONTEMPLATE  After Successfull Payment
+var REGISTRATIONCONFIRMATIONTEMPLATE = "templates/registration_email.gohtml"
+
 //CONFIRMATIONEMAIL After Confirming user registration
 var CONFIRMATIONEMAIL = "Welcome to Picassa"
+
+//CONFIRMATIONTEMPLATE After Confirming user registration
+var CONFIRMATIONTEMPLATE = "templates/confirm_registation.gohtml"
 
 //PAYMENTCONFIRMATION After SuccesfulPayment
 var PAYMENTCONFIRMATION = "Payment Confirmation Picassa"
 
 //PAYMENTCONFIRMATIONTEMPLATE  After Successfull Payment
-var PAYMENTCONFIRMATIONTEMPLATE = "templates/confirmation_email.gohtml"
+var PAYMENTCONFIRMATIONTEMPLATE = "templates/paymentconfirmation_email.gohtml"
+
+// FORGOTPASSWORD subject for forgot password
+var FORGOTPASSWORD = "Please Find your Temporary Password"
+
+//FORGOTPASSWORDTEMPLATE when user forgets password
+var FORGOTPASSWORDTEMPLATE = "templates/forgot_password.gohtml"

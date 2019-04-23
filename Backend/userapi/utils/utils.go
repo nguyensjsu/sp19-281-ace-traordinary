@@ -38,5 +38,10 @@ func GenerateVerificationTocken() string {
 
 //GenerateTemporaryPassword if Password is forgot
 func GenerateTemporaryPassword() string {
-	return ""
+	const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	b := make([]byte, 8)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
 }

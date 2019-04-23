@@ -29,3 +29,11 @@ type Email struct {
 	HTMLBody string `json:"htmlbody,omitempty"`
 	TextBody string `json:"textbody,omitempty"`
 }
+
+//TemplateData service data
+type TemplateData struct {
+	Firstname        string `json:"firstname,omitempty"`
+	Verificationcode string `json:"verificationcodestring,omitempty"`
+	Password         string `json:"password,omitempty"`
+	URL              string `json:"url,omitempty"`
+}
