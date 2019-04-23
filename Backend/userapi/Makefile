@@ -3,6 +3,7 @@ all: clean
 
 clean:
 	find . -name 'userapi' -type f -exec rm -f {} \;
+	rm -rf vendor/
 	go clean
 
 run:
@@ -31,7 +32,7 @@ network-create:
 
 docker-run:
 	docker run --network userapi \
-				--name userapi -p 3000:3000 -td userapi
+				--name userapi -p 8000:8000 -td userapi
 	docker ps
 
 docker-network:
@@ -50,7 +51,7 @@ docker-clean:
 
 docker-ip:
 	docker-machine ip
-	
+
 docker-ps:
 	docker ps --all --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t"
 docker-ps-ports:
