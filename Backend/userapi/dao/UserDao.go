@@ -31,7 +31,7 @@ func init() {
 }
 
 //RegisterUserDao inserts many items from byte slice
-func RegisterUserDao(user models.Registration) (bool, string) {
+func RegisterUserDao(user models.Registration, host string) (bool, string) {
 	fmt.Println("Entered RegisterUserDao function  ")
 	session, err := mgo.Dial(utils.MONGODB["SERVER"])
 	if err != nil {
@@ -54,7 +54,7 @@ func RegisterUserDao(user models.Registration) (bool, string) {
 			if errin != nil {
 				log.Fatal(errin)
 			}
-			services.SendRegistrationEmail(user)
+			services.SendRegistrationEmail(user, host)
 			fmt.Println("Successfully Regestered")
 		} else {
 			return false, "Already In Registration Table"
@@ -85,7 +85,7 @@ func GetAllUsersDao() []models.User {
 
 //ConfirmRegistrationDao once user confirms remove data from Registration and insert data to User Collection
 func ConfirmRegistrationDao(user models.Registration) (bool, models.User) {
-	fmt.Println("Entered LoginDao function  ")
+	fmt.Println("Entered ConfirmRegistrationDao function  ")
 	var status bool
 	var data models.User
 	session, err := mgo.Dial(mongodbServer)
@@ -138,7 +138,7 @@ func createUserDao(newuser models.Registration) (bool, models.User) {
 }
 
 //LoginDao validates weather uaer is valid or not
-func LoginDao(user models.User) (bool, models.User) {
+func LoginDao(user models.User) (models.User, bool) {
 	fmt.Println("Entered LoginDao function  ")
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
@@ -147,7 +147,6 @@ func LoginDao(user models.User) (bool, models.User) {
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodbDatabase).C(USERSCOLLECTION)
-
 	var result models.User
 	query := bson.M{"userid": user.Userid}
 	//Checking if the new user is already present in user table
@@ -157,13 +156,91 @@ func LoginDao(user models.User) (bool, models.User) {
 	}
 	res := validatePassword(user.Password, result.Password)
 	if !res {
-		return false, result
+		return result, false
 	}
-	return true, result
+	return result, true
 }
 func validatePassword(in string, dbpassword string) bool {
 	if in == dbpassword {
 		return true
 	}
 	return false
+}
+
+//DeleteUser removes user with userID from the database
+func DeleteUser(userid string) bool {
+	status := true
+	fmt.Println("Entered DeleteUser function  ")
+	session, err := mgo.Dial(mongodbServer)
+	if err != nil {
+		log.Panic(err)
+		status = false
+	}
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	c := session.DB(mongodbDatabase).C(USERSCOLLECTION)
+	query := bson.M{"userid": userid}
+	err = c.Remove(query)
+	if err != nil {
+		fmt.Printf("remove fail %v\n", err)
+		status = false
+	}
+	go services.DeleteUserEmail(userid)
+	return status
+}
+
+//ForgotpasswordDao  update password of user and mail to user
+func ForgotpasswordDao(userid string) bool {
+	fmt.Println("Entered LoginDao function  ")
+	session, err := mgo.Dial(mongodbServer)
+	if err != nil {
+		log.Panic(err)
+		return false
+	}
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	c := session.DB(mongodbDatabase).C(USERSCOLLECTION)
+	var result models.User
+	query := bson.M{"userid": userid}
+	err = c.Find(query).One(&result)
+	if err != nil {
+		log.Println("No User Found")
+		return false
+	}
+	result.Password = utils.GenerateTemporaryPassword()
+	go services.SendTemporeryPasswordEmail(result)
+	err = c.Update(query, result)
+	if err != nil {
+		log.Println("Error while Updating Document in Forgot Password")
+		return false
+	}
+	return true
+}
+
+//ResendConfirmDao Resend confirmation mail and update the verification code
+func ResendConfirmDao(userid string, host string) bool {
+	fmt.Println("Entered ResendConfirmDao function  ")
+	session, err := mgo.Dial(mongodbServer)
+	if err != nil {
+		log.Panic(err)
+		return false
+	}
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	c := session.DB(mongodbDatabase).C(REGISTRATIONCOLLECTION)
+	var result models.Registration
+	query := bson.M{"userid": userid}
+	err = c.Find(query).One(&result)
+	if err != nil {
+		log.Println("No Registration User Found")
+		return false
+	}
+	result.Verificationcode = utils.GenerateVerificationTocken()
+	err = c.Update(query, result)
+	if err != nil {
+		log.Println("Error while Updating Document in ResendConfirmDao Password")
+		return false
+	}
+	go services.SendRegistrationEmail(result, host)
+	return true
 }
