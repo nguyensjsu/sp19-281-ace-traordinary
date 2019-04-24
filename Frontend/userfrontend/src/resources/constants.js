@@ -1,1 +1,5 @@
 export const USER_ROOTURL="localhost:8080/users"
+export const LIKECOMMENT_ROOTURL=""
+export const BLOCKCHAIN_ROOTURL=""
+export const PAYMENT_ROOTURL=""
+export const IMAGE_ROOTURL=""

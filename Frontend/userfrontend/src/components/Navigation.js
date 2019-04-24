@@ -21,8 +21,11 @@ class Navigation extends Component {
     render() {
         const { open, dimmer } = this.state
         return (
+            <div>
             <div className="Navigation">
+                <div>
                 <img className={"brand"} src={require('./picasalogo.png')}/>
+                </div>
                 <div className={"header-buttons"}>
                     <ul><Link to={"/"} className={"link"}>
                         <li>Home</li>
@@ -30,11 +33,11 @@ class Navigation extends Component {
                         <Link to={"/myimages"} className={"link"}>
                             <li>MyImages</li>
                         </Link>
+                        <li onClick={this.show('blurring')}>NewImage</li>
+                        <li>RemoveAccount</li>
                         <Link to={"/"} className={"link"}>
                             <li onClick={this.logout}>Logout</li>
                         </Link>
-                        <li onClick={this.show('blurring')}>NewImage</li>
-                        <li>RemoveAccount</li>
                     </ul>
                 </div>
                 <Modal dimmer={dimmer} open={open} onClose={this.close}>
@@ -53,6 +56,7 @@ class Navigation extends Component {
                         />
                     </Modal.Actions>
                 </Modal>
+            </div>
             </div>
         );
     }
