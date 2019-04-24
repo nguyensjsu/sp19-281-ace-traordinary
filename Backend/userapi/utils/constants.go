@@ -18,7 +18,7 @@ var ACCESSKEYSES = "AKIAQKC4VVTZIUJMY3GQ"
 var SECRETKEYSES = "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"
 
 //FROM email ID
-var FROM = "1ra4vi3@gmail.com"
+var FROM = "support@picassa.awsapps.com"
 
 //REGIONSES SES Region
 var REGIONSES = "us-west-2"
