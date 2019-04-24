@@ -4,37 +4,43 @@
 
 package main
 
+import 	"gopkg.in/mgo.v2/bson"
+
 
 type Picture struct {
-	PictureId    string   `json:"pictureId"`
-	PictureTitle string   `json:"pictureTitle"`
-	Price 	     float32  `json:"price"`
-	Description  string   `json:"description"`
-	TumbnailUrl  string   `json:"tumbnailUrl"`
-	OrigUrl      string   `json:"origUrl"`
+	PictureId    string   `json:"pictureId" bson:"pictureId"`
+	UserId       string   `json:"userId" bson:"userId"`
+	Title        string   `json:"title" bson:"title"`
+	Price 	     float32  `json:"price" bson:"price"`
+	Description  string   `json:"description" bson:"description"`
+	TumbnailUrl  string   `json:"tumbnailUrl" bson:"tumbnailUrl"`
+	OrigUrl      string   `json:"origUrl" bson:"origUrl"`
 }	
-type PictureQuery struct {
-	QueryId     string  `json:"queryId" bson:"queryId"`
-	UserId      string  `json:"userId" bson:"userId"`
-	PictureId   string  `json:"pictureId" bson:"pictureId"`
-	PageNumber  string  `json:"pageNumber" bson:"pageNumber"`
-	Count       string  `json:"count" bson:"count"`
-	QueryStatus string  `json:"queryStatus" bson:"queryStatus"`
-	IpAddress	string	`json:"ipaddress" bson:"ipaddress"`
-}
 
 type Payload struct {
+	Id		     bson.ObjectId `json:"_id" bson:"_id,omitempty"`
+	PictureId    string   `json:"pictureId" bson:"pictureId"`
+	UserId       string   `json:"userId" bson:"userId"`
+	Title        string   `json:"title" bson:"title"`
+	Price 	     float32  `json:"price" bson:"price"`
+	Description  string   `json:"description" bson:"description"`
+	TumbnailUrl  string   `json:"tumbnailUrl" bson:"tumbnailUrl"`
+	OrigUrl      string   `json:"origUrl" bson:"origUrl"`
+}
+
+type Request struct {
+	//QueryId       string  	`json:"queryId" bson:"queryId"`
+	PictureId    string   `json:"pictureId" bson:"pictureId"`
+	//UserId       string   `json:"userId" bson:"userId"`
+	//PageNumber    string    `json:"pageNumber" bson:"pageNumber"`
+	//PageSize         string    `json:"pageSize" bson:"pageSize"`
+	//QueryStatus   string    `json:"queryStatus" bson:"queryStatus"`
+}
+
+type Log struct {
 	QueryId       string  	`json:"queryId" bson:"queryId"`
 	UserId        string  	`json:"userId" bson:"userId"`
-	PictureId     string 	`json:"pictureId"`
-	PictureTitle  string 	`json:"pictureTitle"`
-	Price 	      float32	`json:"price"`
-	Description   string    `json:"description"`
-	TumbnailUrl   string    `json:"tumbnailUrl"`
-	OrigUrl       string    `json:"origUrl"`
-	PageNumber    string    `json:"pageNumber" bson:"pageNumber"`
-	Count         string    `json:"count" bson:"count"`
 	QueryStatus   string    `json:"queryStatus" bson:"queryStatus"`
 }
 
-var queries map[string]PictureQuery
+var pictures map[string]Payload

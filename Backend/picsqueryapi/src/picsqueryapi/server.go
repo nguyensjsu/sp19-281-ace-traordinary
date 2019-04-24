@@ -12,6 +12,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	//"strconv"
 
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
@@ -20,6 +21,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"github.com/gorilla/handlers"
 
+	//"gopkg.in/mong-go/query.v2/paginate"
+
 	//"github.com/aws/aws-sdk-go/service/s3"
 )
 
@@ -27,12 +30,15 @@ import (
 
 //var mongodb_server = "10.0.0.117"
 //var mongodb_server = "dockerhost"
+var cloudfront_endpoint = "http://d2krh5h0ip6hb6.cloudfront.net"
 
-var mongodb_server = os.Getenv("Server")
-var mongodb_database = os.Getenv("Database")
-var mongodb_collection = os.Getenv("Collection")
-var mongo_user = os.Getenv("User")
-var mongo_pass = os.Getenv("Pass")   
+var mongodb_server = "mongodb"//os.Getenv("Server") 
+var mongodb_database = "picasso"//os.Getenv("Database") // pics
+var mongodb_collection = "pics"//os.Getenv("Collection") // picassa
+var mongo_user = "admin"//os.Getenv("User") // masea
+var mongo_pass = "cmpe281"//os.Getenv("Pass") // cmpe281 
+
+var last_id string
 
 func NewServer() *negroni.Negroni {
 	formatter := render.New(render.Options{
@@ -42,7 +48,7 @@ func NewServer() *negroni.Negroni {
 	router := mux.NewRouter()
 	initRoutes(router, formatter)
 	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
-	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "HEAD",  "OPTIONS"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "HEAD",  "OPTIONS"})
 	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
 
 	n.UseHandler(handlers.CORS(allowedHeaders,allowedMethods , allowedOrigins)(router))
@@ -51,10 +57,10 @@ func NewServer() *negroni.Negroni {
 
 // API Routes
 func initRoutes(mx *mux.Router, formatter *render.Render) {
-	mx.HandleFunc("/picsquery/ping", pingHandler(formatter)).Methods("GET")
-	mx.HandleFunc("/picsquery", pictureQueryByPageNumberAndCount(formatter)).Methods("GET")
-	mx.HandleFunc("/picsquery/{pictureId}", pictureQueryByPictureId(formatter)).Methods("GET")
-	mx.HandleFunc("/picsquery/{userId}", pictureQueryByUserId(formatter)).Methods("GET")
+	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/pictures", pictureQueryByPageNumberAndCount(formatter)).Methods("GET")
+	mx.HandleFunc("/pictures/{pictureId}", pictureQueryByPictureId(formatter)).Methods("GET")
+	mx.HandleFunc("/users/{userId}", pictureQueryByUserId(formatter)).Methods("GET")
 }
 
 // Helper Functions
@@ -88,6 +94,8 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 // API Get Pictures by Page Number and Count Handler
 func pictureQueryByPageNumberAndCount(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		//var request Request
+		//_ = json.NewDecoder(req.Body).Decode(&request)
 		session, _ := mgo.Dial(mongodb_server)
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
@@ -97,62 +105,59 @@ func pictureQueryByPageNumberAndCount(formatter *render.Render) http.HandlerFunc
 			return
 		}
 		c := session.DB(mongodb_database).C(mongodb_collection)
-		params := mux.Vars(req)
-		//var qryid string = params["queryId"]
-		//var usrid string = params["userId"]	
-		//var howMany string = params["count"]
-		var whichPage string = params["pageNumber"]// == "" ? 1 : params["pageNumber"]);
-		if  whichPage == "" {
-		    whichPage = "1"
+		//params := mux.Vars(req)	
+		var howMany int = 10
+		var whichPage int = 1
+
+	    // string to int
+	    //howMany, err = strconv.Atoi(params["pageSize"])
+	    if err != nil {
+	        // handle error
+	        fmt.Println(err)
+	        os.Exit(2)
+	    }
+	    //whichPage, err = strconv.Atoi(params["pageNumber"])
+	    if err != nil {
+	        // handle error
+	        fmt.Println(err)
+	        os.Exit(2)
+	    }
+		
+		result := make([]Payload, 10, 10)
+		if whichPage == 1 { //Page 1
+			err = c.Find(nil).Limit(howMany).All(&result)
+			//Find the id of the last document in this page
+			// Since documents are naturally ordered with _id, last document will have max id.
+        	//last_id = result[len(result)-1].Id.Hex()
+		} else {
+			//err = c.Find(bson.M{'_id': bson.M{'$gt': last_id,},}).Limit(howMany).All(&result)
+			// Since documents are naturally ordered with _id, last document will have max id.
+        	//last_id = result[len(result)-1].Id.Hex()
+		}	
+
+		if err!=nil {
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
 		}
-		//if whichpage == "" {
-			var pics_array []Payload
-			
-			// mongodb
-			err = c.Find(bson.M{}).All(&pics_array)
-			
-            // riak
-   //          rowsPerPage := uint32(howmany)
-			// page := uint32(whichPage) // 2
-			// start := rowsPerPage * (page - uint32(1))
-
-			// cmd, err := riak.NewSearchCommandBuilder().
-			//     WithIndexName("tumbnail").
-			//     WithQuery("*:*").
-			//     WithStart(start).
-			//     WithNumRows(rowsPerPage).
-			//     Build();
-			// if err != nil {
-			//     return err
-			// }
-
-			// if err := cluster.Execute(cmd); err != nil {
-			//     return err
-			// }
-			// riak
-
-
-
-			fmt.Println("Pictures:", pics_array)
-			formatter.JSON(w, http.StatusOK, pics_array)
-		// } else {
-		// 	fmt.Println("queryId: ", qryid)
-		// 	var result Payload
-		// 	err = c.Find(bson.M{"queryId":qryid}).One(&result)
-		// 	if err!=nil {
-		// 		formatter.JSON(w, http.StatusNotFound, "Order Not Found")
-		// 		return
-		// 	}
-		// 	_ = json.NewDecoder(req.Body).Decode(&result)
-		// 	fmt.Println("Pictures: ", result)
-		// 	formatter.JSON(w, http.StatusOK, result)
+		if len(result) == 0 {
+			formatter.JSON(w, http.StatusNotFound, "No Picture Found.")
+			return
+		}
+		_ = json.NewDecoder(req.Body).Decode(&result)
+		//mResult, err := json.Marshal(result)
+		// if err != nil {
+		//     // do something with the error (log it or write it in the response)
 		// }
+		fmt.Println("Pictures:", result[0].PictureId)
+		formatter.JSON(w, http.StatusOK, result)
 	}
 }
 
 // API Get Picture by Picture Id Handler
 func pictureQueryByPictureId(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		//var request Request
+		//_ = json.NewDecoder(req.Body).Decode(&request)
 		session, _ := mgo.Dial(mongodb_server)
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
@@ -163,19 +168,17 @@ func pictureQueryByPictureId(formatter *render.Render) http.HandlerFunc {
 		}
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		params := mux.Vars(req)
-		var qryid string = params["queryId"]
-		var usrid string = params["userId"]
 		var picid string = params["pictureId"]
-		fmt.Println("userId: ", usrid)
-		fmt.Println("pictureId: ", qryid)
-		var result []Payload
-		err = c.Find(bson.M{"pictureId":picid}).All(&result)
+		//var picid string = request.PictureId
+		fmt.Println("pictureId: ", picid)
+		result := make([]Payload, 0, 10)
+		err = c.Find(bson.M{"PictureId":picid}).All(&result)
 		if err!=nil {
-			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			formatter.JSON(w, http.StatusInternalServerError, " Internal Server Error")
 			return
 		}
 		if len(result) == 0 {
-			formatter.JSON(w, http.StatusNotFound, "This picture Id does not exist anymore.")
+			formatter.JSON(w, http.StatusNotFound, "This picture Id does not exist.")
 			return
 		}
 		_ = json.NewDecoder(req.Body).Decode(&result)
@@ -199,9 +202,9 @@ func pictureQueryByUserId(formatter *render.Render) http.HandlerFunc {
 		params := mux.Vars(req)
 		//var qryid string = params["queryId"]
 		var usrid string = params["userId"]
-		fmt.Println("userId: ", usrid)
-		var result []Payload
-		err = c.Find(bson.M{"userId":usrid}).All(&result)
+		fmt.Println("UserId: ", usrid)
+		result := make([]Payload, 10, 10)
+		err = c.Find(bson.M{"UserId":usrid}).All(&result)
 		if err!=nil {
 			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
