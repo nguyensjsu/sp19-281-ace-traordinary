@@ -24,9 +24,12 @@ display: inline-block;
   z-index: 5;
 }
 .Navigation {
+  position: fixed;
   width: 100%;
   display: flex;
   justify-content: space-between;
+  z-index: 1;
+  background-color: white;
   .brand{
     display: flex;
     flex-direction: column;
@@ -66,4 +69,54 @@ display: inline-block;
 }
 .NewImage{
   display: flex;
+  .nemimage{
+    cursor: pointer;
+  }
+}
+.MyImages{
+  padding-top: 50px;
+  margin-left: 5%;
+  padding: 5px;
+}
+.Comment{
+  background-color: white;
+  padding: 5px;
+  .header{
+    display: flex;
+    justify-content: space-between;
+  }
+  .comment{
+    margin-top: 5px;
+    padding: 5px;
+    border-radius: 5px;
+
+  }
+}
+.Comment:hover {
+  background-color: rgba(192,192,192,0.3);
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.ViewImage{
+  padding-top: 5%;
+  background-color: rgba(192,192,192,0.3);
+  .ViewImageSecond{
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10px;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: white;
+  }
+  .commentsdisplay{
+    overflow-y: auto;
+    padding-bottom: 2%;
+    height: 70%;
+    border-radius: 10px;
+  }
+  .TextArea{
+    border-radius: 10px;
+
+  }
 }

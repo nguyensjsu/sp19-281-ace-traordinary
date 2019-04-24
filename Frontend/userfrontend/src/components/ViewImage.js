@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Comment from "./Comment";
-import {Image } from "semantic-ui-react"
+import {Image,Grid,TextArea,Form,Button } from "semantic-ui-react"
 import {testcomments} from '../resources/TestResourse'
+
 class ViewImage extends Component {
 
 
@@ -22,17 +23,32 @@ class ViewImage extends Component {
         let comments=testcomments;
         
         let commentslist =comments.map(comment=>{
-           return <Comment name ={comment.name} timestamp={comment.timestamp}comment={comment.comment}/>
+           return <><Comment name ={comment.name} timestamp={comment.timestamp}comment={comment.comment}/><hr/></>
         })
         return (
             <div className="ViewImage">
-                <Image classNmae='card-image' src={this.state.imgurl} size='medium' rounded />
-                <div>
-                    {commentslist}
+                <div className={"ViewImageSecond"}>
+                <Grid columns={3} >
+                    <Grid.Row>
+                        <Grid.Column>
+                            <Image  src={this.state.imgurl} size='medium' rounded />
+                        </Grid.Column>
+                        <Grid.Column></Grid.Column>
+                        <Grid.Column>
+                            <div className={"commentsdisplay"}>
+                            {commentslist}
+                            </div>
+                            <Form>
+                                <TextArea placeholder='Your Comment goes here' style={{ minHeight: 100 }} />
+                            </Form>
+                            <Button primary>Comment</Button>
+                        </Grid.Column>
+
+
+                    </Grid.Row>
+
+                </Grid>
                 </div>
-<div>
-    
-</div>
             </div>
         );
     }

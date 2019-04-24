@@ -16,11 +16,15 @@ constructor(props){
     render() {
         return (
             <div className="WebRouter">
+                <div>
                 <Navigation/>
+                </div>
+                <div className={"secondComponent"}> 
                 <Route exact path="/" component={ImagesDashBoard}/>
                 <Route path="/images/buy" component={BuyImage}/>
                 <Route path="/images/comment" component={ViewImage}/>
                 <Route exact path="/myimages" component={MyImages}/>
+                </div>
             </div>
         );
     }

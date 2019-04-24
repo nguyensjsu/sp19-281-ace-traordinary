@@ -4,7 +4,7 @@ export const ADDTOCHAIN="ADDTOCHAIN"
 export const GETBLOCKCHANIN="GETBLOCKCHANIN"
 
 export const addblockchain= async (data)=>{
-    const response = await axios.post(`${BLOCKCHAIN_ROOTURL}/images`, inuser);
+    const response = await axios.post(`${BLOCKCHAIN_ROOTURL}/images`, data);
     let chain =response.data;
     const action={
         type:ADDTOCHAIN,
