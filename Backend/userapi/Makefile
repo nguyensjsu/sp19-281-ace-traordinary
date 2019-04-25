@@ -10,16 +10,16 @@ run:
 	go run $(app).go
 
 main:
-	go run main.go
+	go run github.com/sp19-281-ace-traordinary/Backend/userapi/main.go
 
 format:
-	go fmt userapi
+	go fmt github.com/sp19-281-ace-traordinary/Backend/userapi/userapi
 
 install:
-	go install userapi
+	go install github.com/sp19-281-ace-traordinary/Backend/userapi
 
 build:
-	go build userapi
+	go build github.com/sp19-281-ace-traordinary/Backend/userapi
 start:
 		./userapi
 
@@ -58,4 +58,4 @@ docker-ps-ports:
 		 docker ps --all --format "table {{.Names}}\t{{.Ports}}\t"
 
 test-ping:
-		 	curl localhost:3000/ping
+		 	curl localhost:8000/ping

@@ -9,7 +9,7 @@ var MONGODB = map[string]string{
 }
 
 //CHARSET for mail
-var CHARSET = "UTF-8"
+const CHARSET = "UTF-8"
 
 //ACCESSKEYSES access key for SES
 var ACCESSKEYSES = "AKIAQKC4VVTZIUJMY3GQ"
@@ -39,10 +39,10 @@ var CONFIRMATIONTEMPLATE = "templates/confirm_registation.gohtml"
 var PAYMENTCONFIRMATION = "Payment Confirmation Picassa"
 
 //PAYMENTCONFIRMATIONTEMPLATE  After Successfull Payment
-var PAYMENTCONFIRMATIONTEMPLATE = "templates/paymentconfirmation_email.gohtml"
+var PAYMENTCONFIRMATIONTEMPLATE = "/github.com/sp19-281-ace-traordinary/Backend/userapi/templates/paymentconfirmation_email.gohtml"
 
 // FORGOTPASSWORD subject for forgot password
 var FORGOTPASSWORD = "Please Find your Temporary Password"
 
 //FORGOTPASSWORDTEMPLATE when user forgets password
-var FORGOTPASSWORDTEMPLATE = "templates/forgot_password.gohtml"
+var FORGOTPASSWORDTEMPLATE = "/github.com/sp19-281-ace-traordinary/Backend/userapi/templates/forgot_password.gohtml"
