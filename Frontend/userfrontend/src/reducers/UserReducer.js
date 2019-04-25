@@ -1,4 +1,4 @@
-import {USER_REGESTRATION,USER_LOGIN,USER_FORGOT_PASSWORD} from "../actions/UserAction";
+import {USER_REGESTRATION,USER_LOGIN,USER_FORGOT_PASSWORD,FIREBASE_LOGIN} from "../actions/UserAction";
 
 export default function user(state = {} ,action ) {
     switch (action.type) {
@@ -7,6 +7,8 @@ export default function user(state = {} ,action ) {
         case USER_LOGIN:
             return action.user;
         case USER_FORGOT_PASSWORD:
+            return action.user;
+        case FIREBASE_LOGIN:
             return action.user;
 
         default:

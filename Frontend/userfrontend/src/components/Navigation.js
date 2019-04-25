@@ -2,8 +2,15 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import connect from "react-redux/es/connect/connect";
 import {userlogout} from '../actions/UserAction'
-import {Button, Header, Image, Modal} from 'semantic-ui-react'
+import {Button, Header, Image, Modal,Dropdown,Menu,Label} from 'semantic-ui-react'
 import NewImage from './NewImage'
+import firebase from 'firebase'
+
+const options = [
+    { key: 1, text: 'Choice 1', value: 1 },
+    { key: 2, text: 'Choice 2', value: 2 },
+    { key: 3, text: 'Choice 3', value: 3 },
+]
 class Navigation extends Component {
     state = {open: false}
     show = dimmer => () => this.setState({dimmer, open: true})
@@ -15,11 +22,15 @@ class Navigation extends Component {
     }
     logout = () => {
         localStorage.removeItem("state");
+        firebase.auth().signOut();
         this.props.userlogout()
     }
     
     render() {
         const { open, dimmer } = this.state
+        const {user} =this.props
+        const trigger = (<span><Image avatar src={user.profilepic} /> {user.firstname}</span>
+        )
         return (
             <div>
             <div className="Navigation">
@@ -34,11 +45,23 @@ class Navigation extends Component {
                             <li>MyImages</li>
                         </Link>
                         <li onClick={this.show('blurring')}>NewImage</li>
-                        <li>RemoveAccount</li>
-                        <Link to={"/"} className={"link"}>
-                            <li onClick={this.logout}>Logout</li>
-                        </Link>
+
+
+                        <Dropdown   trigger={trigger} pointing='top left' icon={null}  >
+                            <Dropdown.Menu>
+                                <Dropdown.Item><Link to={"/myprofile"} className={"link"}>
+                                    My Profile
+                                </Link></Dropdown.Item>
+                                <Dropdown.Item>Remove Account</Dropdown.Item>
+                                <Dropdown.Divider />
+                                <Dropdown.Item><Link to={"/"} className={"link"}>
+                                    <span onClick={this.logout}>Log Out</span>
+                                </Link></Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+
                     </ul>
+
                 </div>
                 <Modal dimmer={dimmer} open={open} onClose={this.close}>
                     <Modal.Header>Upload New Image</Modal.Header>
