@@ -9,22 +9,26 @@ type Reaction struct{
 	Username 		string 	 	`json:"Username,omitempty" bson:"userName,omitempty"`
 	Timestamp 		time.Time	`json:"Timestamp,omitempty" bson:"timeStamp,omitempty"`
 	Comment 		string  	`json:"Comment,omitempty" bson:"comment,omitempty"`
+	CommentId		string		`json:"CommentId,omitempty"bson:"commentId,omitempty"`
 }
 
 type ImageReaction struct {
 	Imageid 	string		`json:"ImageId,omitempty"`
-	likes	 	[]Likes		`json:",omitempty"`
-	comments	[]Comments	`json:"Comments,omitempty"`
+	Likes	 	[]Likes		`json:",omitempty"`
+	Comments	[]Comments	`json:"Comments,omitempty"`
 
 }
 
 type Comments struct{
+	//Imageid		string		`json:"Imageid,omitempty"bson:"imageId,omitempty"`
 	Username	string 		`json:"Username,omitempty"bson:"userName,omitempty"`
 	Comment		string 		`json:"Comment,omitempty"bson:"comment,omitempty"`
-	TimeStamp 	string 	`json:"TimeStamp,omitempty"bson:"timeStamp,omitempty"`
+	TimeStamp 	string 		`json:"TimeStamp,omitempty"bson:"timeStamp,omitempty"`
+	CommentId	string		`json:"CommentId,omitempty"bson:"commentId,omitempty"`
 }
 
 type Likes struct{
+	//Imageid			string			`json:"Imageid,omitempty"bson:"imageId,omitempty"`
 	Username		string 			`json:"Username,omitempty"bson:"userName,omitempty"`
 	TimeStamp 		time.Time 		`json:"TimeStamp,omitempty"bson:"timeStamp,omitempty"`
 }
