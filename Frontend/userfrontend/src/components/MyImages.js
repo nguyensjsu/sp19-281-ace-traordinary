@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import {testimages} from "../resources/TestResourse"
+import '../css/myImages.css';
+
 import ViewImage from "./ViewImage"
 import ImageCard from "./ImageCard";
 var imagecards=[]
@@ -30,11 +32,10 @@ class MyImages extends Component {
         console.log("IN mY INag"+JSON.stringify(this.state.tracks));
 
         this.state.tracks.map(image=>{
-            imagecards.push(<ImageCard imagesrc={image.imageurl} likecount={image.likecount} commentcount={image.comment} isliked={image.isliked}/>)
+            imagecards.push(<ImageCard imagesrc={image.imageurl} likecount={image.likecount} commentcount={image.comment} isliked={image.isliked} buyoption={false}/>)
         })
         return (
             <div className="MyImages">
-                oooovfdsjnjkk
                 <InfiniteScroll
                     pageStart={0}
                     loadMore={this.loadimages}

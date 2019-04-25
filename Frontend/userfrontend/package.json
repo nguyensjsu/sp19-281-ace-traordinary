@@ -33,6 +33,7 @@
     "react-scripts": "2.1.8",
     "react-speech-recognition": "^1.0.7",
     "react-star-rating-component": "^1.4.1",
+    "react-stripe-elements": "^3.0.0",
     "react-table": "^6.8.6",
     "react-ui-cards": "^1.4.0",
     "react-voice-input": "0.0.4",

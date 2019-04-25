@@ -16,9 +16,7 @@ constructor(props){
     render() {
         return (
             <div className="WebRouter">
-                <div>
-                <Navigation/>
-                </div>
+                <Route  path="/" component={Navigation}/>
                 <div className={"secondComponent"}> 
                 <Route exact path="/" component={ImagesDashBoard}/>
                 <Route path="/images/buy" component={BuyImage}/>

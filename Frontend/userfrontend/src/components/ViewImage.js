@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Comment from "./Comment";
-import {Image,Grid,TextArea,Form,Button } from "semantic-ui-react"
+import {Image,Grid,TextArea,Form,Button,Icon } from "semantic-ui-react"
 import {testcomments} from '../resources/TestResourse'
+import {Link} from "react-router-dom";
 
 class ViewImage extends Component {
 
@@ -28,6 +29,7 @@ class ViewImage extends Component {
         return (
             <div className="ViewImage">
                 <div className={"ViewImageSecond"}>
+                    <Link to={"/"} className={"link"}><Icon  name='angle left' size='huge' color={"blue"} className={"back"}/></Link>
                 <Grid columns={3} >
                     <Grid.Row>
                         <Grid.Column>
