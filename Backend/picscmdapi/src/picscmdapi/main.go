@@ -5,16 +5,22 @@
 package main
 
 import (
-	"os"
+	"fmt"
+	"log"
+	"net/http"
+
+	h "github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 )
 
 func main() {
+	router := mux.NewRouter()
+	headersOk := h.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+	originsOk := h.AllowedOrigins([]string{"*"})
+	methodsOk := h.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 
-	port := os.Getenv("PORT")
-	if len(port) == 0 {
-		port = "3000"
-	}
+	router.HandleFunc("/images", UploadPictureHandler).Methods("POST")
 
-	server := NewServer()
-	server.Run(":" + port)
+	fmt.Println("Starting server on port 3001...")
+	log.Fatal(http.ListenAndServe(":3001", h.CORS(headersOk, methodsOk, originsOk)(router)))
 }
