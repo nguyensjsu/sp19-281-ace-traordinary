@@ -10,7 +10,7 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"os"
+	"strconv"
 	"strings"
 	//"strconv"
 
@@ -48,7 +48,6 @@ func NewServer() *negroni.Negroni {
 	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
 	allowedMethods := handlers.AllowedMethods([]string{"GET", "HEAD", "OPTIONS"})
 	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
-
 	n.UseHandler(handlers.CORS(allowedHeaders, allowedMethods, allowedOrigins)(router))
 	return n
 }
@@ -58,7 +57,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/pictures", pictureQueryByPageNumberAndCount(formatter)).Methods("GET")
 	mx.HandleFunc("/pictures/{pictureId}", pictureQueryByPictureId(formatter)).Methods("GET")
-	mx.HandleFunc("/users/{userId}", pictureQueryByUserId(formatter)).Methods("GET")
+	mx.HandleFunc("/users/{userid}/pictures", pictureQueryByUserId(formatter)).Methods("GET")
 }
 
 // Helper Functions
@@ -104,35 +103,16 @@ func pictureQueryByPageNumberAndCount(formatter *render.Render) http.HandlerFunc
 			return
 		}**/
 		c := session.DB(mongodb_database).C(mongodb_collection)
-		//params := mux.Vars(req)
-		var howMany int = 10
-		var whichPage int = 1
-
-		// string to int
-		//howMany, err = strconv.Atoi(params["pageSize"])
+		params := mux.Vars(req)
+		log.Println(params)
+		var howMany int = 30
+		i, err := strconv.Atoi(req.URL.Query().Get("pagenumber"))
 		if err != nil {
-			// handle error
-			fmt.Println(err)
-			os.Exit(2)
+			i = 1
 		}
-		//whichPage, err = strconv.Atoi(params["pageNumber"])
-		if err != nil {
-			// handle error
-			fmt.Println(err)
-			os.Exit(2)
-		}
-
+		var pagenumber int = i
 		result := make([]Payload, 10, 10)
-		if whichPage == 1 { //Page 1
-			err = c.Find(nil).Limit(howMany).All(&result)
-			//Find the id of the last document in this page
-			// Since documents are naturally ordered with _id, last document will have max id.
-			//last_id = result[len(result)-1].Id.Hex()
-		} else {
-			//err = c.Find(bson.M{'_id': bson.M{'$gt': last_id,},}).Limit(howMany).All(&result)
-			// Since documents are naturally ordered with _id, last document will have max id.
-			//last_id = result[len(result)-1].Id.Hex()
-		}
+		err = c.Find(nil).Skip(10 * (pagenumber - 1)).Limit(howMany).All(&result)
 
 		if err != nil {
 			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
@@ -147,7 +127,7 @@ func pictureQueryByPageNumberAndCount(formatter *render.Render) http.HandlerFunc
 		// if err != nil {
 		//     // do something with the error (log it or write it in the response)
 		// }
-		fmt.Println("Pictures:", result[0].ImageId)
+		fmt.Println("Pictures:", result[0])
 		formatter.JSON(w, http.StatusOK, result)
 	}
 }

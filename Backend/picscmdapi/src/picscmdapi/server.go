@@ -151,17 +151,11 @@ func DeletePictureHandler(w http.ResponseWriter, req *http.Request) {
 	} else {
 		err = DeleteFromS3(imageid)
 		if err != nil {
-			log.Println("Error wile removing from Database")
+			log.Println("Error while removing from S3Bucket")
 		}
 		err = c.Remove(query)
 		if err != nil {
-			log.Println("Error wile removing from S3Bucket")
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("NOT a Valid Request"))
-		}
-		err = c.Remove(query)
-		if err != nil {
-			log.Println("Error wile removing from MongoDB")
+			log.Println("Error while removing from MongoDB")
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("NOT a Valid Request"))
 		}
@@ -174,7 +168,7 @@ func DeletePictureHandler(w http.ResponseWriter, req *http.Request) {
 func UpdatePictureHandler(w http.ResponseWriter, req *http.Request) {
 	params := mux.Vars(req)
 	imageid := params["imageid"]
-	log.Println("imageid" + imageid)
+	log.Println("PicscmdApi In UpdatePictureHandler ImageID" + imageid)
 	var picture Picture
 	_ = json.NewDecoder(req.Body).Decode(&picture)
 	session, err := mgo.Dial(mongodb_server)
@@ -195,7 +189,7 @@ func UpdatePictureHandler(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("NOT a Valid Request"))
 	}
-	json.NewEncoder(w).Encode(map[string]string{"result": "success"})
+	json.NewEncoder(w).Encode(map[string]string{"result": "Removed the image Successfully"})
 }
 
 //DeleteByUserIdHandler API Delete all pictures owned by user userId
