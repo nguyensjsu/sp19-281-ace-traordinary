@@ -105,7 +105,7 @@ func UploadPictureHandler(w http.ResponseWriter, req *http.Request) {
 	var newpic Picture
 	newpic.ImageId = shortuuid.New() + filepath.Ext(handler.Filename)
 	newpic.Description = req.FormValue("description")
-	newpic.OwnerId = req.FormValue("ownerid")
+	newpic.UserId = req.FormValue("userid")
 	price, _ := strconv.ParseInt(req.FormValue("price"), 0, 64)
 	newpic.Price = price
 	newpic.Title = req.FormValue("title")
@@ -148,11 +148,6 @@ func DeletePictureHandler(w http.ResponseWriter, req *http.Request) {
 	err = c.Find(query).One(&result)
 	if err != nil {
 		log.Println("No Image Found")
-	}
-	if result.BuyerId != "" {
-		log.Println("Image is Sold so you cant Remove from Data Base")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("NOT a Valid Request"))
 	} else {
 		err = DeleteFromS3(imageid)
 		if err != nil {

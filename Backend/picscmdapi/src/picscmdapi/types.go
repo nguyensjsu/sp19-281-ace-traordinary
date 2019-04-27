@@ -6,14 +6,13 @@ package main
 
 type Picture struct {
 	ImageId     string `json:"imageid"`
-	OwnerId     string `json:"ownerid"`
-	BuyerId     string `json:"buyerid"`
+	UserId      string `json:"userid"`
 	Title       string `json:"title"`
 	Price       int64  `json:"price"`
 	Description string `json:"description"`
 	IsAvailable bool   `json:"isavailable"`
 	TumbnailUrl string `json:"tumbnailUrl"`
-	OrigUrl     string `json:"origUrl"`
+	OrigUrl     string `json:"origurl"`
 }
 type Payload struct {
 	RequestId     string `json:"requestId" bson:"requestId"`

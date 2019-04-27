@@ -8,21 +8,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"net"
+	"net/http"
 	"os"
 	"strings"
 	//"strconv"
 
 	"github.com/codegangsta/negroni"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/gorilla/handlers"
-
 	//"gopkg.in/mong-go/query.v2/paginate"
-
 	//"github.com/aws/aws-sdk-go/service/s3"
 )
 
@@ -32,11 +30,11 @@ import (
 //var mongodb_server = "dockerhost"
 var cloudfront_endpoint = "http://d2krh5h0ip6hb6.cloudfront.net"
 
-var mongodb_server = "mongodb"//os.Getenv("Server") 
-var mongodb_database = "picasso"//os.Getenv("Database") // pics
-var mongodb_collection = "pics"//os.Getenv("Collection") // picassa
-var mongo_user = "admin"//os.Getenv("User") // masea
-var mongo_pass = "cmpe281"//os.Getenv("Pass") // cmpe281 
+var mongodb_server = "52.11.201.189" //os.Getenv("Server")
+var mongodb_database = "cmpe281"     //os.Getenv("Database") // pics
+var mongodb_collection = "Picture"   //os.Getenv("Collection") // picassa
+var mongo_user = "cmpe281"           //os.Getenv("User") // masea
+var mongo_pass = "cmpe281"           //os.Getenv("Pass") // cmpe281
 
 var last_id string
 
@@ -48,10 +46,10 @@ func NewServer() *negroni.Negroni {
 	router := mux.NewRouter()
 	initRoutes(router, formatter)
 	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
-	allowedMethods := handlers.AllowedMethods([]string{"GET", "HEAD",  "OPTIONS"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "HEAD", "OPTIONS"})
 	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
 
-	n.UseHandler(handlers.CORS(allowedHeaders,allowedMethods , allowedOrigins)(router))
+	n.UseHandler(handlers.CORS(allowedHeaders, allowedMethods, allowedOrigins)(router))
 	return n
 }
 
@@ -73,14 +71,14 @@ func failOnError(err error, msg string) {
 
 func getSystemIp() string {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
-    if err != nil {
-		return "" 
+	if err != nil {
+		return ""
 	}
-    defer conn.Close()
+	defer conn.Close()
 	localAddr := conn.LocalAddr().(*net.UDPAddr).String()
 	address := strings.Split(localAddr, ":")
-    fmt.Println("address: ", address[0])
-    return address[0]
+	fmt.Println("address: ", address[0])
+	return address[0]
 }
 
 // API Ping Handler
@@ -96,46 +94,47 @@ func pictureQueryByPageNumberAndCount(formatter *render.Render) http.HandlerFunc
 	return func(w http.ResponseWriter, req *http.Request) {
 		//var request Request
 		//_ = json.NewDecoder(req.Body).Decode(&request)
-		session, _ := mgo.Dial(mongodb_server)
+		session, err := mgo.Dial(mongodb_server)
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
-		err:= session.DB("admin").Login(mongo_user, mongo_pass)
-		if err!=nil{
+		/**err = session.DB("cmpe281").Login(mongo_user, mongo_pass)
+		if err != nil {
+			log.Println(err)
 			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
-		}
+		}**/
 		c := session.DB(mongodb_database).C(mongodb_collection)
-		//params := mux.Vars(req)	
+		//params := mux.Vars(req)
 		var howMany int = 10
 		var whichPage int = 1
 
-	    // string to int
-	    //howMany, err = strconv.Atoi(params["pageSize"])
-	    if err != nil {
-	        // handle error
-	        fmt.Println(err)
-	        os.Exit(2)
-	    }
-	    //whichPage, err = strconv.Atoi(params["pageNumber"])
-	    if err != nil {
-	        // handle error
-	        fmt.Println(err)
-	        os.Exit(2)
-	    }
-		
+		// string to int
+		//howMany, err = strconv.Atoi(params["pageSize"])
+		if err != nil {
+			// handle error
+			fmt.Println(err)
+			os.Exit(2)
+		}
+		//whichPage, err = strconv.Atoi(params["pageNumber"])
+		if err != nil {
+			// handle error
+			fmt.Println(err)
+			os.Exit(2)
+		}
+
 		result := make([]Payload, 10, 10)
 		if whichPage == 1 { //Page 1
 			err = c.Find(nil).Limit(howMany).All(&result)
 			//Find the id of the last document in this page
 			// Since documents are naturally ordered with _id, last document will have max id.
-        	//last_id = result[len(result)-1].Id.Hex()
+			//last_id = result[len(result)-1].Id.Hex()
 		} else {
 			//err = c.Find(bson.M{'_id': bson.M{'$gt': last_id,},}).Limit(howMany).All(&result)
 			// Since documents are naturally ordered with _id, last document will have max id.
-        	//last_id = result[len(result)-1].Id.Hex()
-		}	
+			//last_id = result[len(result)-1].Id.Hex()
+		}
 
-		if err!=nil {
+		if err != nil {
 			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
@@ -148,7 +147,7 @@ func pictureQueryByPageNumberAndCount(formatter *render.Render) http.HandlerFunc
 		// if err != nil {
 		//     // do something with the error (log it or write it in the response)
 		// }
-		fmt.Println("Pictures:", result[0].PictureId)
+		fmt.Println("Pictures:", result[0].ImageId)
 		formatter.JSON(w, http.StatusOK, result)
 	}
 }
@@ -161,8 +160,8 @@ func pictureQueryByPictureId(formatter *render.Render) http.HandlerFunc {
 		session, _ := mgo.Dial(mongodb_server)
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
-		err:= session.DB("admin").Login(mongo_user, mongo_pass)
-		if err!=nil{
+		err := session.DB("admin").Login(mongo_user, mongo_pass)
+		if err != nil {
 			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
@@ -172,8 +171,8 @@ func pictureQueryByPictureId(formatter *render.Render) http.HandlerFunc {
 		//var picid string = request.PictureId
 		fmt.Println("pictureId: ", picid)
 		result := make([]Payload, 0, 10)
-		err = c.Find(bson.M{"PictureId":picid}).All(&result)
-		if err!=nil {
+		err = c.Find(bson.M{"PictureId": picid}).All(&result)
+		if err != nil {
 			formatter.JSON(w, http.StatusInternalServerError, " Internal Server Error")
 			return
 		}
@@ -193,19 +192,19 @@ func pictureQueryByUserId(formatter *render.Render) http.HandlerFunc {
 		session, _ := mgo.Dial(mongodb_server)
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
-		err:= session.DB("admin").Login(mongo_user, mongo_pass)
-		if err!=nil{
+		err := session.DB("admin").Login(mongo_user, mongo_pass)
+		if err != nil {
 			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		params := mux.Vars(req)
 		//var qryid string = params["queryId"]
-		var usrid string = params["userId"]
-		fmt.Println("UserId: ", usrid)
+		var userid string = params["userid"]
+		fmt.Println("UserId: ", userid)
 		result := make([]Payload, 10, 10)
-		err = c.Find(bson.M{"UserId":usrid}).All(&result)
-		if err!=nil {
+		err = c.Find(bson.M{"userid": userid}).All(&result)
+		if err != nil {
 			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
