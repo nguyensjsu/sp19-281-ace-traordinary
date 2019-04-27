@@ -20,6 +20,8 @@ func main() {
 	methodsOk := h.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 
 	router.HandleFunc("/images", UploadPictureHandler).Methods("POST")
+	router.HandleFunc("/images/:imageid", UpdatePictureHandler).Methods("PUT")
+	router.HandleFunc("/images/:imageid", DeletePictureHandler).Methods("DELETE")
 
 	fmt.Println("Starting server on port 3001...")
 	log.Fatal(http.ListenAndServe(":3001", h.CORS(headersOk, methodsOk, originsOk)(router)))

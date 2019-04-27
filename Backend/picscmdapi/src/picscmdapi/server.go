@@ -16,12 +16,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/codegangsta/negroni"
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/lithammer/shortuuid"
-	"github.com/mgechev/revive/formatter"
-	"github.com/unrolled/render"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -52,30 +48,6 @@ const BUCKETNAME = "cmpe281picassa"
 
 //FOLDERS3 FOLDERS3
 const FOLDERS3 = "pictures"
-
-func NewServer() *negroni.Negroni {
-	formatter := render.New(render.Options{
-		IndentJSON: true,
-	})
-	n := negroni.Classic()
-	router := mux.NewRouter()
-	initRoutes(router, formatter)
-	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
-	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"})
-	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
-
-	n.UseHandler(handlers.CORS(allowedHeaders, allowedMethods, allowedOrigins)(router))
-	return n
-}
-
-// API Routes
-func initRoutes(mx *mux.Router, formatter *render.Render) {
-	//mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
-	//mx.HandleFunc("/upload", UploadPictureHandler(formatter)).Methods("POST")
-	//	mx.HandleFunc("/update/{pictureId}", UpdateHandler(formatter)).Methods("PUT")
-	//	mx.HandleFunc("/delete/{pictureId}", deleteByPictureIdHandler(formatter)).Methods("DELETE")
-	//	mx.HandleFunc("/delete/{userId}", deleteByUserIdHandler(formatter)).Methods("DELETE")
-}
 
 // Helper Functions
 func failOnError(err error, msg string) {
@@ -129,7 +101,7 @@ func UploadPictureHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	defer file.Close()
-	log.Println(handler.Filename)
+
 	var newpic Picture
 	newpic.ImageId = shortuuid.New() + filepath.Ext(handler.Filename)
 	newpic.Description = req.FormValue("description")
@@ -156,98 +128,82 @@ func UploadPictureHandler(w http.ResponseWriter, req *http.Request) {
 
 }
 
-//UpdatePictureHandler API update i.e. change owner
-func UpdatePictureHandler(w http.ResponseWriter, req *http.Request) {
-	var updaterequest Payload
-	_ = json.NewDecoder(req.Body).Decode(&paymentdetail)
-	session, _ := mgo.Dial(mongodb_server)
-	defer session.Close()
-	session.SetMode(mgo.Monotonic, true)
-	err := session.DB("admin").Login(mongo_user, mongo_pass)
-	if err != nil {
-		formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
-		return
-	}
-	c := session.DB(mongodb_database).C(mongodb_collection)
-	params := mux.Vars(req)
-	var picid string = params["pictureId"]
-	var newusrid string = params["userId"]
-	fmt.Println(picid)
-	fmt.Println(newusrid)
-	var result PictureRequest
-	err = c.Find(bson.M{"pictureId": picid}).One(&result)
-	if err != nil {
-		fmt.Println("Picture not found")
-		formatter.JSON(w, http.StatusNotFound, "Picture Not Found")
-		return
-	}
-	result.RequestStatus = "Updated"
-	result.UserId = paymentdetail.UserId
-	c.Update(bson.M{"pictureId": picid}, bson.M{"$set": bson.M{"requestStatus": result.RequestStatus, "userId": result.UserId, "ipaddress": getIp()}})
-	fmt.Println("Request:", picid, usrid, "updated")
-	json.NewEncoder(w).Encode(result)
-}
-
-//DeletePictureHandler Deletes pictureby ID
+//DeletePictureHandler API update i.e. change owner
 func DeletePictureHandler(w http.ResponseWriter, req *http.Request) {
+	params := mux.Vars(req)
+	imageid := params["imageid"]
 	session, err := mgo.Dial(mongodb_server)
-	if err != nil {
+	/**if err := session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
 		formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
 		return
+	}**/
+	if err != nil {
+		panic(err)
 	}
 	defer session.Close()
-	if err := session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
-		formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
-		return
-	}
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodb_database).C(mongodb_collection)
-	var orderdetail RequiredPayload
-	_ = json.NewDecoder(req.Body).Decode(&orderdetail)
-	params := mux.Vars(req)
-	var picid string = params["pictureId"]
-	var result BurgerOrder
-	fmt.Println("User ID: ", usrid)
-	err = c.Find(bson.M{"commandId": uuid}).One(&result)
+	query := bson.M{"imageid": imageid}
+	var result Picture
+	err = c.Find(query).One(&result)
 	if err != nil {
-		fmt.Println("Command not found")
-		formatter.JSON(w, http.StatusNotFound, "Command Not Found")
-		return
+		log.Println("No Image Found")
 	}
-	for i := 0; i < len(result.Cart); i++ {
-		if result.Cart[i].ItemId == orderdetail.ItemId {
-			result.TotalAmount = result.TotalAmount - result.Cart[i].Price
-			result.Cart = append(result.Cart[0:i], result.Cart[i+1:]...)
-			break
+	if result.BuyerId != "" {
+		log.Println("Image is Sold so you cant Remove from Data Base")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("NOT a Valid Request"))
+	} else {
+		err = DeleteFromS3(imageid)
+		if err != nil {
+			log.Println("Error wile removing from Database")
 		}
+		err = c.Remove(query)
+		if err != nil {
+			log.Println("Error wile removing from S3Bucket")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("NOT a Valid Request"))
+		}
+		err = c.Remove(query)
+		if err != nil {
+			log.Println("Error wile removing from MongoDB")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("NOT a Valid Request"))
+		}
+		json.NewEncoder(w).Encode(map[string]string{"result": "success"})
 	}
-	c.Update(bson.M{"commandId": uuid}, bson.M{"$set": bson.M{"items": result.Cart, "totalAmount": result.TotalAmount, "ipaddress": getIp()}})
-	fmt.Println("Delete Item: ", orderdetail.ItemId, "from order", uuid)
-	formatter.JSON(w, http.StatusOK, result)
+
 }
 
-/**
-// API Delete all pictures owned by user userId
-func deleteByUserIdHandler(formatter *render.Render) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		session, err := mgo.Dial(mongodb_server)
-		defer session.Close()
-		if err := session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
-			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
-			return
-		}
-		session.SetMode(mgo.Monotonic, true)
-		c := session.DB(mongodb_database).C(mongodb_collection)
-		var orderdetail RequiredPayload
-		_ = json.NewDecoder(req.Body).Decode(&orderdetail)
-		fmt.Println("order ID: ", orderdetail.OrderId)
-		err = c.Remove(bson.M{"orderId": orderdetail.OrderId})
-		if err != nil {
-			fmt.Println("order not found")
-			formatter.JSON(w, http.StatusNotFound, "Order Not Found")
-			return
-		}
-		formatter.JSON(w, http.StatusOK, "Order: "+orderdetail.OrderId+" Deleted")
+//UpdatePictureHandler Deletes pictureby ID
+func UpdatePictureHandler(w http.ResponseWriter, req *http.Request) {
+	params := mux.Vars(req)
+	imageid := params["imageid"]
+	log.Println("imageid" + imageid)
+	var picture Picture
+	_ = json.NewDecoder(req.Body).Decode(&picture)
+	session, err := mgo.Dial(mongodb_server)
+	/**if err := session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
+		formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}**/
+	if err != nil {
+		panic(err)
 	}
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	c := session.DB(mongodb_database).C(mongodb_collection)
+	query := bson.M{"imageid": picture.ImageId}
+	err = c.Update(query, picture)
+	if err != nil {
+		log.Println("Error while Updating Document in UpdatePictureHandler Password")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("NOT a Valid Request"))
+	}
+	json.NewEncoder(w).Encode(map[string]string{"result": "success"})
 }
-**/
+
+//DeleteByUserIdHandler API Delete all pictures owned by user userId
+func DeleteByUserIdHandler(w http.ResponseWriter, req *http.Request) {
+
+}
