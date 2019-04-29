@@ -12,9 +12,6 @@ const options = [
     { key: 3, text: 'Choice 3', value: 3 },
 ]
 class Navigation extends Component {
-    state = {open: false}
-    show = dimmer => () => this.setState({dimmer, open: true})
-    close = () => this.setState({open: false})
 
     constructor(props) {
         super(props);
@@ -27,10 +24,8 @@ class Navigation extends Component {
     }
     
     render() {
-        const { open, dimmer } = this.state
         const {user} =this.props
-        const trigger = (<span><Image avatar src={user.profilepic} /> {user.firstname}</span>
-        )
+        const trigger = (<span><Image avatar src={user.profilepic} /> {user.firstname}</span>)
         return (
             <div>
             <div className="Navigation">
@@ -44,9 +39,7 @@ class Navigation extends Component {
                         <Link to={"/myimages"} className={"link"}>
                             <li>MyImages</li>
                         </Link>
-                        <li onClick={this.show('blurring')}>NewImage</li>
-
-
+                        <NewImage/>
                         <Dropdown   trigger={trigger} pointing='top left' icon={null}  >
                             <Dropdown.Menu>
                                 <Dropdown.Item><Link to={"/myprofile"} className={"link"}>
@@ -61,24 +54,7 @@ class Navigation extends Component {
                         </Dropdown>
 
                     </ul>
-
                 </div>
-                <Modal dimmer={dimmer} open={open} onClose={this.close}>
-                    <Modal.Header>Upload New Image</Modal.Header>
-                    <Modal.Content image>
-                        <NewImage/>
-                    </Modal.Content>
-                    <Modal.Actions>
-                        <Button color='red' onClick={this.close}>
-                            Cancel
-                        </Button>
-                        <Button
-                            color='green'
-                            content="Upload"
-                            onClick={this.close}
-                        />
-                    </Modal.Actions>
-                </Modal>
             </div>
             </div>
         );

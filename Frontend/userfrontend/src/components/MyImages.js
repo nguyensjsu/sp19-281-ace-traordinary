@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import {testimages} from "../resources/TestResourse"
 import '../css/myImages.css';
-
+import {getallmyimages} from '../actions/ImageAction'
 import ViewImage from "./ViewImage"
 import ImageCard from "./ImageCard";
+import connect from "react-redux/es/connect/connect";
 var imagecards=[]
 
 class MyImages extends Component {
@@ -15,25 +16,20 @@ class MyImages extends Component {
         this.state = {
             tracks: testimages,
             totalcount:50,
-            hasMoreItems: true,
+            hasMoreItems: false,
             nextHref: null
         };
         this.loadimages=this.loadimages.bind(this);
     }
-
+componentWillMount(){
+        this.props.getallmyimages(this.props.user.userid)
+}
     loadimages=(page)=> {
-        this.setState({
-            tracks:testimages
-        })
+
     }
     render() {
-
         const loader = <div className="loader">Loading ...</div>;
-        console.log("IN mY INag"+JSON.stringify(this.state.tracks));
-
-        this.state.tracks.map(image=>{
-            imagecards.push(<ImageCard imagesrc={image.imageurl} likecount={image.likecount} commentcount={image.comment} isliked={image.isliked} buyoption={false}/>)
-        })
+        imagecards=this.props.myimages.map(image=> <ImageCard  key={image.imageid} imagesrc={image.origurl} img={image}likecount={image.likecount} commentcount={image.comment} isliked={image.isliked} buyoption={false} />)
         return (
             <div className="MyImages">
                 <InfiniteScroll
@@ -50,5 +46,10 @@ class MyImages extends Component {
         );
     }
 }
-
-export default MyImages;
+function mapStateToProps(state) {
+    return{
+        myimages:state.images.myimages,
+        user:state.user
+    }
+}
+export default connect(mapStateToProps,{getallmyimages})(MyImages);

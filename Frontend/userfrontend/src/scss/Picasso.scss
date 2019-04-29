@@ -7,7 +7,10 @@ $white: #ffffff;
 .Imagecard:hover {
   background-color: rgba(192,192,192,0.3);
   .buy-button{
-display: inline-block;
+    display: inline-block;
+  }
+  .delete-icon{
+    display: inline-block;
   }
 }
 
