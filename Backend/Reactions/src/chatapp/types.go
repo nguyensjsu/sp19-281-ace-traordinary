@@ -17,6 +17,7 @@ type Message struct {
 	Status	string `json:"Status" omitempty bson:"Status,omitempty"`
 	Lastupdated time.Time `json:"Lastupdated" omitempty bson:"Lastupdated,omitempty"`
 	Users	map[string]bool  `json:"Users" omitempty`
+	ConversationId	string	`json:"ConversationId" omitempty bson:"ConversationId,omitempty"`
 
 }
 
