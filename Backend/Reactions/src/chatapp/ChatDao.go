@@ -5,6 +5,8 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"log"
+	"sort"
+	"strings"
 	"time"
 )
 
@@ -155,13 +157,14 @@ func loadConverstaion(userid string, receiverid string) ([]Message, bool){
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodbDatabase).C(Messages_Collection)
+	convId := getConversationId(userid,receiverid)
 	var messages []Message
 	fmt.Println( "Updating status messages for: ", userid )
-	users := []string{userid,receiverid}
+	//users := []string{userid,receiverid}
 	//matchQuery := bson.M{"UserId":userid,"Receiverid":"receiverid"}
-	match := bson.M{"$and" : []bson.M{bson.M{ "UserId": bson.M{"$in" : users}},bson.M{"Receiverid" : bson.M{"$in" : users}}}}
+	match := bson.M{"ConversationId":convId}
 	sortQuery1 := bson.M{"Time": -1 }
-	sortQuery2 := bson.M{"Time": 1 }
+	//sortQuery2 := bson.M{"Time": 1 }
 
 
 
@@ -169,7 +172,6 @@ func loadConverstaion(userid string, receiverid string) ([]Message, bool){
 		{"$match": match},
 		{"$sort" : sortQuery1},
 		{"$limit" : 5},
-		{"$sort": sortQuery2},
 	}
 
 	err = c.Pipe(pipeline).All(&messages)
@@ -179,5 +181,56 @@ func loadConverstaion(userid string, receiverid string) ([]Message, bool){
 	}
 
 	return messages,true
+
+}
+
+func updateSeenStatus(sender string,recver string, time2 time.Time) (string,bool){
+
+
+
+	fmt.Println("Entered LoginDao function  ")
+
+	session, err := mgo.Dial(mongodbServer)
+	if err != nil {
+	panic(err)
+	}
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	c := session.DB(mongodbDatabase).C(Messages_Collection)
+
+	fmt.Println( "Updating seen by the user : ",recver  )
+
+	query := bson.M{
+	"UserId": sender,
+	"Receiverid" : recver,
+	}
+
+	update := bson.M{
+	"$set": bson.M{
+	"Status": "Seen",
+	"Lastupdated": time2,
+	}}
+
+			err= c.Update(query,update)
+
+
+if err != nil {
+panic(err)
+return "",false
+}
+
+return getConversationId(sender,recver),true
+
+
+}
+
+func getConversationId(user1 string, user2 string) string{
+
+	arrayId := []string{strings.ToLower(user1),strings.ToLower(user2)}
+	sort.Strings(arrayId);
+	uniqueId := strings.Join(arrayId,"")
+	fmt.Println("conv id generated is ",uniqueId)
+	return uniqueId
+
 
 }
