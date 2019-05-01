@@ -25,7 +25,7 @@ export const testcomments=[{
 }]
 
 export const testimages=[
-    {imageurl:"https://i.pinimg.com/564x/ff/e2/90/ffe2903e3a21ed87ce59d1ef64f82f8b.jpg",imageid:"123DFECCDCD",likecount:25,comment:12,isliked:false},
+    {imageurl:"https://cmpe281picassa.s3.us-west-2.amazonaws.com/7uNLKsKDiVsGnFxcsN9iki.jpg",imageid:"123DFECCDCD",likecount:25,comment:12,isliked:false},
     {imageurl:"https://i.pinimg.com/564x/b4/51/0c/b4510ccb6b57ab59de1eb5a729d52922.jpg",imageid:"123frfDDDWE",likecount:208,comment:17,isliked:true},
     {imageurl:"https://i.pinimg.com/564x/57/1f/ad/571fad00eb6393c5470bf7b092d7d6f0.jpg",imageid:"1efvD23EDEC",likecount:907,comment:24,isliked:true},
     {imageurl:"https://i.pinimg.com/564x/0d/a0/a9/0da0a96686b491628ab48435f746678c.jpg",imageid:"EDCvfv123CF",likecount:66,comment:21,isliked:false},

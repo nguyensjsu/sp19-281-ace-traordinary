@@ -6,11 +6,21 @@ import (
 )
 
 type Message struct {
-	Userid    string `json:"userid"`
-	Username string `json:"username"`
-	Receiverid	string `json:"receiverid"`
-	Message  string `json:"message"`
+	Type	string `json:"Type" bson:"Type,omitempty"`
+	MessageId string `json:"MessageId" bson:"MessageId,omitempty"`
+	Userid    string `json:"UserId" omitempty bson:"UserId,omitempty"`
+	Username string `json:"Username" omitempty bson:"Username,omitempty"`
+	Receiverid	string `json:"Receiverid" omitempty bson:"Receiverid,omitempty"`
+	Message  string `json:"Message" omitempty bson:"Message,omitempty"`
+	Time 	time.Time  `json:"Time" omitempty bson:"Time,omitempty"`
+	//AddedUser string
+	Status	string `json:"Status" omitempty bson:"Status,omitempty"`
+	Lastupdated time.Time `json:"Lastupdated" omitempty bson:"Lastupdated,omitempty"`
+	Users	map[string]bool  `json:"Users" omitempty`
+	ConversationId	string	`json:"ConversationId" omitempty bson:"ConversationId,omitempty"`
+
 }
+
 
 type Client struct {
 	Pool *Pool
@@ -29,6 +39,7 @@ type Pool struct{
 	clients map[string]*Client
 	register chan *Client
 	unregister chan *Client
+	broadcast chan Message
 
 }
 
@@ -44,4 +55,6 @@ const (
 
 	// Maximum message size allowed from peer.
 	maxMessageSize = 512
+
+	onlineUsersPeriod = 60 * time.Second
 )

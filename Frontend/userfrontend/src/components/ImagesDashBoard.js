@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import '../css/imagedashboard.css';
 import ImageCard from "./ImageCard";
 import InfiniteScroll from 'react-infinite-scroller';
+import {getallimages} from '../actions/ImageAction'
 import {testimages} from "../resources/TestResourse"
+import connect from "react-redux/es/connect/connect";
 
 var imagecards=[]
 
@@ -11,25 +13,26 @@ class ImagesDashBoard extends Component {
         super(props);
 
         this.state = {
-            tracks: testimages,
-            totalcount:50,
+            totalcount:1000,
             hasMoreItems: true,
             nextHref: null
         };
         this.loadimages=this.loadimages.bind(this);
     }
-
+componentWillMount(){
+        this.props.getallimages(1)
+    this.setState({
+        hasMoreItems:false
+    })
+}
     loadimages=(page)=> {
-        this.setState({
-            tracks:testimages
-        })
+           this.props.getallimages(2)
     }
     render() {
         const loader = <div className="loader">Loading ...</div>;
-        let images  = testimages;
-        this.state.tracks.map(image=>{
-            imagecards.push(<ImageCard imagesrc={image.imageurl} likecount={image.likecount} commentcount={image.comment} isliked={image.isliked} buyoption={true}/>)
-         })
+        let allimages  = this.props.allimages;
+        imagecards= allimages.map(image=> <ImageCard key={image.imageid}  likecount={10} commentcount={10} isliked={true} img={image}/>
+         )
         return (
 
             <div className="ImagesDashBoard">
@@ -48,4 +51,9 @@ class ImagesDashBoard extends Component {
     }
 }
 
-export default ImagesDashBoard;
+function mapStateToProps(state) {
+    return{
+        allimages:state.images.allimages,
+    }
+}
+export default connect(mapStateToProps,{getallimages})(ImagesDashBoard);

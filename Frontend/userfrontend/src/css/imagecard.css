@@ -34,6 +34,18 @@ background-color: rgba(192,192,192,0.3);
     color: white;
     display: none;
 }
+.delete-icon{
+    padding: 5px;
+    font-weight: bold;
+    text-align: center;
+    position: absolute;
+    align-items: center;
+    left: 0px;
+    background-color: white;
+    top: 0px;
+    color: white;
+    display: none;
+}
 .like{
     background-color: blue;
 }

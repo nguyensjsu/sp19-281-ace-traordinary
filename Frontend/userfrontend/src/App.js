@@ -6,7 +6,7 @@ import BrowserRouter from "react-router-dom/es/BrowserRouter";
 import WebRouter from "./components/WebRouter"
 import Login from "./components/Login";
 import connect from "react-redux/es/connect/connect";
-
+import { Route, Redirect } from 'react-router'
 class App extends Component {
 
 
@@ -37,7 +37,7 @@ class App extends Component {
 
   render() {
     if(this.props.user.userid){
-        return (
+      return (
             <BrowserRouter>
                 <div className="App">
                     <WebRouter/>

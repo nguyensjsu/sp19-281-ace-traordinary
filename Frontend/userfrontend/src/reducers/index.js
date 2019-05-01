@@ -1,9 +1,10 @@
 import {combineReducers} from 'redux';
 import user from './UserReducer'
+import images from './ImageReducer'
 import {USER_LOGOUT} from "../actions/UserAction";
 
 const appReducer =combineReducers(
-    {user}
+    {user,images}
 );
 
 const rootReducer = (state, action) => {
