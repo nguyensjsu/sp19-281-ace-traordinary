@@ -1,5 +1,5 @@
 FROM golang:latest 
-EXPOSE 3000
+EXPOSE 8005
 RUN mkdir /app 
 ADD . /app/ 
 WORKDIR /app 

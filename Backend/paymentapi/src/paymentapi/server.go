@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/codegangsta/negroni"
-	//"encoding/json"
+	"encoding/json"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -118,8 +118,7 @@ func allOrdersHandler(formatter *render.Render) http.HandlerFunc {
 					Amount:    amount,
 					},
 				)
-				//fmt.Println(id, userid, imageid, paymentid, amount)
-				//log.Println(id, userid, imageid, paymentid, amount)
+				
 			}
 
 		}
@@ -139,11 +138,22 @@ func placeorderHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		decoder := json.NewDecoder(req.Body)
 
-		var data orderData
+		var data order
+		//var order order
 		err := decoder.Decode(&data)
 		if err != nil {
 			panic(err)
 		}
+
+		fmt.Println(data)
+		//insert, err := db.Query("insert into orders (userid, imageid, paymentid, amount, payment_method_id) 
+		//						VALUES(?,?,?,?,1);")
+
+    	// if there is an error inserting, handle it
+    	//if err != nil {
+       	//	 panic(err.Error())
+    	//}
+ 		//res, err = insert.Exec(id)
 
 	    fmt.Println("Successfuly inserted")
 
