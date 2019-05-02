@@ -10,9 +10,11 @@ import (
 	"github.com/unrolled/render"
 	"log"
 	"net/http"
+	"io/ioutil"
 )
 
 var mysql_connect = "root:cmpe281@tcp(localhost:3306)/cmpe281"
+//var mysql_connect = "cmpe281:cmpe281@tcp(10.0.2.230:3306)/cmpe281"
 
 // NewServer configures and returns a Server.
 func NewServer() *negroni.Negroni {
@@ -31,31 +33,7 @@ func init() {
 	db, err := sql.Open("mysql", mysql_connect)
 	if err != nil {
 		log.Fatal(err)
-	}/* else {
-		var (
-			id        int
-			userid    string
-			imageid   int
-			paymentid int
-			amount    float64
-		)
-		rows, err := db.Query("select id, userid, imageid, paymentid, amount from orders where id = ?", 1)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer rows.Close()
-		for rows.Next() {
-			err := rows.Scan(&id, &userid, &imageid, &paymentid, &amount)
-			if err != nil {
-				log.Fatal(err)
-			}
-			log.Println(id, userid, imageid, paymentid, amount)
-		}
-		err = rows.Err()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}*/
+	}
 	defer db.Close()
 
 }
@@ -84,8 +62,8 @@ func allOrdersHandler(formatter *render.Render) http.HandlerFunc {
 		var (
 			id         int
 			userid     string
-			imageid    int
-			paymentid  int
+			imageid    string
+			paymentid  string
 			amount     float64
 			created_on string
 		)
@@ -136,28 +114,68 @@ func allOrdersHandler(formatter *render.Render) http.HandlerFunc {
 
 func placeorderHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		decoder := json.NewDecoder(req.Body)
+		fmt.Println("Am I here?")
+		data, _ := ioutil.ReadAll(req.Body)
 
-		var data order
-		//var order order
-		err := decoder.Decode(&data)
+		
+
+		db, err := sql.Open("mysql", mysql_connect)
 		if err != nil {
 			panic(err)
 		}
 
-		fmt.Println(data)
-		//insert, err := db.Query("insert into orders (userid, imageid, paymentid, amount, payment_method_id) 
-		//						VALUES(?,?,?,?,1);")
+		defer db.Close()
 
-    	// if there is an error inserting, handle it
-    	//if err != nil {
-       	//	 panic(err.Error())
-    	//}
- 		//res, err = insert.Exec(id)
+		var order order
+		err = json.Unmarshal(data, &order)
+		fmt.Println(order)
+		
+		//err := decoder.Decode(&data)
 
-	    fmt.Println("Successfuly inserted")
+		if err != nil {
+			//panic(err)
+			fmt.Println(err)
+		}
 
-		params := mux.Vars(req)
-		fmt.Println(params)
+		
+	    if order.Imageid == "" || order.Userid == "" || order.Amount == 0 || order.Paymentid == "" {
+			formatter.JSON(w, http.StatusBadRequest, "Order Information Incomplete. Please send Imageid, userid,  amount, Paymentid")
+		} else {
+			insertStmt := "insert into orders (userid, imageid, paymentid, amount, payment_method_id) VALUES(?,?,?,?,1);"
+			ret , err := db.Exec(insertStmt, order.Userid, order.Imageid, order.Paymentid, order.Amount)	
+			if err !=nil {	
+				formatter.JSON(w, http.StatusInternalServerError, "Payment Failed")
+				panic(err)			
+				
+			} else {
+				formatter.JSON(w, http.StatusOK, "Payment Successful")
+				id, _ := ret.LastInsertId()
+
+				subject := "Payment Successful"
+				body := fmt.Sprintf(`Hi, <br>
+
+						The payment for order id: %d is successful.  Your purchase is complete.
+						Please save your order details:<br>
+						Order ID: %d
+						Image code: %s
+						Payment ID: %s`, 
+						 id, id, order.Imageid, order.Paymentid)
+					 
+				success := sendEmail(order.Userid, body, subject)
+				fmt.Println(success)
+			}
+		}
+
+
+		
+
+    	
 	}
+}
+
+func sendEmail(to string, body string, subject string) int  {
+	fmt.Println(to)
+	fmt.Println(subject)
+	fmt.Println(body)
+	return 1
 }
