@@ -39,6 +39,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/unlike/{ImageId}/{User}", imageUnlikeHandler(formatter)).Methods("DELETE")
 	mx.HandleFunc("/comment", imageCommentHandler(formatter)).Methods("POST")
 	mx.HandleFunc("/removecomment/{ImageId}", commentDeleteHandler(formatter)).Methods("DELETE")
+	mx.HandleFunc("like/image/{ImageId}/user/{User}", isImageLikedByUser(formatter)).Methods("GET")
 
 }
 
@@ -325,6 +326,52 @@ func getReactionList(imageId string) []Reaction {
 		return nil
 	}
 return result
+}
+
+
+func isImageLikedByUser(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+
+		session, err := mgo.Dial(mongodbServer)
+		if err != nil {
+			panic(err)
+		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(mongodbDatabase).C(COLLECTION)
+
+		params := mux.Vars(req)
+		var imageid  = params["ImageId"]
+		var userid  = params["User"]
+
+		fmt.Println( "Image ID: ", imageid )
+		fmt.Println( "User ID: ", userid )
+
+		type isLike struct {
+			isLiked bool
+		}
+		result := isLike{
+			isLiked: false,
+		}
+
+		query := bson.M{"imageId":imageid,"userId": userid,"reactionType":"Like"}
+
+		n, errin := c.Find(query).Count()
+		if errin != nil {
+			panic(err)
+		}
+
+		if n>0 {
+
+			result.isLiked= true
+
+		}
+
+		_ = json.NewDecoder(req.Body).Decode(&result)
+		fmt.Println("Reactions: ", result)
+		formatter.JSON(w, http.StatusOK, result)
+
+	}
 }
 
 //Helper method for returning likes

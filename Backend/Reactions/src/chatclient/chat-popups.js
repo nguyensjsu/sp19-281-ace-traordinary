@@ -192,6 +192,7 @@ $(document).on('keypress', 'textarea' , function(e) {
             var time = new Date();
             message.Message = msg;
             message.Time = time;
+            message.Type = "Text";
             console.log("imessage is",JSON.stringify(message));
             connection.send(JSON.stringify(message));
             $('<div class="msg-right">'+ userid + '@ ' + (time.getHours() < 10 ? '0'

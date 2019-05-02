@@ -64,7 +64,7 @@ func (c *Client) readerProcess() {
 	fmt.Println("in Reader");
 	defer func() {
 		c.Pool.unregister <- c
-		delete(Users, c.Clientid)
+		//delete(Users, c.Clientid)
 		var mesg Message
 		mesg.Type = "OnlineUsers"
 		mesg.Users = Users
@@ -263,6 +263,7 @@ fmt.Println("request is ",r);
 			client.send <- oldmesg
 
 		}
+
 
 
 	}

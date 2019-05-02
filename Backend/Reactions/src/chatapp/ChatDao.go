@@ -71,7 +71,7 @@ func readUnreadMessages(clientid string) ([]Message,bool) {
 	fmt.Println( "Fetching unread messages for: ", clientid )
 
 	var messages []Message
-	err = c.Find(bson.M{"Receiverid": clientid}).All(&messages)
+	err = c.Find(bson.M{"receiverid": clientid}).All(&messages)
 	if err!=nil {
 		fmt.Println( "Error: ", err )
 		return nil,false
@@ -159,7 +159,7 @@ func loadConverstaion(userid string, receiverid string) ([]Message, bool){
 	c := session.DB(mongodbDatabase).C(Messages_Collection)
 	convId := getConversationId(userid,receiverid)
 	var messages []Message
-	fmt.Println( "Updating status messages for: ", userid )
+	fmt.Println( "oadConverstaion(): ", userid )
 	//users := []string{userid,receiverid}
 	//matchQuery := bson.M{"UserId":userid,"Receiverid":"receiverid"}
 	match := bson.M{"ConversationId":convId}
