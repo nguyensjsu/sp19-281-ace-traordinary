@@ -27,22 +27,22 @@ var REGIONSES = "us-west-2"
 var REGISTRATIONEMAIL = "Registration Email From Picassa"
 
 //REGISTRATIONCONFIRMATIONTEMPLATE  After Successfull Payment
-var REGISTRATIONCONFIRMATIONTEMPLATE = "templates/registration_email.gohtml"
+var REGISTRATIONCONFIRMATIONTEMPLATE = "src/github.com/sp19-281-ace-traordinary/Backend/userapi/templates/registration_email.gohtml"
 
 //CONFIRMATIONEMAIL After Confirming user registration
 var CONFIRMATIONEMAIL = "Welcome to Picassa"
 
 //CONFIRMATIONTEMPLATE After Confirming user registration
-var CONFIRMATIONTEMPLATE = "templates/confirm_registation.gohtml"
+var CONFIRMATIONTEMPLATE = "src/github.com/sp19-281-ace-traordinary/Backend/userapi/templates/confirm_registation.gohtml"
 
 //PAYMENTCONFIRMATION After SuccesfulPayment
 var PAYMENTCONFIRMATION = "Payment Confirmation Picassa"
 
 //PAYMENTCONFIRMATIONTEMPLATE  After Successfull Payment
-var PAYMENTCONFIRMATIONTEMPLATE = "/github.com/sp19-281-ace-traordinary/Backend/userapi/templates/paymentconfirmation_email.gohtml"
+var PAYMENTCONFIRMATIONTEMPLATE = "src/github.com/sp19-281-ace-traordinary/Backend/userapi/templates/paymentconfirmation_email.gohtml"
 
 // FORGOTPASSWORD subject for forgot password
 var FORGOTPASSWORD = "Please Find your Temporary Password"
 
 //FORGOTPASSWORDTEMPLATE when user forgets password
-var FORGOTPASSWORDTEMPLATE = "/github.com/sp19-281-ace-traordinary/Backend/userapi/templates/forgot_password.gohtml"
+var FORGOTPASSWORDTEMPLATE = "src/github.com/sp19-281-ace-traordinary/Backend/userapi/templates/forgot_password.gohtml"

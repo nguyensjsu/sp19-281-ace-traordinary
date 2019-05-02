@@ -1,5 +1,6 @@
-package main
+//package main
 
+/**
 import (
 	"fmt"
 	"github.com/codegangsta/negroni"
@@ -68,3 +69,4 @@ func main(){
 //	}
 
 }
+**/

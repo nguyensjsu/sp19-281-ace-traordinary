@@ -72,10 +72,8 @@ func (c *Client) readerProcess() {
 		c.conn.Close()
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
-	fmt.Println("Reader 1")
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 
-	fmt.Println("Reader 2")
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	//fmt.Printf("Reader 2")
 	for {
@@ -88,31 +86,52 @@ func (c *Client) readerProcess() {
 			}
 			break
 		}
-		// msg.MessageId,_ := uuid.NewV4()
-		uid := uuid.NewV4()
-		msg.MessageId=uid.String()
-		msg.Status = "Sent"
-		msg.Lastupdated = time.Now()
-		if _,ok:= storeMessage(msg); ok{
-			var notif Message
-			notif.MessageId = msg.MessageId
-			notif.Type= "Notification"
-			notif.Userid = msg.Userid
-			notif.Receiverid = msg.Receiverid
-			notif.Status = "Sent"
-			notif.Time = msg.Lastupdated
-			c.send <- notif
-		}
-		fmt.Println("Message ",msg.Receiverid)
 
-		if recvClient, ok := c.Pool.clients[msg.Receiverid]; ok {
-			msg.Type ="Text"
-			recvClient.send <- msg
-		}else {
-			//store in uread table..
-			storeUnreadMessage(msg)
+		 if msg.Type == "Readreceipt" {
+			seenTime := time.Now()
+			 if convId, ok :=  updateSeenStatus(msg.Userid,msg.Receiverid,seenTime); ok{
+				 if senderToNotify, ok := c.Pool.clients[msg.Userid]; ok {
+					 var notif Message
+					 notif.MessageId = msg.MessageId
+					 notif.Type= "Notification"
+					 notif.Userid = msg.Receiverid
+					 notif.Receiverid = msg.Userid
+					 notif.Status = "Seen"
+					 notif.Time = seenTime
+					 notif.ConversationId = convId
+					 senderToNotify.send <- notif
+				 }
+			 }
+		 }else {
 
-		}
+			 // msg.MessageId,_ := uuid.NewV4()
+			 uid := uuid.NewV4()
+			 msg.MessageId = uid.String()
+			 msg.Status = "Sent"
+			 msg.Lastupdated = time.Now()
+			 msg.ConversationId = getConversationId(msg.Userid, msg.Receiverid)
+			 if _, ok := storeMessage(msg); ok {
+				 var notif Message
+				 notif.MessageId = msg.MessageId
+				 notif.Type = "Notification"
+				 notif.Userid = msg.Userid
+				 notif.Receiverid = msg.Receiverid
+				 notif.Status = "Sent"
+				 notif.Time = msg.Lastupdated
+				 notif.ConversationId = msg.ConversationId
+				 c.send <- notif
+			 }
+			 fmt.Println("Message ", msg.Receiverid)
+
+			 if recvClient, ok := c.Pool.clients[msg.Receiverid]; ok {
+				 msg.Type = "Text"
+				 recvClient.send <- msg
+			 } else {
+				 //store in uread table..
+				 storeUnreadMessage(msg)
+
+			 }
+		 }
 
 	}
 }
@@ -158,6 +177,7 @@ func (c *Client) writerProcess() {
 					notif.Receiverid = message.Receiverid
 					notif.Status = "Delivered"
 					notif.Time = updated_time
+					notif.ConversationId = message.ConversationId
 					sender.send <- notif
 				}
 			}

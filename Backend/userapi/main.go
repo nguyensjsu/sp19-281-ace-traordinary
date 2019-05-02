@@ -22,7 +22,8 @@ func main() {
 	router.HandleFunc("/users", handlers.ResendConfirmHandler).Methods("POST")
 	router.HandleFunc("/users/{userid}", handlers.ForgotPasswordrHandler).Methods("GET")
 	router.HandleFunc("/users", handlers.DeleteUserHandler).Methods("DELETE")
-	router.HandleFunc("/users/test", handlers.TestHandler).Methods("POST")
+	//Below routers are not into the business they are for testing
+	router.HandleFunc("/test", handlers.TestHandler).Methods("POST")
 	router.HandleFunc("/ping", handlers.PingHandler).Methods("GET")
 
 	fmt.Println("Starting server on port 8000...")
