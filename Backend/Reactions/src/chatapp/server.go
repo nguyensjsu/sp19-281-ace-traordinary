@@ -99,11 +99,12 @@ func (c *Client) readerProcess() {
 					 notif.Status = "Seen"
 					 notif.Time = seenTime
 					 notif.ConversationId = convId
-					 senderToNotify.send <- notif
+					 senderToNotify.notifications <- notif
+					 fmt.Println("Sending sent notify, Seen")
 				 }
 			 }
 		 }else {
-
+			 fmt.Println("Message ", msg.Receiverid)
 			 // msg.MessageId,_ := uuid.NewV4()
 			 uid := uuid.NewV4()
 			 msg.MessageId = uid.String()
@@ -119,11 +120,20 @@ func (c *Client) readerProcess() {
 				 notif.Status = "Sent"
 				 notif.Time = msg.Lastupdated
 				 notif.ConversationId = msg.ConversationId
-				 c.send <- notif
+				 fmt.Println("Sending sent notify, Sent")
+				 select{
+					 case c.notifications <- notif:
+						 fmt.Println("Sent to notif channel")
+				 default:
+
+				 }
+				// c.notifications <- notif
+				 fmt.Println("Sending sent notify2")
 			 }
 			 fmt.Println("Message ", msg.Receiverid)
 
 			 if recvClient, ok := c.Pool.clients[msg.Receiverid]; ok {
+
 				 msg.Type = "Text"
 				 recvClient.send <- msg
 			 } else {
@@ -150,7 +160,7 @@ func (c *Client) writerProcess() {
 	for {
 		select {
 		case message, ok := <-c.send:
-			fmt.Println("in writer message is ",ok)
+			fmt.Println("in writer message is ",message.Type)
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// The hub closed the channel.
@@ -161,27 +171,50 @@ func (c *Client) writerProcess() {
 			c.conn.NextWriter(websocket.TextMessage)
 
 			//w.WriteJSON(message)
-			fmt.Println("writer 1", message)
+			fmt.Println("writer 1", message.Type)
 			error := c.conn.WriteJSON(message)
 			if error != nil {
 				panic(error);
 			}
+			if message.Type == "Text" {
+				updated_time := time.Now()
+				if _, ok := updateConversations(message.MessageId, "Delivered", updated_time); ok {
+					if sender, ok := c.Pool.clients[message.Userid]; ok {
+						var notif Message
+						notif.MessageId = message.MessageId
+						notif.Type = "Notification"
+						notif.Userid = message.Userid
+						notif.Receiverid = message.Receiverid
+						notif.Status = "Delivered"
+						notif.Time = updated_time
+						notif.ConversationId = message.ConversationId
+						select {
+							case sender.notifications <- notif:
+						default:
 
-			updated_time := time.Now()
-			if _,ok :=updateConversations(message.MessageId, "Delivered", updated_time); ok {
-				if sender, ok := c.Pool.clients[message.Userid]; ok {
-					var notif Message
-					notif.MessageId = message.MessageId
-					notif.Type = "Notification"
-					notif.Userid = message.Userid
-					notif.Receiverid = message.Receiverid
-					notif.Status = "Delivered"
-					notif.Time = updated_time
-					notif.ConversationId = message.ConversationId
-					sender.send <- notif
+						}
+					}
 				}
 			}
 			//c.conn.WriteMessage(websocket.TextMessage, message)
+		case notifMessage, ok := <-c.notifications:
+
+			fmt.Println("in NOTIFICATION is ",notifMessage.Type)
+			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if !ok {
+				// The hub closed the channel.
+				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+				return
+			}
+
+			c.conn.NextWriter(websocket.TextMessage)
+
+			//w.WriteJSON(message)
+			fmt.Println("writer 1", notifMessage.Type)
+			error := c.conn.WriteJSON(notifMessage)
+			if error != nil {
+				panic(error);
+			}
 
 
 		case <-ticker.C:
@@ -210,7 +243,7 @@ fmt.Println("request is ",r);
 		log.Println(err)
 		return
 	}
-	client := &Client{Pool: Pool, conn: conn, send: make(chan Message), Clientid:id}
+	client := &Client{Pool: Pool, conn: conn, send: make(chan Message), notifications: make(chan Message), Clientid:id}
 	fmt.Println("client is ",client);
 	client.Pool.register <- client
 	Users[client.Clientid] = true
