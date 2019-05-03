@@ -80,8 +80,10 @@ Ramya
 
 Nasrajan
 ----------
-
-Created the DB design for the payment api and set up the go environment. Checked different payment gateways.The option for block chain was also discussed in the group. Since the scope of the project covers mostly the backend technologies, I have shortlisted stripe for the payment implementation.
+* Created the DB design for the payment api and set up the go environment. 
+* Checked different payment gateways. 
+* The option for block chain was also discussed in the group. 
+* Since the scope of the project covers mostly the backend technologies, I have shortlisted stripe for the payment implementation.
 
 
 
@@ -95,9 +97,10 @@ Ramya
 
 Nasrajan
 ---------
-* Created the Payment API methods. C
+* Created the Payment API methods. 
+* React App for Credit Card forms and the node js server for Stripe handling.
 * Created the MySQL database and tables. 
-* Tested everything on EC2 + Docker. 
+* Tested the setup on EC2 + Docker. 
 * Waiting for the other parts to finish to do the end to end testing.
 
 Masi
@@ -140,7 +143,9 @@ Masi
 -----
 
 
-
+### Week 6: 4/27 - 5/3 : Final Integrations and Demo
+* Project was demoed in the Student Union. 
+* Discussed things that didn't work and things that we had to change on the fly.
 
 
 - 
