@@ -3,24 +3,26 @@ import ImageBlockChain from "./ImageBlockChain";
 import Payment from "./Payment";
 import {Image ,Grid,Icon} from "semantic-ui-react"
 import {Link} from "react-router-dom";
+import connect from "react-redux/es/connect/connect";
+import {viewimage} from "../actions/ImageAction";
 class BuyImage extends Component {
     
     
     constructor(props){
         super(props)
         this.state={
-            imgurl:""
+            imgurl:"",
+            img:{}
         }
     }
-    componentDidMount(){
-        const {imageurl} = this.props.location.state
+    componentWillMount(){
+        const {imageurl,img} = this.props.location.state
         this.setState({
-            imgurl:imageurl
+            imgurl:imageurl,
+            img:img
         })
     }
     render() {
-       // const { imageurl } = this.props.match.params
-        console.log(this.state.imgurl)
         return (
             <div className="BuyImage">
                 <div className={"BuyImageSecond"}>
@@ -32,7 +34,7 @@ class BuyImage extends Component {
                 <Image classNmae='card-image' src={this.state.imgurl} size='medium' rounded />
                     </Grid.Column>
                         <Grid.Column>
-                <ImageBlockChain/>
+                <ImageBlockChain description={this.state.img.description}/>
                         </Grid.Column>
                             <Grid.Column>
                 <Payment/>
@@ -44,5 +46,9 @@ class BuyImage extends Component {
         );
     }
 }
-
-export default BuyImage;
+function mapStateToProps(state) {
+    return {
+        image: state.images.viewingimage,
+    }
+}
+export default connect(mapStateToProps, {})(BuyImage);

@@ -9,7 +9,7 @@ export const GETREACTION ="GETREACTION"
 
 
 export const likeimage= async (data)=>{
-    const response = await axios.post(`${BLOCKCHAIN_ROOTURL}/images`, data);
+    const response = await axios.post(`${LIKECOMMENT_ROOTURL}/images`, data);
     let reaction =response.data;
     const action={
         type:LIKEIMAGE,
@@ -18,7 +18,7 @@ export const likeimage= async (data)=>{
     return action;
 }
 export const comment= async (data)=>{
-    const response = await axios.post(`${BLOCKCHAIN_ROOTURL}/images`, data);
+    const response = await axios.post(`${LIKECOMMENT_ROOTURL}/images`, data);
     let reaction =response.data;
     const action={
         type:COMMENTIMAGE,
@@ -28,7 +28,7 @@ export const comment= async (data)=>{
 }
 
 export const getreaction = async (imageid)=>{
-    const response = await axios.get(`${BLOCKCHAIN_ROOTURL}/images`,{
+    const response = await axios.get(`${LIKECOMMENT_ROOTURL}/images`,{
         params:{
             imageid:imageid
         }
@@ -44,7 +44,7 @@ export const getreaction = async (imageid)=>{
 }
 
 export const deletecomment = async (data)=>{
-    const response = await axios.delete(`${BLOCKCHAIN_ROOTURL}/images`,{
+    const response = await axios.delete(`${LIKECOMMENT_ROOTURL}/images`,{
         params:{
             imageid:data.imageid,
             commentid:data.commentid,

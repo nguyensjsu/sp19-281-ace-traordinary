@@ -6,11 +6,13 @@ export const GETIMAGE="GETIMAGE"
 export const GETALLIMAGES="GETALLIMAGES"
 export const GETALLMYIMAGES="GETALLMYIMAGES"
 export const DELETEIMAGE="DELETEIMAGE"
-
-export const addimage = async (imagedata)=> {
+export const VIEWIMAGE="VIEWIMAGE"
+export const addimage = async (imagedata,inclass)=> {
     console.log("In ADD image")
     console.log(imagedata)
-    const response = await axios.post(`${IMAGE_CMDURL}/images`, {
+    let url=`${IMAGE_CMDURL}/images`
+    const response = await axios({method: 'post',
+        url: url,
         data: imagedata,
         config: { headers: {'Content-Type': 'multipart/form-data' }}
     }).catch(function (error) {
@@ -23,6 +25,7 @@ export const addimage = async (imagedata)=> {
     if (response == undefined) {
         resimage = undefined;
     }else{
+        inclass.close();
         resimage=response.data
     }
     console.log(JSON.stringify(resimage))
@@ -39,12 +42,11 @@ export const getallimages = async (pagenumber)=> {
         }
     }).catch(function (error) {
         if (error.response) {
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            console.log("Error in get all Images");
         }
     });
     let allimages;
-    if (response == undefined) {
+    if (response === undefined) {
     allimages = [];
      }else{
         allimages=response.data
@@ -59,12 +61,11 @@ export const getallimages = async (pagenumber)=> {
 export const getallmyimages = async (userid)=> {
     const response = await axios.get(`${IMAGE_ROOTURL}/users/${userid}/pictures`).catch(function (error) {
         if (error.response) {
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            console.log("Error in get all My images");
         }
     });
     let myimages;
-    if (response == undefined) {
+    if (response ===undefined) {
         myimages = [];
     }else{
         myimages=response.data
@@ -89,4 +90,10 @@ export const deleteimage = async (imageid)=> {
         imageid
     }
     return action;
+}
+export const viewimage=(image)=>{
+    const action={
+        type:VIEWIMAGE,
+        image
+    }
 }
