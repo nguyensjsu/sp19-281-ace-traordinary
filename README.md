@@ -17,10 +17,20 @@ This is the GitHub repository for the final project of CMPE-281 Cloud Technologi
 - Final Project Report [[Link]](https://docs.google.com/document/d/1XapQTQ9ASTv0dynM6l-vwouOpOWAlX07A3syy0WJtpE/edit?usp=sharing)
 - Project Journal & Documentation [[Link]](https://github.com/nguyensjsu/sp19-281-ace-traordinary/tree/master/docs)
 
-## Deployment Endpoint:
-- The frontend Nodejs App is deployed on Heroku [[Link]]
+## Deployment Endpoints:
+- The frontend Nodejs App is deployed to Heroku [[Link]]()
+- The Kong API Gateway is deployed on AWS [[Link]]()
+- The backend microservices are load-balanced and deployed on AWS:
+  - User Service ELB [[Link]]()
+  - Picture Command Service ELB [[Link]]()
+  - Picture Query Service ELB [[Link]]()
+  - Payment Service ELB [[Link]]()
+  - Reactions Service ELB [[Link]]()
 
 ## Deployment Instructions
+### Frontend App
+
+### Backend Microservices
 
 
 ## Design Features
