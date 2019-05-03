@@ -7,7 +7,7 @@ This is the GitHub repository for the final project of CMPE-281 Cloud Technologi
 ## Team
 - [Raviteja Kommalapati](https://github.com/RAVITEJAKOMMALAPATI20)
 - [Ramya Dharwada](https://github.com/RamyaDharwada)
-- [Nasrajan ](https://github.com/nasrajan)
+- [Nasrajan Jalin](https://github.com/nasrajan)
 - [Masi Nazarian](https://github.com/Masea)
 
 ## Links
