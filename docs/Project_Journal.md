@@ -26,9 +26,11 @@ The Pictures service is implemented using CQRS / ES architecture. The reason for
 - Pictures Query Service: is responsible for READ requests to the Pictures database
 - Reactions Service: is responsible for managing user reactions on pictures
 
+### Command-Query Responsibility Segregation
+
+CQRS segregates an application into two parts: Commands to perform an action to change the state of aggregates, and Queries to provide a query model for the views of aggregates. 
 
 ### Brainstorm on Project Ideas
-
 
 https://www.linux.com/news/7-essential-open-source-devops-projects  -- Something to explore and adapt ideas from.
 
