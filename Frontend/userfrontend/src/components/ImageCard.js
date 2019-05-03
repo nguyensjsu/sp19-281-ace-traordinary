@@ -31,7 +31,16 @@ constructor(props){
         axios.get(url)
             .then(res => {
                 const likes = res.data.Likes;
-                this.setState({ likes:likes,likecount:likes.length });
+                const comments = res.data.Comments
+                let likeslength=0;
+                if(likes!==undefined){
+                    likeslength=likes.length;
+                }
+                let commentslength=0;
+                if(comments!==undefined)
+                    commentslength=comments.length
+                console.log("this are comments",res.data)
+                this.setState({ likes:likes,likecount:likeslength,comments:comments,commentcount:commentslength });
             }).catch(err=>{
             console.log("No data Available")
         });
@@ -96,7 +105,8 @@ constructor(props){
                     <Link to={{pathname:'/images/comment',
                         state:{
                             imageurl:img.origurl,
-                            img:img
+                            img:img,
+                            comments:this.state.comments
                         }
                     }} className={"link"}>
                         <div className={"comment-container"}><span><Icon className="comment outline" ></Icon> {this.state.commentcount}</span></div></Link>

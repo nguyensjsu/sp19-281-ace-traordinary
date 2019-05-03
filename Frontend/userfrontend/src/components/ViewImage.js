@@ -4,7 +4,11 @@ import {Image,Grid,TextArea,Form,Button,Icon } from "semantic-ui-react"
 import {testcomments} from '../resources/TestResourse'
 import {Link} from "react-router-dom";
 import ImageBlockChain from "./ImageBlockChain";
-import {deleteimage,a} from '../actions/ImageAction'
+import {deleteimage, a, viewimage} from '../actions/ImageAction'
+import {LIKECOMMENT_ROOTURL}from "../resources/constants"
+import axios from "axios";
+import connect from "react-redux/es/connect/connect";
+
 class ViewImage extends Component {
 
 
@@ -13,29 +17,51 @@ class ViewImage extends Component {
         this.state={
             imgurl:"https://i.pinimg.com/236x/4d/f8/58/4df85823d89a34522dabf8dd49cdfbd8.jpg",
             img:{},
-            newcomment:""
+            newcomment:"",
+            comments:[]
         }
         this.comment=this.comment.bind(this);
+        this.deletecomment=this.deletecomment.bind(this);
+        this.handleChange =this.handleChange.bind(this);
     }
 
-    componentDidMount(){
-        const {imageurl,img} = this.props.location.state
+    componentWillMount(){
+        const {imageurl,img,comments} = this.props.location.state
         this.setState({
             imgurl:imageurl,
-            img:img
+            img:img,
+            comments:comments
+        })
+    }
+    handleChange(event){
+        this.setState({[event.target.name]:event.target.value})
+    }
+    deletecomment(comments){
+        this.setState({
+            comments:comments
         })
     }
     comment(){
         if(this.state.newcomment.length>5){
-
+            let url=`${LIKECOMMENT_ROOTURL}/comment`;
+            let reqdata={
+                image_id:this.state.img.imageid,
+                userid:this.props.user.userid,
+                username:this.props.user.firstname,
+                comment:this.state.newcomment}
+            axios.post(url,reqdata).then(res=>{
+                let comments=res.data.Comments;
+                this.setState({comments:comments})
+                console.log("New Comment Respose"+res.data)
+            })
         }
     }
     render() {
-
-        let comments=testcomments;
-        
-        let commentslist =comments.map(comment=>{
-           return <><Comment name ={comment.name} timestamp={comment.timestamp}comment={comment.comment}/><hr/></>
+        let commentslist;
+        let comments=this.state.comments;
+        if(comments!==undefined)
+         commentslist =comments.map(comment=>{
+           return <><Comment key={comment.CommentId}comment ={comment} userid={this.props.user.userid}imageid={this.state.img.imageid} deletecomment={this.deletecomment}/><hr/></>
         })
         return (
             <div className="ViewImage">
@@ -54,9 +80,9 @@ class ViewImage extends Component {
                             {commentslist}
                             </div>
                             <Form>
-                                <TextArea placeholder='Your Comment goes here' style={{ minHeight: 100 }} />
+                                <TextArea placeholder='Your Comment goes here' style={{ minHeight: 100 }} name={"newcomment"} onChange={this.handleChange}/>
                             </Form>
-                            <Button primary>Comment</Button>
+                            <Button primary onClick={this.comment}>Comment</Button>
                         </Grid.Column>
 
 
@@ -68,5 +94,9 @@ class ViewImage extends Component {
         );
     }
 }
-
-export default ViewImage;
+function mapStateToProps(state) {
+    return{
+        user:state.user
+    }
+}
+export default connect(mapStateToProps,{})(ViewImage);
