@@ -22,7 +22,7 @@ func main() {
 	router.HandleFunc("/images", UploadPictureHandler).Methods("POST")
 	router.HandleFunc("/images/:imageid", UpdatePictureHandler).Methods("PUT")
 	router.HandleFunc("/images/{imageid}", DeletePictureHandler).Methods("DELETE")
-
+	router.HandleFunc("/picscmd/ping", PingHandler).Methods("GET")
 	fmt.Println("Starting server on port 8001...")
 	log.Fatal(http.ListenAndServe(":8001", h.CORS(headersOk, methodsOk, originsOk)(router)))
 }

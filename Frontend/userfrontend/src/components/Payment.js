@@ -7,9 +7,13 @@ class Payment extends Component {
         return (
             <StripeProvider apiKey="pk_test_TYooMQauvdEDq54NiTphI7jx">
             <div className="Payment">
+<<<<<<< Updated upstream
                 <Elements>
               <CheckoutForm/>
                 </Elements>
+=======
+                
+>>>>>>> Stashed changes
             </div>
             </StripeProvider>
         );

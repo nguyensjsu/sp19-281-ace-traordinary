@@ -16,6 +16,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/golang/glog"
 	"github.com/gorilla/mux"
 	"github.com/lithammer/shortuuid"
 	"gopkg.in/mgo.v2"
@@ -76,20 +77,22 @@ func getIp() string {
 }
 
 // API Ping Handler
-func pingHandler(w http.ResponseWriter, req *http.Request) {
+func PingHandler(w http.ResponseWriter, req *http.Request) {
 	message := "Picture write command API Server Working on machine: " + getIp()
+
 	json.NewEncoder(w).Encode(map[string]string{"result": message})
 }
 
 //UploadHandler upload new image to s3 and store data to MongoDB
 func UploadPictureHandler(w http.ResponseWriter, req *http.Request) {
+	glog.Info("Inside PICSCMDAPI UploadPictureHandler", req)
 	session, err := mgo.Dial(mongodb_server)
 	/**if err := session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
 		formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}**/
 	if err != nil {
-		panic(err)
+		glog.Error("Error in creating MongoDB session", err)
 	}
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
@@ -97,7 +100,7 @@ func UploadPictureHandler(w http.ResponseWriter, req *http.Request) {
 
 	file, handler, err := req.FormFile("myfile")
 	if err != nil {
-		log.Println("Error in uploading the file")
+		glog.Error("Error in uploading the file", err)
 		return
 	}
 	defer file.Close()
@@ -112,16 +115,24 @@ func UploadPictureHandler(w http.ResponseWriter, req *http.Request) {
 	//Inserting file to S3 Bucket
 	res := InsertIntoS3(newpic.ImageId, file)
 	if res == "" {
+		glog.Info("NOT a Valid Request")
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("NOT a Valid Request"))
 	} else {
 		newpic.OrigUrl = res
 		err = c.Insert(newpic)
 		if err != nil {
-			log.Println("Exception inserting data to Database")
+			glog.Error("Exception inserting data to Database", err)
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("NOT a Valid Request"))
 		} else {
+			glog.Info("Exit PICSCMDAPI UploadPictureHandler response", newpic)
+			//	parent := context.Background()
+			//value, err := json.Marshal(newpic)
+			if err != nil {
+				glog.Error("Error in Marshaling data before sendding to kafka channel")
+			}
+			//Push(parent, nil, value)
 			json.NewEncoder(w).Encode(newpic)
 		}
 	}
@@ -130,6 +141,7 @@ func UploadPictureHandler(w http.ResponseWriter, req *http.Request) {
 
 //DeletePictureHandler API update i.e. change owner
 func DeletePictureHandler(w http.ResponseWriter, req *http.Request) {
+	glog.Info("Inside PICSCMDAPI DeletePictureHandler", req)
 	params := mux.Vars(req)
 	imageid := params["imageid"]
 	session, err := mgo.Dial(mongodb_server)
@@ -138,7 +150,7 @@ func DeletePictureHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}**/
 	if err != nil {
-		panic(err)
+		glog.Error("Error in creating the session", err)
 	}
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
@@ -168,7 +180,7 @@ func DeletePictureHandler(w http.ResponseWriter, req *http.Request) {
 func UpdatePictureHandler(w http.ResponseWriter, req *http.Request) {
 	params := mux.Vars(req)
 	imageid := params["imageid"]
-	log.Println("PicscmdApi In UpdatePictureHandler ImageID" + imageid)
+	log.Println("PicsIn UpdatePictureHandler ImageID" + imageid)
 	var picture Picture
 	_ = json.NewDecoder(req.Body).Decode(&picture)
 	session, err := mgo.Dial(mongodb_server)

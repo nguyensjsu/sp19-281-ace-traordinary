@@ -4,16 +4,17 @@ import (
 	//"database/sql/driver"
 	"encoding/json"
 	"fmt"
-	"github.com/codegangsta/negroni"
-	"github.com/gorilla/mux"
-	"github.com/unrolled/render"
 	"net/http"
+	"time"
+
+	"github.com/codegangsta/negroni"
+	"github.com/golang/glog"
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
+	uuid "github.com/satori/go.uuid"
+	"github.com/unrolled/render"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"time"
-	"github.com/satori/go.uuid"
-	//"github.com/sp19-281-ace-traordinary/Backend/Reactions"
-
 )
 
 //MongoDB connection details
@@ -28,7 +29,10 @@ func NewServer() *negroni.Negroni {
 	n := negroni.Classic()
 	mx := mux.NewRouter()
 	initRoutes(mx, formatter)
-	n.UseHandler(mx)
+	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"})
+	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
+	n.UseHandler(handlers.CORS(allowedHeaders, allowedMethods, allowedOrigins)(mx))
 	return n
 }
 
@@ -36,10 +40,10 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/reaction/{ImageId}", imageReactionHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/like", imageLikeHandler(formatter)).Methods("POST")
-	mx.HandleFunc("/unlike/{ImageId}/{User}", imageUnlikeHandler(formatter)).Methods("DELETE")
+	mx.HandleFunc("/unlike/{imageid}/{userid}", imageUnlikeHandler(formatter)).Methods("DELETE")
 	mx.HandleFunc("/comment", imageCommentHandler(formatter)).Methods("POST")
 	mx.HandleFunc("/removecomment/{ImageId}", commentDeleteHandler(formatter)).Methods("DELETE")
-
+	mx.HandleFunc("/images/{imageid}/user/{userid}", isImageLikedByUser(formatter)).Methods("GET")
 }
 
 //Ping Handler
@@ -53,7 +57,7 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 //API handler for GET reactions for Image..
 func imageReactionHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		fmt.Println("Request: ", req)
+		glog.Info("Entered imageReactionHandler")
 		session, err := mgo.Dial(mongodbServer)
 		if err != nil {
 			panic(err)
@@ -63,8 +67,7 @@ func imageReactionHandler(formatter *render.Render) http.HandlerFunc {
 
 		params := mux.Vars(req)
 		var imageid string = params["ImageId"]
-		fmt.Println("Image ID: ", imageid)
-
+		glog.Info("Incoming data", imageid)
 		var likes []Likes
 		var comments []Comments
 
@@ -76,12 +79,12 @@ func imageReactionHandler(formatter *render.Render) http.HandlerFunc {
 				_ = formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
-		_ = formatter.JSON(w, http.StatusNotFound, "This picture Id does not exist anymore.")
-		return
-	}
+			_ = formatter.JSON(w, http.StatusNotFound, "This picture Id does not exist anymore.")
+			return
+		}
 
 		var reactions ImageReaction
-		reactions.Imageid=imageid
+		reactions.Imageid = imageid
 		if len(likes) != 0 {
 			reactions.Likes = likes
 		}
@@ -99,9 +102,10 @@ func imageReactionHandler(formatter *render.Render) http.HandlerFunc {
 //API to update like
 func imageLikeHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-
-		fmt.Println("Request: ", req.URL.Query())
-		fmt.Println("Request Param: ", req.URL.Query().Get("imageId"))
+		glog.Info("Entered imageLikeHandler")
+		var reaction Reaction
+		_ = json.NewDecoder(req.Body).Decode(&reaction)
+		glog.Info("Incoming data", reaction)
 		session, err := mgo.Dial(mongodbServer)
 		if err != nil {
 			panic(err)
@@ -110,19 +114,8 @@ func imageLikeHandler(formatter *render.Render) http.HandlerFunc {
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
 		c := session.DB(mongodbDatabase).C(COLLECTION)
-
-		var imageid string = req.URL.Query().Get("imageId")
-		var userid= req.URL.Query().Get("userId")
-		var username= req.URL.Query().Get("userName")
-		fmt.Println("Image ID: ", imageid)
-		fmt.Println("User ID: ", userid)
-
 		var result []Likes
-		var reaction Reaction
-		reaction.Image_id = imageid
 		reaction.Reaction_type = "Like"
-		reaction.UserId = userid
-		reaction.Username = username
 		reaction.Timestamp = time.Now()
 
 		errin := c.Insert(reaction)
@@ -130,9 +123,9 @@ func imageLikeHandler(formatter *render.Render) http.HandlerFunc {
 			panic(err)
 		}
 
-		result, err = getLikesList(imageid)
+		result, err = getLikesList(reaction.Image_id)
 		var reactions ImageReaction
-		reactions.Imageid = imageid
+		reactions.Imageid = reaction.Image_id
 
 		if result == nil {
 			if err != nil {
@@ -144,15 +137,15 @@ func imageLikeHandler(formatter *render.Render) http.HandlerFunc {
 		}
 		reactions.Likes = result
 		_ = json.NewDecoder(req.Body).Decode(&reactions)
-		fmt.Println("Reactions: ", reactions)
+		glog.Info("Reactions: ", reactions)
 		_ = formatter.JSON(w, http.StatusOK, reactions)
 	}
 }
 
-//API to update the unlike
-func imageUnlikeHandler(formatter *render.Render) http.HandlerFunc {
+//Image like
+func isImageLikedByUser(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-
+		glog.Info("Inside isImageLikedByUser")
 		session, err := mgo.Dial(mongodbServer)
 		if err != nil {
 			panic(err)
@@ -162,35 +155,76 @@ func imageUnlikeHandler(formatter *render.Render) http.HandlerFunc {
 		c := session.DB(mongodbDatabase).C(COLLECTION)
 
 		params := mux.Vars(req)
-		var imageid  = params["ImageId"]
-		var userid  = params["User"]
+		var imageid = params["imageid"]
+		var userid = params["userid"]
+		glog.Info("Incoming Data", imageid, userid)
 
-		fmt.Println( "Image ID: ", imageid )
-		fmt.Println( "User ID: ", userid )
+		type isLike struct {
+			isliked bool
+		}
+		result := isLike{
+			isliked: false,
+		}
+
+		query := bson.M{"imageId": imageid, "userId": userid, "reactionType": "Like"}
+
+		n, errin := c.Find(query).Count()
+		if errin != nil {
+			panic(err)
+		}
+
+		if n > 0 {
+
+			result.isliked = true
+
+		}
+
+		_ = json.NewDecoder(req.Body).Decode(&result)
+		glog.Info("Response sending ", result)
+		formatter.JSON(w, http.StatusOK, result.isliked)
+	}
+}
+
+//API to update the unlike
+func imageUnlikeHandler(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		glog.Info("Inside imageUnlikeHandler")
+		session, err := mgo.Dial(mongodbServer)
+		if err != nil {
+			panic(err)
+		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(mongodbDatabase).C(COLLECTION)
+
+		params := mux.Vars(req)
+		var imageid = params["imageid"]
+		var userid = params["userid"]
+		glog.Info("Incomingdata", imageid, userid)
 
 		var likes []Likes
-		query := bson.M{"imageId":imageid,"userId": userid,"reactionType":"Like"}
+		query := bson.M{"imageId": imageid, "userId": userid, "reactionType": "Like"}
 
 		errin := c.Remove(query)
 		if errin != nil {
 			panic(err)
 		}
-		likes,err = getLikesList(imageid)
-		if likes==nil {
-			if err!=nil{
-				_=formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+		likes, err = getLikesList(imageid)
+		if likes == nil {
+			if err != nil {
+				_ = formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
-			_=formatter.JSON(w, http.StatusNotFound, "This picture Id does not exist anymore.")
+			_ = formatter.JSON(w, http.StatusNotFound, "This picture Id does not exist anymore.")
 			return
 		}
 		var reactions ImageReaction
-		reactions.Imageid=imageid
+		reactions.Imageid = imageid
 		if len(likes) != 0 {
 			reactions.Likes = likes
 		}
 		_ = json.NewDecoder(req.Body).Decode(&reactions)
-		fmt.Println("Reactions: ", reactions)
+		glog.Info("Reactions: ", reactions)
 		formatter.JSON(w, http.StatusOK, reactions)
 
 	}
@@ -208,35 +242,35 @@ func commentDeleteHandler(formatter *render.Render) http.HandlerFunc {
 		c := session.DB(mongodbDatabase).C(COLLECTION)
 
 		params := mux.Vars(req)
-		var imageid  = params["ImageId"]
-		var userid  = req.URL.Query().Get("userId")
+		var imageid = params["ImageId"]
+		var userid = req.URL.Query().Get("userId")
 		var commentId string = req.URL.Query().Get("commentId")
-		fmt.Println( "Image ID: ", imageid )
-		fmt.Println( "User ID: ", userid )
+		fmt.Println("Image ID: ", imageid)
+		fmt.Println("User ID: ", userid)
 
 		var comments []Comments
-		query := bson.M{"imageId":imageid,"userId": userid,"reactionType":"Comment", "commentId":commentId}
+		query := bson.M{"imageId": imageid, "userId": userid, "reactionType": "Comment", "commentId": commentId}
 		fmt.Println("Debugging: 0")
 		errin := c.Remove(query)
 		if errin != nil {
 			panic(err)
 		}
 		fmt.Println("Debugging: 1")
-		comments,err = getCommentsList(imageid)
+		comments, err = getCommentsList(imageid)
 		fmt.Println("Debugging: 2")
-		if comments==nil {
+		if comments == nil {
 
-			if err!=nil{
-				_=formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			if err != nil {
+				_ = formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
-			_=formatter.JSON(w, http.StatusNotFound, "This picture Id does not exist anymore.")
+			_ = formatter.JSON(w, http.StatusNotFound, "This picture Id does not exist anymore.")
 			return
 		}
 		fmt.Println("Debugging: 3")
 		fmt.Println("Reactions: ", comments)
 		var reactions ImageReaction
-		reactions.Imageid=imageid
+		reactions.Imageid = imageid
 		if len(comments) != 0 {
 			reactions.Comments = comments
 		}
@@ -245,6 +279,7 @@ func commentDeleteHandler(formatter *render.Render) http.HandlerFunc {
 		formatter.JSON(w, http.StatusOK, reactions)
 	}
 }
+
 //API to insert comments
 func imageCommentHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
@@ -257,14 +292,14 @@ func imageCommentHandler(formatter *render.Render) http.HandlerFunc {
 		session.SetMode(mgo.Monotonic, true)
 		c := session.DB(mongodbDatabase).C(COLLECTION)
 
-		values :=req.URL.Query()
-		var imageid string  = values.Get("imageId")
-		var userid  = values.Get("userId")
-		var username  = values.Get("userName")
-		var comment  = values.Get("comment")
+		values := req.URL.Query()
+		var imageid string = values.Get("imageId")
+		var userid = values.Get("userId")
+		var username = values.Get("userName")
+		var comment = values.Get("comment")
 
-		fmt.Println( "Image ID: ", imageid )
-		fmt.Println( "User ID: ", userid )
+		fmt.Println("Image ID: ", imageid)
+		fmt.Println("User ID: ", userid)
 
 		var comments []Comments
 		var reaction Reaction
@@ -276,16 +311,16 @@ func imageCommentHandler(formatter *render.Render) http.HandlerFunc {
 		reaction.Comment = comment
 
 		uuid := uuid.NewV4()
-		reaction.CommentId = uuid.String();
+		reaction.CommentId = uuid.String()
 
 		errin := c.Insert(reaction)
 		if errin != nil {
 			panic(err)
 		}
-		comments,err = getCommentsList(imageid)
+		comments, err = getCommentsList(imageid)
 
-		if comments==nil {
-			if err!=nil {
+		if comments == nil {
+			if err != nil {
 				_ = formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
@@ -294,16 +329,15 @@ func imageCommentHandler(formatter *render.Render) http.HandlerFunc {
 		}
 
 		var reactions ImageReaction
-		reactions.Imageid=imageid
-		if(len(comments) != 0) {
+		reactions.Imageid = imageid
+		if len(comments) != 0 {
 			reactions.Comments = comments
 		}
-		  json.NewDecoder(req.Body).Decode(&reactions)
+		json.NewDecoder(req.Body).Decode(&reactions)
 		fmt.Println("Reactions: ", reactions)
-		 formatter.JSON(w, http.StatusOK, reactions)
+		formatter.JSON(w, http.StatusOK, reactions)
 	}
 }
-
 
 func getReactionList(imageId string) []Reaction {
 	fmt.Println("Entered LoginDao function  ")
@@ -315,22 +349,66 @@ func getReactionList(imageId string) []Reaction {
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodbDatabase).C(COLLECTION)
 
-	fmt.Println( "Image ID: ", imageId )
+	fmt.Println("Image ID: ", imageId)
 
 	var result []Reaction
-	err = c.Find(bson.M{"imageId":imageId}).All(&result)
-	if err!=nil {
+	err = c.Find(bson.M{"imageId": imageId}).All(&result)
+	if err != nil {
 		//formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
-		fmt.Println( "Error: ", err )
+		fmt.Println("Error: ", err)
 		return nil
 	}
-return result
+	return result
+}
+
+func isImageLikedByUser(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+
+		session, err := mgo.Dial(mongodbServer)
+		if err != nil {
+			panic(err)
+		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(mongodbDatabase).C(COLLECTION)
+
+		params := mux.Vars(req)
+		var imageid = params["ImageId"]
+		var userid = params["User"]
+
+		fmt.Println("Image ID: ", imageid)
+		fmt.Println("User ID: ", userid)
+
+		type isLike struct {
+			isLiked bool
+		}
+		result := isLike{
+			isLiked: false,
+		}
+
+		query := bson.M{"imageId": imageid, "userId": userid, "reactionType": "Like"}
+
+		n, errin := c.Find(query).Count()
+		if errin != nil {
+			panic(err)
+		}
+
+		if n > 0 {
+
+			result.isLiked = true
+
+		}
+
+		_ = json.NewDecoder(req.Body).Decode(&result)
+		fmt.Println("Reactions: ", result)
+		formatter.JSON(w, http.StatusOK, result)
+
+	}
 }
 
 //Helper method for returning likes
-func getLikesList(imageId string) ([]Likes,error) {
-	fmt.Println("Entered LoginDao function  ")
-
+func getLikesList(imageId string) ([]Likes, error) {
+	glog.Info("Entered getLikesList function ")
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
 		panic(err)
@@ -338,25 +416,22 @@ func getLikesList(imageId string) ([]Likes,error) {
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodbDatabase).C(COLLECTION)
-
-	fmt.Println( "Image ID: ", imageId )
-
 	var likes []Likes
-	err = c.Find(bson.M{"imageId": imageId,"reactionType":"Like"}).Select(bson.M{"userName": 1,"timeStamp": 1 }).All(&likes)
-	if err!=nil {
-		fmt.Println( "Error: ", err )
-		return nil,err
+	err = c.Find(bson.M{"imageId": imageId, "reactionType": "Like"}).Select(bson.M{"userName": 1, "timeStamp": 1}).All(&likes)
+	if err != nil {
+		glog.Error("Error finding the data", err)
+		return nil, err
 	}
-	if len(likes)==0 {
-		fmt.Println( "No such document: " )
-		return nil,nil
+	if len(likes) == 0 {
+		glog.Info("No such document")
+		return nil, nil
 	}
-	return likes,nil
+	return likes, nil
 }
 
 //Helper method to return comments
-func getCommentsList(imageId string) ([]Comments,error ){
-	fmt.Println("Entered LoginDao function  ")
+func getCommentsList(imageId string) ([]Comments, error) {
+	glog.Info("Entered getCommentsList function  ")
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
 		panic(err)
@@ -364,35 +439,29 @@ func getCommentsList(imageId string) ([]Comments,error ){
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodbDatabase).C(COLLECTION)
-	fmt.Println( "Image ID: ", imageId )
 	var comments []Comments
-
-	matchQuery := bson.M{"imageId":imageId,"reactionType":"Comment"}
+	matchQuery := bson.M{"imageId": imageId, "reactionType": "Comment"}
 	projectQuery := bson.M{
-		"userName" : 1,
-		"comment" : 1,
+		"userName": 1,
+		"comment":  1,
 		"timeStamp": bson.M{
 			"$dateToString": bson.M{"format": "%Y-%m-%d %H:%M:%S", "date": "$timeStamp"},
-
 		},
-		"commentId" : 1,
+		"commentId": 1,
 	}
 	pipeline := []bson.M{
 		{"$match": matchQuery},
 		{"$project": projectQuery},
 	}
 	err = c.Pipe(pipeline).All(&comments)
-	if err!=nil {
-		fmt.Println( "Error: ", err )
-		return nil,err
+	if err != nil {
+		glog.Error("Error: ", err)
+		return nil, err
 	}
-	if len(comments)==0 {
-		fmt.Println("No such document: ")
+	if len(comments) == 0 {
+		glog.Info("No such document")
 		return nil, nil
 	}
-	fmt.Println( "Comments: ", comments )
-	return comments,nil
+	return comments, nil
 
 }
-
-

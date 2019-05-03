@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/golang/glog"
 	"github.com/sp19-281-ace-traordinary/Backend/userapi/models"
 	"github.com/sp19-281-ace-traordinary/Backend/userapi/services"
 	"github.com/sp19-281-ace-traordinary/Backend/userapi/utils"
@@ -32,9 +33,10 @@ func init() {
 
 //RegisterUserDao inserts many items from byte slice
 func RegisterUserDao(user models.Registration, host string) (bool, string) {
-	fmt.Println("Entered RegisterUserDao function  ")
+	glog.Info("Entered RegisterUserDao function")
 	session, err := mgo.Dial(utils.MONGODB["SERVER"])
 	if err != nil {
+		glog.Error("Error connecting to server")
 		panic(err)
 	}
 	defer session.Close()
@@ -45,17 +47,15 @@ func RegisterUserDao(user models.Registration, host string) (bool, string) {
 	err = c.Find(bson.M{"userid": user.Userid}).One(&result)
 	if err != nil {
 		c = session.DB(mongodbDatabase).C(utils.MONGODB["REGISTRATIONCOLLECTION"])
-		//hash, err := utils.EncodePassword(user.Password)
-		fmt.Println(user.Userid)
 		err = c.Find(bson.M{"userid": user.Userid}).One(&result)
 		if err != nil {
 			fmt.Println(user)
 			errin := c.Insert(user)
 			if errin != nil {
-				log.Fatal(errin)
+				glog.Error(errin)
 			}
 			services.SendRegistrationEmail(user, host)
-			fmt.Println("Successfully Regestered")
+			glog.Info("Successfully Regestered")
 		} else {
 			return false, "Already In Registration Table"
 		}
@@ -69,7 +69,7 @@ func RegisterUserDao(user models.Registration, host string) (bool, string) {
 func GetAllUsersDao() []models.User {
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
-		panic(err)
+		glog.Error(err)
 	}
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
@@ -77,19 +77,20 @@ func GetAllUsersDao() []models.User {
 	c := session.DB(mongodbDatabase).C(USERSCOLLECTION)
 	err = c.Find(nil).All(&results)
 	if err != nil {
-		panic(err)
+		glog.Error("No users found in Database", err)
 	}
-	fmt.Println("Results All: ", results)
+	glog.Error("Database Results", results)
 	return results
 }
 
 //ConfirmRegistrationDao once user confirms remove data from Registration and insert data to User Collection
 func ConfirmRegistrationDao(user models.Registration) (bool, models.User) {
-	fmt.Println("Entered ConfirmRegistrationDao function  ")
+	glog.Info("Entered ConfirmRegistrationDao function")
 	var status bool
 	var data models.User
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
+		glog.Error("Error creating session")
 		panic(err)
 	}
 	defer session.Close()
@@ -100,6 +101,7 @@ func ConfirmRegistrationDao(user models.Registration) (bool, models.User) {
 	query := bson.M{"userid": user.Userid}
 	err = c.Find(query).One(&result)
 	if err != nil {
+		glog.Error("No results found")
 		panic(err)
 	}
 	if result.Verificationcode == user.Verificationcode {
@@ -107,7 +109,7 @@ func ConfirmRegistrationDao(user models.Registration) (bool, models.User) {
 		if status {
 			err = c.Remove(query)
 			if err != nil {
-				fmt.Printf("remove fail %v\n", err)
+				glog.Error("Remove Fail ", err)
 				status = false
 			}
 		}
@@ -116,7 +118,7 @@ func ConfirmRegistrationDao(user models.Registration) (bool, models.User) {
 }
 
 func createUserDao(newuser models.Registration) (bool, models.User) {
-	fmt.Println("Entered LoginDao function  ")
+	glog.Info("Entered CreateUserDao function")
 	var user models.User
 	user.Userid = newuser.Userid
 	user.Password = newuser.Password
@@ -125,6 +127,7 @@ func createUserDao(newuser models.Registration) (bool, models.User) {
 	user.Phonenumber = newuser.Phonenumber
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
+		glog.Error("Error creating session")
 		panic(err)
 	}
 	defer session.Close()
@@ -139,9 +142,10 @@ func createUserDao(newuser models.Registration) (bool, models.User) {
 
 //LoginDao validates weather uaer is valid or not
 func LoginDao(user models.User) (models.User, bool) {
-	fmt.Println("Entered LoginDao function  ")
+	glog.Info("Entered LoginDao function  ")
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
+		glog.Error("Error creating session")
 		panic(err)
 	}
 	defer session.Close()
@@ -152,7 +156,8 @@ func LoginDao(user models.User) (models.User, bool) {
 	//Checking if the new user is already present in user table
 	err = c.Find(query).One(&result)
 	if err != nil {
-		log.Println("No User Found")
+		glog.Error("No User Found")
+		panic(err)
 	}
 	res := validatePassword(user.Password, result.Password)
 	if !res {
@@ -169,12 +174,13 @@ func validatePassword(in string, dbpassword string) bool {
 
 //DeleteUser removes user with userID from the database
 func DeleteUser(userid string) bool {
+	glog.Info("Entered DeleteUser function  ")
 	status := true
-	fmt.Println("Entered DeleteUser function  ")
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
-		log.Panic(err)
+		glog.Error("Error creating session")
 		status = false
+		panic(err)
 	}
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
@@ -182,7 +188,7 @@ func DeleteUser(userid string) bool {
 	query := bson.M{"userid": userid}
 	err = c.Remove(query)
 	if err != nil {
-		fmt.Printf("remove fail %v\n", err)
+		glog.Error("remove fail", err)
 		status = false
 	}
 	go services.DeleteUserEmail(userid)
@@ -191,9 +197,10 @@ func DeleteUser(userid string) bool {
 
 //ForgotpasswordDao  update password of user and mail to user
 func ForgotpasswordDao(userid string) bool {
-	fmt.Println("Entered LoginDao function  ")
+	glog.Info("Entered ForgotpasswordDao function  ")
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
+		glog.Error("Error creating session")
 		log.Panic(err)
 		return false
 	}
@@ -204,14 +211,14 @@ func ForgotpasswordDao(userid string) bool {
 	query := bson.M{"userid": userid}
 	err = c.Find(query).One(&result)
 	if err != nil {
-		log.Println("No User Found")
+		glog.Error("No User Found")
 		return false
 	}
 	result.Password = utils.GenerateTemporaryPassword()
 	go services.SendTemporeryPasswordEmail(result)
 	err = c.Update(query, result)
 	if err != nil {
-		log.Println("Error while Updating Document in Forgot Password")
+		glog.Error("Error while Updating Document in Forgot Password")
 		return false
 	}
 	return true
@@ -222,6 +229,7 @@ func ResendConfirmDao(userid string, host string) bool {
 	fmt.Println("Entered ResendConfirmDao function  ")
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
+		glog.Error("Error creating session")
 		log.Panic(err)
 		return false
 	}
@@ -232,13 +240,13 @@ func ResendConfirmDao(userid string, host string) bool {
 	query := bson.M{"userid": userid}
 	err = c.Find(query).One(&result)
 	if err != nil {
-		log.Println("No Registration User Found")
+		glog.Info("No Registration User Found")
 		return false
 	}
 	result.Verificationcode = utils.GenerateVerificationTocken()
 	err = c.Update(query, result)
 	if err != nil {
-		log.Println("Error while Updating Document in ResendConfirmDao Password")
+		glog.Error("Error while Updating Document in ResendConfirmDao Password")
 		return false
 	}
 	go services.SendRegistrationEmail(result, host)
