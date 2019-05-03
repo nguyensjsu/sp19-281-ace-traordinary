@@ -64,12 +64,13 @@ func (c *Client) readerProcess() {
 	fmt.Println("in Reader");
 	defer func() {
 		c.Pool.unregister <- c
-		//delete(Users, c.Clientid)
+		delete(Users, c.Clientid)
+		fmt.Println("users after unregister ",Users)
 		var mesg Message
 		mesg.Type = "OnlineUsers"
 		mesg.Users = Users
-		c.Pool.broadcast <- mesg
 		c.conn.Close()
+		c.Pool.broadcast <- mesg
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
@@ -78,9 +79,11 @@ func (c *Client) readerProcess() {
 	//fmt.Printf("Reader 2")
 	for {
 		var msg Message
+
 		 err := c.conn.ReadJSON(&msg)
 		if err != nil {
-			panic(err)
+			fmt.Println("Error at line 84",c.Clientid)
+		//	panic(err)
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				fmt.Printf("error: %v", err)
 			}
@@ -174,7 +177,9 @@ func (c *Client) writerProcess() {
 			fmt.Println("writer 1", message.Type)
 			error := c.conn.WriteJSON(message)
 			if error != nil {
+				fmt.Println("Error at line 178")
 				panic(error);
+
 			}
 			if message.Type == "Text" {
 				updated_time := time.Now()
@@ -213,6 +218,7 @@ func (c *Client) writerProcess() {
 			fmt.Println("writer 1", notifMessage.Type)
 			error := c.conn.WriteJSON(notifMessage)
 			if error != nil {
+				fmt.Println("Error at line 219")
 				panic(error);
 			}
 
@@ -263,8 +269,6 @@ fmt.Println("request is ",r);
 			client.send <- oldmesg
 
 		}
-
-
 
 	}
 	if err,ok :=removeUnreadMessages(client.Clientid); !ok{
