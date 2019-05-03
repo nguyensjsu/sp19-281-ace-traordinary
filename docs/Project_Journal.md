@@ -33,15 +33,26 @@ A mechanism is implemented for collecting users reactions. The Picasso Reactions
 
 The Pictures service is implemented using CQRS / ES architecture. The reason for this decision is that the frequency and number of queries to the Picture's database to READ / VIEW pictures is expected to be significantly higher than the WRITE / UPLOAD requests. The Pictures service is implemented as two independent services: Pictures Command Service and Pictures Query Service. More notes on implementaion details is included in next sections.
 
-* RaviTeja - Login and registration micro service and the UI
+#### Microservices
+- User Service: is responsible for user registration and login
+- Payments Service: is responsible for processing payments for picture purchases
+- Pictures Command Service: is responsible for new picture uploads and deletes 
+- Pictures Query Service: is responsible for READ requests to the Pictures database
+- Reactions Service: is responsible for managing user reactions on pictures
 
-* Masi - Images micro service
+#### Command-Query Responsibility Segregation
 
-* Nasrajan - Payment micro service
+CQRS segregates an application into two parts: Commands to perform an action to change the state of aggregates, and Queries to provide a query model for the views of aggregates. 
 
- * Ramya - Likes and Comments micro service
 
-Masi will be implementing CQRS for the image part. The images will be fetched using one service and will be inserted using another. 
+* RaviTeja - User Service and the UI
+
+* Masi - Pictures Command Service, Pictures Query Service
+
+* Nasrajan - Payments Service
+
+ * Ramya - Reactions Service
+
 
 The data storages to be used are:
 
@@ -63,35 +74,70 @@ We met after the class and discussed the difficulties faced by each person.
 Raviteja
 ----
 Finished the rough draft of the UI using ReactJS
+
 Ramya
 -----
 
 Nasrajan
 ----------
-Created the DB design for the payment api and set up the go environment. Finalized that Stripe will be the payment gateway to be used.
+
+Created the DB design for the payment api and set up the go environment. Checked different payment gateways.The option for block chain was also discussed in the group. Since the scope of the project covers mostly the backend technologies, I have shortlisted stripe for the payment implementation.
 
 
 
 ### Week 4: 4/13 - 4/20 What have everyone worked on?
 
-Raviteja - 
-Ramya - 
-Nasrajan - 
-Masi - 
+Raviteja
+--------
+
+Ramya
+------
+
+Nasrajan
+---------
+* Created the Payment API methods. C
+* Created the MySQL database and tables. 
+* Tested everything on EC2 + Docker. 
+* Waiting for the other parts to finish to do the end to end testing.
+
+Masi
+-----
 
 ### Week 5: 4/20 - 4/27 What have everyone worked on?
 
-Raviteja - 
-Ramya - 
-Nasrajan - 
+Raviteja
+--------
+
+Ramya
+------
+
+
+Nasrajan
+--------
+* MySQL sharding
+
+
 Masi
+-----
+
 
 ### Week 5: 4/27 - 5/3 What have everyone worked on?
 
-Raviteja - 
-Ramya - 
-Nasrajan 
-Masi - 
+Raviteja
+--------
+
+
+Ramya
+------
+
+
+Nasrajan
+--------
+* Pushed all the changes
+* Discussed about integrating the service to other services.
+
+Masi
+-----
 
 
 
@@ -99,16 +145,5 @@ Masi -
 
 - 
 
-### Microservices
-- User Service: is responsible for user registration and login
-- Payments Service: is responsible for processing payments for picture purchases
-- Pictures Command Service: is responsible for new picture uploads and deletes 
-- Pictures Query Service: is responsible for READ requests to the Pictures database
-- Reactions Service: is responsible for managing user reactions on pictures
 
-### Command-Query Responsibility Segregation
-
-CQRS segregates an application into two parts: Commands to perform an action to change the state of aggregates, and Queries to provide a query model for the views of aggregates. 
-
-### Brainstorm on Project Ideas
 
