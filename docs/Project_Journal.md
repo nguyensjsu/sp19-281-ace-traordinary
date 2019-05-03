@@ -1,6 +1,28 @@
-## Team ACe-traordinary - Project Journal
+## Team Ace-traordinary - Project Journal
 
-### What is Picasso?
+### Week 1 : 3/23 - 3/30  Brain Storming 
+The project team met after the class. Every team member came up with an idea for the project. The options considered were Uber, Shopping Carts for general. But, we would like to do something different. 
+
+https://www.linux.com/news/7-essential-open-source-devops-projects  -- Something to explore and adapt ideas from.
+
+Project Idea:
+
+Find Partner / Team Social Network for campus:
+
+There will be multiple events / activities like -
+
+- academic -> combined study ->  subject
+- academic -> campus events
+- professional -> out of campus events
+- casual
+
+A basic networking website for teaming up for different activities.
+Can be scaled outside campus by adding more activities
+
+
+### Week 2: 3/30 - 4/6 Idea of Picasso
+The idea of picassa was brainstormed. it is a scalable containerized application to buy / sell image copy rights. We discussed the architecture in general and identified potential areas to explore. Assigned the folowing tasks to each member:
+#### What is Picasso?
 Picasso is a scalable containerized application that implements CQRS / ES design pattern. Picasso is designed using AWS-based Golang microservices backend architecture and a NodeJS frontend deployed on Heroku. 
 
 Picasso is a Twitter-like marketplace for pictures. The main idea is to build a platform for users to upload and broadcast original pictures into the platform to be explored by other users. A tumbnail version of each picture will be showcased in the main page. If a user is interested in a picture, she/he can purchase the picture through Picasso Payments service and upon successfull payment, they can download the original size / higher quality version of that picture from the app. Upon each purchase, the ownership of the picture will be transfered to its new owner. 
@@ -10,6 +32,41 @@ Users should register and login to the app using their Picasso account credentia
 A mechanism is implemented for collecting users reactions. The Picasso Reactions service provides a "Like" icon for each picture. 
 
 The Pictures service is implemented using CQRS / ES architecture. The reason for this decision is that the frequency and number of queries to the Picture's database to READ / VIEW pictures is expected to be significantly higher than the WRITE / UPLOAD requests. The Pictures service is implemented as two independent services: Pictures Command Service and Pictures Query Service. More notes on implementaion details is included in next sections.
+
+RaviTeja - Login and registration
+Masi - Images
+Nasrajan - Payment
+Ramya - Likes and Comments
+
+Ravi will be working on the UI too. 
+Masi will be implementing CQRS for the image part. The images will be fetched using one service and will be inserted using another. The data storages to be used are:
+
+Login and Registration - Mongo
+Images - MongoDB, DynamoDB and Amazon S3
+Payment - MySQL
+Likes and Comments - MongoDB
+
+### Week 3: 4/6 - 4/13 What have everyone worked on?
+We met after the class and discussed the difficulties faced by each person. 
+
+
+
+
+### Week 4: 4/13 - 4/20 What have everyone worked on?
+
+
+
+
+
+### Week 5: 4/20 - 4/27 What have everyone worked on?
+
+
+
+### Week 5: 4/27 - 5/3 What have everyone worked on?
+
+
+
+
 
 
 ### Design Concepts (high level)
@@ -32,18 +89,3 @@ CQRS segregates an application into two parts: Commands to perform an action to 
 
 ### Brainstorm on Project Ideas
 
-https://www.linux.com/news/7-essential-open-source-devops-projects  -- Something to explore and adapt ideas from.
-
-Project Idea:
-
-Find Partner / Team Social Network for campus:
-
-There will be multiple events / activities like -
-
-- academic -> combined study ->  subject
-- academic -> campus events
-- professional -> out of campus events
-- casual
-
-A basic networking website for teaming up for different activities.
-Can be scaled outside campus by adding more activities
