@@ -1,8 +1,10 @@
 
-var userid = "rbd@gmail.com";
+var userid = "";
 var name = "Ramya";
 var myList = new Array();
-myList.push("Ravi");
+var connection;
+
+//myList.push("Ravi");
 Array.remove = function(array, from, to) {
     var rest = array.slice((to || from) + 1 || array.length);
     array.length = from < 0 ? array.length + from : from;
@@ -15,6 +17,16 @@ var total_popups = 0;
 //arrays of popups ids
 var popups = [];
 
+userid = localStorage.getItem("username");
+console.log("user id is",userid);
+function  open_connection(){
+
+
+
+}
+
+  //  window.onload = localStorage.getItem("connection",userid);
+
 function register_popup(id)
 {
 
@@ -24,16 +36,11 @@ function register_popup(id)
         if(id == popups[iii])
         {
             Array.remove(popups, iii);
-
             popups.unshift(id);
-
             calculate_popups();
-
-
             return;
         }
     }
-
    var chatPopup =  '<div class="msg_box" id="'+id+'" style="right:270px" rel="'+id+'">'+
         '<div class="msg_head">'+id+
         '<div class="close">x<a href="javascript:close_popup(\''+ id +'\');">&#10005;</a></div> </div>'+
@@ -129,19 +136,21 @@ function generate_sidebar(){
         return;
     }
     var i = 0;
-    var element;
+    var element = '<div>';
     for(i; i<myList.length ;i++){
-        element = '<div class="sidebar-name">';
+        element = element + '<div class="sidebar-name">';
         element = element + '<a href="javascript:register_popup(\''+ myList[i] +'\');"><span>'+myList[i]+'</span></a></div>';
-        document.getElementById("sidebar").innerHTML = document.getElementById("sidebar").innerHTML + element;
+
     }
+    document.getElementById("sidebar").innerHTML =  element+'<div>';
 }
 //recalculate when window is loaded and also when window is resized.
 window.addEventListener("resize", calculate_popups);
+//window.addEventListener("load", open_connection);
+console.log("below event listener document ready",connection);
 window.addEventListener("load", calculate_popups);
 window.addEventListener("load", generate_sidebar);
-window.myList = myList;
-var connection;
+//window.myList = myList;
 
 
 
@@ -206,22 +215,18 @@ $(document).on('keypress', 'textarea' , function(e) {
 });
 
         //calculate the total number of popups suitable and then populate the toatal_popups variable.
-
 $(function () {
+
    // window.addEventListener("load", open_connection);
-        var log = $('#log');
+    var log = $('#log');
 
-
-
-                connection = new WebSocket("ws://localhost:8000/ws/rbd@gmail.com");
-
-        connection.onopen = function () {
-            // first we want users to enter their names
-            log.html($('<p>', {
-                text: 'Connection open'
-            }));
-
-        };
+        console.log("inside document ready",connection);
+        var ws = "ws://localhost:8000/ws/";
+        var url = ws.concat(userid);
+console.log(url);
+    connection = new WebSocket(url);
+    alert("connection");
+    console.log("below event listener document ready",connection);
         connection.onerror = function (error) {
             // just in there were some problems with connection...
             log.html($('<p>', {
@@ -249,7 +254,8 @@ $(function () {
             if (json.Type === 'OnlineUsers') {
               var users  = json.Users;
                // window.myList = users.keys;
-                myList.length=0;
+                myList = new Array();
+                console.log(myList);
                // myList = users.keys;
                 for (var p in users) {
                     console.log(p);
@@ -275,7 +281,7 @@ $(function () {
         if(element === null){
             register_popup(author);
         }
-        $('<div class="msg-left">'+ userid + '@ ' + (dt.getHours() < 10 ? '0'
+        $('<div class="msg-left">'+ author + '@ ' + (dt.getHours() < 10 ? '0'
             + dt.getHours() : dt.getHours()) + ':'
             + (dt.getMinutes() < 10
                 ? '0' + dt.getMinutes() : dt.getMinutes())
