@@ -29,7 +29,7 @@ type Client struct {
 	// Buffered channel of outbound messages.
 	send chan Message
 	//Buffered channel for incoming messages.
-	recv chan []byte
+	notifications chan Message
 	//Client id
 	Clientid string
 }

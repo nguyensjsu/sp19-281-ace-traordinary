@@ -45,7 +45,8 @@ func (h *Pool) run() {
 			for client := range h.clients {
 				h.clients[client].send <- message
 				fmt.Println("Sending mesg to client channel..",client)
-				//close(client.send)
+
+					//close(client.send)
 					//delete(h.clients, client)
 				}
 

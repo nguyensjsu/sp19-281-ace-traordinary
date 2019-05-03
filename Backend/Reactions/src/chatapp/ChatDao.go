@@ -17,7 +17,7 @@ var Unread_Messages = "UnreadCollection"
 
 
 func storeMessage(message Message) (error,bool) {
-	fmt.Println("Entered LoginDao function  ")
+	fmt.Println("storeMessage()  ")
 
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
@@ -26,7 +26,7 @@ func storeMessage(message Message) (error,bool) {
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodbDatabase).C(Messages_Collection)
-
+	fmt.Println("storeMessage():  ", c)
 	err = c.Insert(message)
 	if err!=nil {
 		log.Println( "Error: ", err )
@@ -37,7 +37,7 @@ func storeMessage(message Message) (error,bool) {
 	return nil,true
 }
 func storeUnreadMessage(message Message) (error,bool) {
-	fmt.Println("Entered LoginDao function  ")
+	fmt.Println("storeUnreadMessage() ")
 
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
@@ -58,7 +58,7 @@ func storeUnreadMessage(message Message) (error,bool) {
 }
 
 func readUnreadMessages(clientid string) ([]Message,bool) {
-	fmt.Println("Entered LoginDao function  ")
+	fmt.Println("readUnreadMessages(): ")
 
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
@@ -71,7 +71,7 @@ func readUnreadMessages(clientid string) ([]Message,bool) {
 	fmt.Println( "Fetching unread messages for: ", clientid )
 
 	var messages []Message
-	err = c.Find(bson.M{"Receiverid": clientid}).All(&messages)
+	err = c.Find(bson.M{"receiverid": clientid}).All(&messages)
 	if err!=nil {
 		fmt.Println( "Error: ", err )
 		return nil,false
@@ -84,7 +84,7 @@ func readUnreadMessages(clientid string) ([]Message,bool) {
 }
 
 func removeUnreadMessages(clientid string) (error,bool) {
-	fmt.Println("Entered LoginDao function  ")
+	fmt.Println("removeUnreadMessages() ")
 
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
@@ -110,7 +110,7 @@ func removeUnreadMessages(clientid string) (error,bool) {
 func updateConversations(messageId string, status string, updated time.Time) (error, bool){
 
 
-	fmt.Println("Entered LoginDao function  ")
+	fmt.Println("updateConversations()  ")
 
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
@@ -148,7 +148,7 @@ func updateConversations(messageId string, status string, updated time.Time) (er
 func loadConverstaion(userid string, receiverid string) ([]Message, bool){
 
 //var limit = 5;
-	fmt.Println("Entered LoginDao function  ")
+	fmt.Println("loadConverstaion() ")
 
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {
@@ -159,7 +159,7 @@ func loadConverstaion(userid string, receiverid string) ([]Message, bool){
 	c := session.DB(mongodbDatabase).C(Messages_Collection)
 	convId := getConversationId(userid,receiverid)
 	var messages []Message
-	fmt.Println( "Updating status messages for: ", userid )
+	fmt.Println( "oadConverstaion(): ", userid )
 	//users := []string{userid,receiverid}
 	//matchQuery := bson.M{"UserId":userid,"Receiverid":"receiverid"}
 	match := bson.M{"ConversationId":convId}
@@ -188,7 +188,7 @@ func updateSeenStatus(sender string,recver string, time2 time.Time) (string,bool
 
 
 
-	fmt.Println("Entered LoginDao function  ")
+	fmt.Println("updateSeenStatus() ")
 
 	session, err := mgo.Dial(mongodbServer)
 	if err != nil {

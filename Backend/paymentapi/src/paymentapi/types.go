@@ -3,8 +3,8 @@ package main
 type order struct {
 	Id             	int 	
 	Userid		    string   	
-	Imageid 		int
-	Paymentid       int	    
+	Imageid 		string
+	Paymentid       string  
 	Amount 			float64	
 }
 

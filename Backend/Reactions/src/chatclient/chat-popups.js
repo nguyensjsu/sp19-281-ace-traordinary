@@ -191,6 +191,8 @@ $(document).on('keypress', 'textarea' , function(e) {
             message.Receiverid = chatboxId;
             var time = new Date();
             message.Message = msg;
+            message.Time = time;
+            message.Type = "Text";
             console.log("imessage is",JSON.stringify(message));
             connection.send(JSON.stringify(message));
             $('<div class="msg-right">'+ userid + '@ ' + (time.getHours() < 10 ? '0'
@@ -247,7 +249,8 @@ $(function () {
             if (json.Type === 'OnlineUsers') {
               var users  = json.Users;
                // window.myList = users.keys;
-                myList = users.keys;
+                myList.length=0;
+               // myList = users.keys;
                 for (var p in users) {
                     console.log(p);
                     myList.push(p);
