@@ -33,47 +33,70 @@ A mechanism is implemented for collecting users reactions. The Picasso Reactions
 
 The Pictures service is implemented using CQRS / ES architecture. The reason for this decision is that the frequency and number of queries to the Picture's database to READ / VIEW pictures is expected to be significantly higher than the WRITE / UPLOAD requests. The Pictures service is implemented as two independent services: Pictures Command Service and Pictures Query Service. More notes on implementaion details is included in next sections.
 
-RaviTeja - Login and registration
-Masi - Images
-Nasrajan - Payment
-Ramya - Likes and Comments
+* RaviTeja - Login and registration micro service and the UI
 
-Ravi will be working on the UI too. 
-Masi will be implementing CQRS for the image part. The images will be fetched using one service and will be inserted using another. The data storages to be used are:
+* Masi - Images micro service
 
-Login and Registration - Mongo
-Images - MongoDB, DynamoDB and Amazon S3
-Payment - MySQL
-Likes and Comments - MongoDB
+* Nasrajan - Payment micro service
+
+ * Ramya - Likes and Comments micro service
+
+Masi will be implementing CQRS for the image part. The images will be fetched using one service and will be inserted using another. 
+
+The data storages to be used are:
+
+* Login and Registration - Mongo
+* Images - MongoDB, DynamoDB and Amazon S3
+* Payment - MySQL
+* Likes and Comments - MongoDB
+
+#### Design Concepts (high level)
+- CQRS (Command-Query Responsibility Segregation) / Event-Sourcing pattern
+- Implement at least five microservices; 
+- Implement data sharding in Payments service
+- Implement CQRS in Pictures Service
+
 
 ### Week 3: 4/6 - 4/13 What have everyone worked on?
 We met after the class and discussed the difficulties faced by each person. 
 
+Raviteja
+----
+Finished the rough draft of the UI using ReactJS
+Ramya
+-----
+
+Nasrajan
+----------
+Created the DB design for the payment api and set up the go environment. Finalized that Stripe will be the payment gateway to be used.
 
 
 
 ### Week 4: 4/13 - 4/20 What have everyone worked on?
 
-
-
-
+Raviteja - 
+Ramya - 
+Nasrajan - 
+Masi - 
 
 ### Week 5: 4/20 - 4/27 What have everyone worked on?
 
-
+Raviteja - 
+Ramya - 
+Nasrajan - 
+Masi
 
 ### Week 5: 4/27 - 5/3 What have everyone worked on?
 
+Raviteja - 
+Ramya - 
+Nasrajan 
+Masi - 
 
 
 
 
 
-### Design Concepts (high level)
-- CQRS (Command-Query Responsibility Segregation) / Event-Sourcing pattern
-- Implement at least five microservices; 
-- Implement data sharding in Payments service
-- Implement CQRS in Pictures Service
 - 
 
 ### Microservices
