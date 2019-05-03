@@ -80,8 +80,6 @@ func getIp() string {
 func PingHandler(w http.ResponseWriter, req *http.Request) {
 	message := "Picture write command API Server Working on machine: " + getIp()
 
-	Push()
-
 	json.NewEncoder(w).Encode(map[string]string{"result": message})
 }
 
@@ -95,7 +93,6 @@ func UploadPictureHandler(w http.ResponseWriter, req *http.Request) {
 	}**/
 	if err != nil {
 		glog.Error("Error in creating MongoDB session", err)
-		panic(err)
 	}
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)

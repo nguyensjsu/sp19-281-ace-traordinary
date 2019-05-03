@@ -24,7 +24,7 @@ start:
 		./userapi
 
 docker-build:
-	docker build -t userapi .
+	docker build -t 1ra4vi3/userapi .
 	docker images
 
 network-create:
@@ -32,7 +32,7 @@ network-create:
 
 docker-run:
 	docker run --network userapi \
-				--name userapi -p 8000:8000 -td userapi
+				--name userapi -p 8000:8000 -td 1ra4vi3/userapi
 	docker ps
 
 docker-network:
@@ -47,7 +47,7 @@ docker-network-inspect:
 docker-clean:
 	docker stop userapi
 	docker rm userapi
-	docker rmi userapi
+	docker rmi 1ra4vi3/userapi
 
 docker-ip:
 	docker-machine ip
