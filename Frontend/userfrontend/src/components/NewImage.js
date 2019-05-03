@@ -39,12 +39,12 @@ class NewImage extends Component {
     }
     handleSubmit(){
         let formdata = new FormData()
+        formdata.append('myfile', this.state.file);
         formdata.append('userid', this.props.user.userid);
         formdata.append('description', this.state.description);
         formdata.append('price', this.state.price);
         formdata.append('title', this.state.title);
-        formdata.append('myfile', this.state.file);
-        this.props.addimage(formdata)
+        this.props.addimage(formdata,this)
     }
     render() {
         const { open, dimmer } = this.state

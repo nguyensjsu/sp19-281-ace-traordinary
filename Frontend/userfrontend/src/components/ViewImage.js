@@ -3,21 +3,32 @@ import Comment from "./Comment";
 import {Image,Grid,TextArea,Form,Button,Icon } from "semantic-ui-react"
 import {testcomments} from '../resources/TestResourse'
 import {Link} from "react-router-dom";
-
+import ImageBlockChain from "./ImageBlockChain";
+import {deleteimage,a} from '../actions/ImageAction'
 class ViewImage extends Component {
 
 
     constructor(props){
         super(props)
         this.state={
-            imgurl:"https://i.pinimg.com/236x/4d/f8/58/4df85823d89a34522dabf8dd49cdfbd8.jpg"
+            imgurl:"https://i.pinimg.com/236x/4d/f8/58/4df85823d89a34522dabf8dd49cdfbd8.jpg",
+            img:{},
+            newcomment:""
         }
+        this.comment=this.comment.bind(this);
     }
+
     componentDidMount(){
-        const {imageurl} = this.props.location.state
+        const {imageurl,img} = this.props.location.state
         this.setState({
-            imgurl:imageurl
+            imgurl:imageurl,
+            img:img
         })
+    }
+    comment(){
+        if(this.state.newcomment.length>5){
+
+        }
     }
     render() {
 
@@ -35,7 +46,9 @@ class ViewImage extends Component {
                         <Grid.Column>
                             <Image  src={this.state.imgurl} size='medium' rounded />
                         </Grid.Column>
-                        <Grid.Column></Grid.Column>
+                        <Grid.Column>
+                            <ImageBlockChain description={this.state.img.description}/>
+                        </Grid.Column>
                         <Grid.Column>
                             <div className={"commentsdisplay"}>
                             {commentslist}
