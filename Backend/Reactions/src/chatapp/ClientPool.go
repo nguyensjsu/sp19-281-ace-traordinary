@@ -22,21 +22,12 @@ func (h *Pool) run() {
 			var mesg Message
 			mesg.Type = "OnlineUsers"
 			mesg.Users = Users
-			//fmt.Println("debugger 2", client.Clientid);
-		//	fmt.Println("message is ",mesg);
-		//	var ok bool
-		//	select {
-		//	case h.broadcast <- mesg:
-		//		ok = true
-		//	default:
-		//		ok = false
-			//}
-			//h.broadcast <- mesg
-		//	fmt.Println("message is ",ok);
+
 
 		case client := <-h.unregister:
 			if _, ok := h.clients[client.Clientid]; ok {
 				delete(h.clients, client.Clientid)
+				fmt.Println("Client Unregistered..",h.clients)
 				close(client.send)
 			}
 			fmt.Println("Client Unregistered..")
