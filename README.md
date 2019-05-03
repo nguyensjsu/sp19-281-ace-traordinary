@@ -13,7 +13,7 @@ This is the GitHub repository for the final project of CMPE-281 Cloud Technologi
 ## Links
 
 - The Kanban Task Board of Picasso [Link](https://github.com/nguyensjsu/sp19-281-ace-traordinary/projects/1)
-- Presentation Slides [Link]()
+- Presentation Slides [Link](https://docs.google.com/presentation/d/1jU1vt8rPpnsM-NtAsXNxud8ZH3kMMWB3_Rd4kYi-uRA/edit?usp=sharing)
 - Documentations [Link]()
 
 ## Deployment Endpoint:
