@@ -12,12 +12,13 @@ This is the GitHub repository for the final project of CMPE-281 Cloud Technologi
 
 ## Links
 
-- The Kanban Task Board of Picasso [Link](https://github.com/nguyensjsu/sp19-281-ace-traordinary/projects/1)
-- Presentation Slides [Link](https://docs.google.com/presentation/d/1jU1vt8rPpnsM-NtAsXNxud8ZH3kMMWB3_Rd4kYi-uRA/edit?usp=sharing)
-- Documentations [Link]()
+- The Kanban Task Board of Picasso [[Link]](https://github.com/nguyensjsu/sp19-281-ace-traordinary/projects/1)
+- Presentation Slides [[Link]](https://docs.google.com/presentation/d/1jU1vt8rPpnsM-NtAsXNxud8ZH3kMMWB3_Rd4kYi-uRA/edit?usp=sharing)
+- Final Project Report [[Link]](https://docs.google.com/document/d/1XapQTQ9ASTv0dynM6l-vwouOpOWAlX07A3syy0WJtpE/edit?usp=sharing)
+- Project Journal & Documentation [[Link]](https://github.com/nguyensjsu/sp19-281-ace-traordinary/tree/master/docs)
 
 ## Deployment Endpoint:
-- The frontend Nodejs App is deployed on Heroku [Link]
+- The frontend Nodejs App is deployed on Heroku [[Link]]
 
 ## Deployment Instructions
 
