@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ImageBlockChain from "./ImageBlockChain";
 import Payment from "./Payment";
-import {Image ,Grid,Icon} from "semantic-ui-react"
+import {Image, Grid, Icon, Segment} from "semantic-ui-react"
 import {Link} from "react-router-dom";
 import connect from "react-redux/es/connect/connect";
 import {viewimage} from "../actions/ImageAction";
@@ -37,7 +37,8 @@ class BuyImage extends Component {
                 <ImageBlockChain description={this.state.img.description}/>
                         </Grid.Column>
                             <Grid.Column>
-                <Payment/>
+                                <Segment inverted color={"blue"} raised><b>Payment</b></Segment>
+                            <Payment/>
                             </Grid.Column>
                     </Grid.Row>
                 </Grid>

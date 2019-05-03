@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Comment from "./Comment";
-import {Image,Grid,TextArea,Form,Button,Icon } from "semantic-ui-react"
+import {Image,Grid,TextArea,Form,Button,Icon,Segment } from "semantic-ui-react"
 import {testcomments} from '../resources/TestResourse'
 import {Link} from "react-router-dom";
 import ImageBlockChain from "./ImageBlockChain";
@@ -76,6 +76,7 @@ class ViewImage extends Component {
                             <ImageBlockChain description={this.state.img.description}/>
                         </Grid.Column>
                         <Grid.Column>
+                            <Segment inverted color={"blue"} >Comments</Segment>
                             <div className={"commentsdisplay"}>
                             {commentslist}
                             </div>
