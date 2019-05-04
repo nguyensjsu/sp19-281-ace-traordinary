@@ -30,7 +30,7 @@ install:
 	go install picscmdapi
 
 build:
-	go build picscmdapi
+	go build github.com/sp19-281-ace-traordinary/Backend/picscmdapi/src/picscmdapi
 
 start:
 	./picscmdapi

@@ -61,7 +61,7 @@ class ViewImage extends Component {
         let comments=this.state.comments;
         if(comments!==undefined)
          commentslist =comments.map(comment=>{
-           return <><Comment key={comment.CommentId}comment ={comment} userid={this.props.user.userid}imageid={this.state.img.imageid} deletecomment={this.deletecomment}/><hr/></>
+           return <><Comment key={comment.CommentId}comment ={comment} userid={this.props.user.userid}imageid={this.state.img.imageid} deletecomment={this.deletecomment} img={this.state.img}/><hr/></>
         })
         return (
             <div className="ViewImage">

@@ -11,7 +11,7 @@
   <style>
 body {background-color: powderblue;padding: 10px;border-radius: 10px}
 h1   {color: blue;}
-p    {color: red;}
+p    {color: green;}
 </style>
 </head>
 <body>
@@ -20,6 +20,9 @@ p    {color: red;}
     <div class="card-body">
       <h4 class="card-title">Hi {{.Firstname}}</h4>
       <p class="card-text">Successfull Payment</p>
+      <h4 class="card-text">Your Paument ID:{{.Verificationcode}}<h4>
+        <h4 class="card-text">Your Have been Chnareged for Amount:{{.Price}}<h4>
+      <h4 class="card-text">Buyed Image={{.URL}}</h4>
     </div>
     <img class="card-img-bottom" src="https://s3-us-west-2.amazonaws.com/ravitejakommalapati.com/picasalogo.png" alt="Card image" style="width:100%">
   </div>

@@ -8,7 +8,7 @@ class Payment extends Component {
             <StripeProvider apiKey="pk_test_TYooMQauvdEDq54NiTphI7jx">
             <div className="Payment">
                 <Elements>
-              <CheckoutForm/>
+              <CheckoutForm img={this.props.img} user={this.props.user}/>
                 </Elements>
             </div>
             </StripeProvider>
