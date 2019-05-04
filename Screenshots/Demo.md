@@ -29,6 +29,8 @@
 
 ![Buy Image 2](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-13-BuyImage-2.png)
 
+![Buy Image 3](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-14-BuyImage-3.png)
+
 ### User Log Out
 ![User Log Out 1](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-14-UserLogOut.png)
 
