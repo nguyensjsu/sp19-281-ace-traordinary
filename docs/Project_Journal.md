@@ -278,7 +278,7 @@ Figure: All the shard nodes are eventaully consistent with same data (document c
 ## Picasso Flow
 -------------
 1. Register a user in Picasso.
-
+![Landing](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-01-LandingPage.png)
 
 2. Or, use Google Sign in
 
