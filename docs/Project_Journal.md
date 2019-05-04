@@ -87,7 +87,10 @@ We met after the class and discussed the difficulties faced by each person.
 
 ### Ramya
 -----
-*
+Deciding on the database. Deciding on the document design for MongoDB.
+Understanding the restful standards and APIs.
+Finalized on the different APIs needed to handle the reactions like Like, Unlike, Comment, Get Reactions, Delete Comments
+
 
 ### Nasrajan
 ----------
@@ -112,6 +115,14 @@ Raviteja
 
 Ramya
 ------
+
+MongoDB design, cluster creation hosted on private AWS EC2 instance.
+Using GOlang and implemented the helper and Database object layer for reactions service
+Created Like API
+Created Comment API
+Created Load Reactions API
+
+
 
 Nasrajan
 ---------
@@ -140,6 +151,11 @@ Raviteja
 Ramya
 ------
 
+Implemented Delete comments API
+Implemented unlike Image API
+Created the docker image and hosted in the Amazon EC2
+Tested the APIs using postman service.
+
 
 Nasrajan
 --------
@@ -163,6 +179,14 @@ Raviteja
 
 Ramya
 ------
+Worked with Ravi to integrate and addressed issues.
+Implemented a new API to test if a user reacted for image.
+Working with Sharding replication and configuring on EC2
+MongoDB sharding and testing
+MongoDB sharding creating issues when deleting or editing docuemnts
+Create and Chat application using websockets in Go Lang, javascript, HTML. But due to time constraint could not integrate with the Picassa Application 
+
+
 
 
 Nasrajan
