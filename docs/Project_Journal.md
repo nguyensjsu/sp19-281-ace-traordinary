@@ -187,7 +187,13 @@ The oauth authentication by Google and facebook is handled by Firebase.
 3. Once you sign in, you can see a list of images posted by all users.
 
 
-4. 
+4. Upload a picture. It will be shown under My Images and also will be visible to all other users.
+
+
+5. Buy Image
+
+6. Give Feedback with like and comment.
+
 
 
 
