@@ -1,4 +1,4 @@
-## Picasso: A Twitter-like Marketplace for Pictures
+## Picasso: A Twitter-like Marketplace for Pictures [[Check out Picasso]](https://picassa.herokuapp.com/)
 ### CMPE-281 Team Project - Team Ace-traordinary
 ---
 
@@ -18,7 +18,7 @@ This is the GitHub repository for the final project of CMPE-281 Cloud Technologi
 - Project Journal & Documentation [[Link]](https://github.com/nguyensjsu/sp19-281-ace-traordinary/tree/master/docs)
 
 ## Deployment Endpoints:
-- The frontend Nodejs App is deployed to Heroku [[Link]]()
+- The frontend Nodejs App is deployed to Heroku [[Link]](https://picassa.herokuapp.com/)
 - The AWS API Gateway Routs:
 - The backend microservices are load-balanced and deployed on AWS:
   - User Service API [[Link]](https://qpz0rsmm2c.execute-api.us-west-2.amazonaws.com/prod)
