@@ -29,8 +29,9 @@ componentWillMount(){
     }
     render() {
         const loader = <div className="loader">Loading ...</div>;
-        if(this.props.myimages!=undefined)
-        imagecards=this.props.myimages.map(image=> <ImageCard  key={image.imageid} imagesrc={image.origurl} img={image}likecount={image.likecount} commentcount={image.comment} isliked={image.isliked} buyoption={false} />)
+        if(this.props.myimages!==undefined)
+        imagecards=this.props.myimages.map(image=>
+        { if(image!==undefined) return<ImageCard  key={image.imageid} imagesrc={image.origurl} img={image}likecount={image.likecount} commentcount={image.comment} isliked={image.isliked} buyoption={false} />})
         return (
             <div className="MyImages">
                 <InfiniteScroll
