@@ -1,5 +1,7 @@
 ## Team Ace-traordinary - Project Journal
 
+# Weekly Progress
+----------------
 ### Week 1 : 3/23 - 3/30  Brain Storming 
 The project team met after the class. Every team member came up with an idea for the project. The options considered were Uber, Shopping Carts for general. But, we would like to do something different. 
 
@@ -53,19 +55,21 @@ CQRS segregates an application into two parts: Commands to perform an action to 
 
  * Ramya - Reactions Service
 
-
+#### Databases
 The data storages to be used are:
 
 * Login and Registration - Mongo
 * Images - MongoDB, DynamoDB and Amazon S3
 * Payment - MySQL
 * Likes and Comments - MongoDB
+* Logging - Elasticssearch
 
 #### Design Concepts (high level)
 - CQRS (Command-Query Responsibility Segregation) / Event-Sourcing pattern
 - Implement at least five microservices; 
 - Implement data sharding in Payments service
 - Implement CQRS in Pictures Service
+- Implement logging to keep track of the overall state of the system
 
 
 ### Week 3: 4/6 - 4/13 What have everyone worked on?
@@ -73,10 +77,11 @@ We met after the class and discussed the difficulties faced by each person.
 
 Raviteja
 ----
-Finished the rough draft of the UI using ReactJS
+* Finished the rough draft of the UI using ReactJS
 
 Ramya
 -----
+*
 
 Nasrajan
 ----------
@@ -85,6 +90,9 @@ Nasrajan
 * The option for block chain was also discussed in the group. 
 * Since the scope of the project covers mostly the backend technologies, I have shortlisted stripe for the payment implementation.
 
+Masi
+----------
+* Researched on CQRS / ES concepts and its implementation on AWS
 
 
 ### Week 4: 4/13 - 4/20 What have everyone worked on?
@@ -105,6 +113,7 @@ Nasrajan
 
 Masi
 -----
+
 
 ### Week 5: 4/20 - 4/27 What have everyone worked on?
 
@@ -147,8 +156,59 @@ Masi
 * Project was demoed in the Student Union. 
 * Discussed things that didn't work and things that we had to change on the fly.
 
+--------------------------------------------------
 
-- 
+# WOW Factor!
+## 1. CQRS : Command Query Resposnibility Segregation
+The Images service uses CQRS to separate the query and inserts of the images. 
+
+## 2. Logging with ElasticSearch
+Since micro services run totally separate from each other, logging helps  visualizing the total flow of the system. We are using ElasticSearch for logging.
+
+## 3. Firebase for oAuth authentication
+The oauth authentication by Google and facebook is handled by Firebase.
+
+# AKF Scale Cube
+------------------
+
+## X Axis - Horizontal Duplication
+
+
+## Y Axis - Split by function service
+Picasso App constitutes 5 Micro services.
+- User Service: is responsible for user registration and login
+- Payments Service: is responsible for processing payments for picture purchases
+- Pictures Command Service: is responsible for new picture uploads and deletes 
+- Pictures Query Service: is responsible for READ requests to the Pictures database
+- Reactions Service: is responsible for managing user reactions on pictures
+
+## Z Axis - Sharding
+
+# Demonstrating our application's ability to handle a network partition
+
+# Testing
+----------
+## Picasso Flow
+-------------
+1. Register a user in Picasso.
+
+
+2. Or, use Google Sign in
+
+
+3. Once you sign in, you can see a list of images posted by all users.
+
+
+4. Upload a picture. It will be shown under My Images and also will be visible to all other users.
+
+
+5. Purchase an image
+
+
+6. Give Feedback with like and comment.
+
+
+
 
 
 
