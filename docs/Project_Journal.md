@@ -1,5 +1,7 @@
 ## Team Ace-traordinary - Project Journal
 
+# Weekly Progress
+----------------
 ### Week 1 : 3/23 - 3/30  Brain Storming 
 The project team met after the class. Every team member came up with an idea for the project. The options considered were Uber, Shopping Carts for general. But, we would like to do something different. 
 
@@ -147,8 +149,46 @@ Masi
 * Project was demoed in the Student Union. 
 * Discussed things that didn't work and things that we had to change on the fly.
 
+--------------------------------------------------
 
-- 
+# WOW Factor!
+## 1. CQRS : Command Query Resposnibility Segregation
+The Images service uses CQRS to separate the query and inserts of the images. 
+
+## 2. Logging with ElasticSearch
+Since micro services run totally separate from each other, logging helps  visualizing the total flow of the system. We are using ElasticSearch for logging.
+
+## 3. Firebase for oAuth authentication
+The oauth authentication by Google and facebook is handled by Firebase.
+
+# AKF Scale Cube
+------------------
+
+## X Axis - Horizontal Duplication
+
+
+## Y Axis - Split by function service
+
+## Z Axis - Sharding
+
+# Demonstrating our application's ability to handle a network partition
+
+# Testing
+----------
+## Picasso Flow
+-------------
+1. Register in Picasso.
+
+
+2. Or, use Google Sign in
+
+
+3. Once you sign in, you can see a list of images posted by all users.
+
+
+4. 
+
+
 
 
 
