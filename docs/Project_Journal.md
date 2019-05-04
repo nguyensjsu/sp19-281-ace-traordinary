@@ -264,7 +264,8 @@ Figure: Inserting a new item in the menu after creating partition
 
 Figure: Showing stale data read (document count) in the isolated (network partitioned) node
 Removing network partition by deleting IP Table rules
-[sharding](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Images/Screen%20Shot%202019-05-03%20at%2011.41.02%20PM.png)
+
+![sharding](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Images/Screen%20Shot%202019-05-03%20at%2011.41.02%20PM.png)
 
 Figure: All the shard nodes are eventaully consistent with same data (document count)
 
