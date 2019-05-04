@@ -81,6 +81,9 @@ We met after the class and discussed the difficulties faced by each person.
 ### Raviteja
 ----
 * Finished the rough draft of the UI using ReactJS
+* Implemented Mail Service for User registation verification and Login
+* Designed end points and code architecture
+* Design data base schema and cloud mongodb up and running
 
 ### Ramya
 -----
@@ -102,6 +105,10 @@ We met after the class and discussed the difficulties faced by each person.
 
 Raviteja
 --------
+* Integrated available code to the front end
+* Implemented pagination with infinite scrolling 
+* Done coding backend of user api
+* Deployed the docker image in the cloud and loadbalencer and API gate way running
 
 Ramya
 ------
@@ -125,6 +132,10 @@ Masi
 
 Raviteja
 --------
+* worked in changes to images api to implement CQRS 
+* worked on designing and quering s3 bucked and helped the team on removing bugs
+* worked on issues in reactions api and design architecture
+* worked on Kafka integration for CQRS using AWS Cloudfront and MQS
 
 Ramya
 ------
@@ -144,6 +155,10 @@ Masi
 
 Raviteja
 --------
+* worked on integrating user api to front end
+* Integrated all APIS to the front end
+* ELK stack integration to the logs of docker containers.
+* Deploying all the containers in the respectiv hosts and created API gateway and loadbalancers
 
 
 Ramya
@@ -171,8 +186,8 @@ Masi
 ## 1. CQRS : Command Query Resposnibility Segregation
 The Images service uses CQRS to separate the writes to DB when uploading / deleting images from reads from MongoDB to view images each as a separate standalone service. 
 
-## 2. Logging with ElasticSearch
-Since micro services run totally separate from each other, logging helps  visualizing the total flow of the system. We are using ElasticSearch for logging.
+## 2. Logging with ELK
+Since micro services run totally separate from each other, logging helps  visualizing the total flow of the system. We are using Logtash ElasticSearch for logging and Kibana for visualization.
 
 ## 3. Firebase for oAuth authentication
 The oauth authentication by Google and facebook is handled by Firebase.
