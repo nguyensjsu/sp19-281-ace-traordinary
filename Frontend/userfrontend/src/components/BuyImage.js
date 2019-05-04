@@ -38,7 +38,7 @@ class BuyImage extends Component {
                         </Grid.Column>
                             <Grid.Column>
                                 <Segment inverted color={"blue"} raised><b>Payment</b></Segment>
-                            <Payment/>
+                            <Payment img={this.state.img} user={this.props.user}/>
                             </Grid.Column>
                     </Grid.Row>
                 </Grid>
@@ -50,6 +50,7 @@ class BuyImage extends Component {
 function mapStateToProps(state) {
     return {
         image: state.images.viewingimage,
+        user:state.user
     }
 }
 export default connect(mapStateToProps, {})(BuyImage);
