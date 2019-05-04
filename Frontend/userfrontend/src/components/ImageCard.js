@@ -90,7 +90,7 @@ constructor(props){
                     imageurl:img.origurl,
                     img:img
                 }
-            }}className={"link"}> <div className={"buy-button"} >Buy</div></Link>
+            }}className={"link"}> <div className={"buy-button"} >Buy{img.price}$</div></Link>
         }
         return (
             <div className="Imagecard">
