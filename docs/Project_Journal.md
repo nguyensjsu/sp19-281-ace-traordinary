@@ -281,7 +281,7 @@ Figure: All the shard nodes are eventaully consistent with same data (document c
 ![Landing](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-01-LandingPage.png)
 
 2. Or, use Google Sign in
-
+![Google](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-02-LoginWithGoogle.png)
 
 3. Once you sign in, you can see a list of images posted by all users.
 
