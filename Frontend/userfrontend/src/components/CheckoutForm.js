@@ -2,14 +2,16 @@ import React, {Component} from 'react';
 import {CardElement, injectStripe} from 'react-stripe-elements';
 import {Image,Grid,TextArea,Form,Button,Icon ,Modal,Header} from "semantic-ui-react"
 import axios from "axios";
-import {IMAGE_CMDURL} from "../resources/constants";
+import {IMAGE_CMDURL,USER_ROOTURL} from "../resources/constants";
 import  { Redirect } from 'react-router-dom'
 class CheckoutForm extends Component {
 
 
     handleOpen = () => this.setState({ modalOpen: true })
 
-    handleClose = () => this.setState({ modalOpen: false })
+    handleClose = () => {
+        this.setState({complete:true})
+        this.setState({ modalOpen: false })}
     constructor(props) {
         super(props);
         this.submit = this.submit.bind(this);
@@ -29,6 +31,13 @@ class CheckoutForm extends Component {
             }
         });
         if (response.status===200) {
+            const r2 = await axios.post(`${USER_ROOTURL}/test`,img).catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                }
+            });
+            if(r2.status===200)
             this.setState({modalOpen: true })
         }
 
@@ -67,7 +76,7 @@ class CheckoutForm extends Component {
                     </Modal.Content>
                     <Modal.Actions>
                         <Button color='green' onClick={this.handleClose} inverted>
-                            <Icon name='checkmark' onClick={()=>this.setState({complete:true})}/> Got it
+                            <Icon name='checkmark' /> Got it
                         </Button>
                     </Modal.Actions>
                 </Modal>

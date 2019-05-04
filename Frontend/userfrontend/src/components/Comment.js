@@ -22,12 +22,16 @@ deletecomment(){
     });
 }
     render() {
+        let cross;
+        if(this.props.img.userid===this.props.userid){
+            cross=<Icon disabled name='close' color={"red"} onClick={this.deletecomment}/>;
+        }
         return (
             <div className="Comment">
                 <div className={"header"}>
                     <span><b> {this.props.comment.Username}</b></span>
                     <span>{this.props.comment.TimeStamp}</span>
-                    <span><Icon disabled name='close' color={"red"} onClick={this.deletecomment}/></span>
+                    <span>{cross}</span>
                 </div>
                 <div className={"comment"}> 
                     <p>{this.props.comment.Comment}</p>
