@@ -287,14 +287,15 @@ Figure: All the shard nodes are eventaully consistent with same data (document c
 ![Landing](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-03-ImagesUserLoggedIn-1.png)
 
 4. Upload a picture. It will be shown under "My Images" and also will be visible to all other users.
-
+![Landing](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-08-UploadNewImage-4.png)
 
 5. Purchase an image
-
+![Landing](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-13-BuyImage-2.png)
+![Landing](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-14-BuyImage-3.png)
 
 6. Give Feedback with like and comment.
 
-
+![Landing](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-21-Comments.png)
 
 
 
