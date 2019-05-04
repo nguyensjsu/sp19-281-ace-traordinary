@@ -17,8 +17,6 @@ import (
 
 var mysql_connect = "root:cmpe281@tcp(localhost:3306)/cmpe281"
 
-//var mysql_connect = "cmpe281:cmpe281@tcp(10.0.2.230:3306)/cmpe281"
-
 // NewServer configures and returns a Server.
 func NewServer() *negroni.Negroni {
 	formatter := render.New(render.Options{
@@ -115,7 +113,7 @@ func allOrdersHandler(formatter *render.Render) http.HandlerFunc {
 
 func placeorderHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		fmt.Println("Am I here?")
+
 		data, _ := ioutil.ReadAll(req.Body)
 
 		db, err := sql.Open("mysql", mysql_connect)
