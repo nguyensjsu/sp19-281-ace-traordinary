@@ -19,13 +19,13 @@ This is the GitHub repository for the final project of CMPE-281 Cloud Technologi
 
 ## Deployment Endpoints:
 - The frontend Nodejs App is deployed to Heroku [[Link]]()
-- The Kong API Gateway is deployed on AWS [[Link]]()
+- The AWS API Gateway Routs:
 - The backend microservices are load-balanced and deployed on AWS:
-  - User Service ELB [[Link]]()
-  - Picture Command Service ELB [[Link]]()
-  - Picture Query Service ELB [[Link]]()
-  - Payment Service ELB [[Link]]()
-  - Reactions Service ELB [[Link]]()
+  - User Service API [[Link]](https://qpz0rsmm2c.execute-api.us-west-2.amazonaws.com/prod)
+  - Picture Command Service API [[Link]](https://lz2chjfhzi.execute-api.us-west-2.amazonaws.com/prod)
+  - Picture Query Service API [[Link]](https://ndp9qk3fxi.execute-api.us-west-2.amazonaws.com/prod)
+  - Payment Service API [[Link]](https://pqgz7noyc5.execute-api.us-west-2.amazonaws.com/prod)
+  - Reactions Service API [[Link]](https://md1d39irl8.execute-api.us-west-2.amazonaws.com/prod)
 
 ## Deployment Instructions
 ### Frontend App
