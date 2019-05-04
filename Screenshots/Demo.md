@@ -24,6 +24,9 @@
 
 ![After New Image Uploaded 3](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-11-AfterImageUploaded-HomePage-2.png)
 
+### User Likes an image
+![Like](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-20-Like.png)
+
 ### Buy Image
 ![Buy Image 1](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-12-BuyImage-1.png)
 
