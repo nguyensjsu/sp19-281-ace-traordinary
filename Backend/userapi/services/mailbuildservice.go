@@ -17,7 +17,7 @@ func SendRegistrationEmail(user models.Registration, host string) {
 	mail.From = utils.FROM
 	mail.To = user.Userid
 	mail.Subject = utils.REGISTRATIONEMAIL
-	//mail.HTMLBody, _ = getHTMLBody(utils.REGISTRATIONCONFIRMATIONTEMPLATE, data)
+	mail.HTMLBody, _ = getHTMLBody(utils.REGISTRATIONCONFIRMATIONTEMPLATE, data)
 	SendEmail(mail, utils.REGISTRATIONCONFIRMATIONTEMPLATE, data)
 }
 
@@ -65,13 +65,17 @@ func DeleteUserEmail(userid string) {
 }
 
 //SendPaymentConfirmationEmail Service
-func SendPaymentConfirmationEmail(indata map[string]string) {
+func SendPaymentConfirmationEmail(picture models.Picture) {
 	var data models.TemplateData
-	data.Firstname = indata["Firstname"]
+	data.Firstname = picture.UserId
+	data.URL = picture.OrigUrl
+	data.Price = picture.Price
+	data.Verificationcode = utils.GenerateVerificationTocken()
 	var mail models.Email
 	mail.From = utils.FROM
-	mail.To = indata["toAddress"]
+	mail.To = picture.UserId
 	mail.Subject = utils.PAYMENTCONFIRMATION
+	mail.HTMLBody, _ = getHTMLBody(utils.PAYMENTCONFIRMATION, data)
 	SendEmail(mail, utils.PAYMENTCONFIRMATIONTEMPLATE, data)
 }
 
