@@ -32,3 +32,8 @@ type Likes struct{
 	Username		string 			`json:"Username,omitempty"bson:"userName,omitempty"`
 	TimeStamp 		time.Time 		`json:"TimeStamp,omitempty"bson:"timeStamp,omitempty"`
 }
+
+db.createUser( {user: "admin", pwd: "adminadmin", roles: [{ role: "root", db: "admin" }]});
+
+
+for (var i = 101; i <= 200; i++) db.Reaction.insert({"Image_id": i,"Reaction_type":"Like","UserId":"rbd@gmail.com","Username":"ramya","Timestamp": new Date(),"Comment":"","CommentId":""})
