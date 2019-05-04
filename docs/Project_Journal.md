@@ -55,13 +55,14 @@ CQRS segregates an application into two parts: Commands to perform an action to 
 
  * Ramya - Reactions Service
 
-
+#### Databases
 The data storages to be used are:
 
 * Login and Registration - Mongo
 * Images - MongoDB, DynamoDB and Amazon S3
 * Payment - MySQL
 * Likes and Comments - MongoDB
+* Logging - Elasticssearch
 
 #### Design Concepts (high level)
 - CQRS (Command-Query Responsibility Segregation) / Event-Sourcing pattern
@@ -76,10 +77,11 @@ We met after the class and discussed the difficulties faced by each person.
 
 Raviteja
 ----
-Finished the rough draft of the UI using ReactJS
+* Finished the rough draft of the UI using ReactJS
 
 Ramya
 -----
+*
 
 Nasrajan
 ----------
@@ -88,6 +90,9 @@ Nasrajan
 * The option for block chain was also discussed in the group. 
 * Since the scope of the project covers mostly the backend technologies, I have shortlisted stripe for the payment implementation.
 
+Masi
+----------
+* Researched on CQRS / ES concepts and its implementation on AWS
 
 
 ### Week 4: 4/13 - 4/20 What have everyone worked on?
@@ -108,6 +113,7 @@ Nasrajan
 
 Masi
 -----
+
 
 ### Week 5: 4/20 - 4/27 What have everyone worked on?
 
@@ -184,7 +190,7 @@ Picasso App constitutes 5 Micro services.
 ----------
 ## Picasso Flow
 -------------
-1. Register in Picasso.
+1. Register a user in Picasso.
 
 
 2. Or, use Google Sign in
@@ -196,7 +202,8 @@ Picasso App constitutes 5 Micro services.
 4. Upload a picture. It will be shown under My Images and also will be visible to all other users.
 
 
-5. Buy Image
+5. Purchase an image
+
 
 6. Give Feedback with like and comment.
 
