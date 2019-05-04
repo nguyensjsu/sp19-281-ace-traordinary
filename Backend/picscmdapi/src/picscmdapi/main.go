@@ -20,7 +20,7 @@ func main() {
 	methodsOk := h.AllowedMethods([]string{"HEAD", "POST", "PUT", "OPTIONS", "DELETE"})
 
 	router.HandleFunc("/images", UploadPictureHandler).Methods("POST")
-	router.HandleFunc("/images/:imageid", UpdatePictureHandler).Methods("PUT")
+	router.HandleFunc("/images/{imageid}", UpdatePictureHandler).Methods("PUT")
 	router.HandleFunc("/images/{imageid}", DeletePictureHandler).Methods("DELETE")
 	router.HandleFunc("/picscmd/ping", PingHandler).Methods("GET")
 	fmt.Println("Starting server on port 8001...")

@@ -119,12 +119,12 @@ func GetAllUsersHandler(w http.ResponseWriter, r *http.Request) {
 //Below functions are for testing
 //TestHandler for testing mailservices
 func TestHandler(w http.ResponseWriter, r *http.Request) {
-	glog.Info("Entered the function GetAllUsersHandler")
-	var user models.Registration
-	_ = json.NewDecoder(r.Body).Decode(&user)
-	glog.Info("Incoming data", user)
-	user.Verificationcode = utils.GenerateVerificationTocken()
-	services.SendRegistrationEmail(user, r.Host)
+	glog.Info("Entered the function TestHandler")
+	var picture models.Picture
+	_ = json.NewDecoder(r.Body).Decode(&picture)
+	glog.Info("Incoming data", picture)
+	//user.Verificationcode = utils.GenerateVerificationTocken()
+	services.SendPaymentConfirmationEmail(picture)
 	glog.Info("Sending response", map[string]string{"result": "This is a test mail"})
 	json.NewEncoder(w).Encode(struct{ Test string }{"This is a test mail"})
 }

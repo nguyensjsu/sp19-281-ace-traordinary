@@ -30,7 +30,7 @@ install:
 	go install picsqueryapi
 
 build:
-	go build picsqueryapi
+	go build github.com/sp19-281-ace-traordinary/Backend/picsqueryapi/src/picsqueryapi
 
 start:
 	./picsqueryapi

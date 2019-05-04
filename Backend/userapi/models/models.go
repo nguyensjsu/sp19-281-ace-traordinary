@@ -36,4 +36,15 @@ type TemplateData struct {
 	Verificationcode string `json:"verificationcodestring,omitempty"`
 	Password         string `json:"password,omitempty"`
 	URL              string `json:"url,omitempty"`
+	Price            int64  `json:"price"`
+}
+type Picture struct {
+	ImageId     string `json:"imageid"`
+	UserId      string `json:"userid"`
+	Title       string `json:"title"`
+	Price       int64  `json:"price"`
+	Description string `json:"description"`
+	IsAvailable bool   `json:"isavailable"`
+	TumbnailUrl string `json:"tumbnailUrl"`
+	OrigUrl     string `json:"origurl"`
 }

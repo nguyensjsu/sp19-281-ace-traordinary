@@ -207,7 +207,8 @@ Picasso App constitutes 5 Micro services.
 - Reactions Service: is responsible for managing user reactions on pictures
 
 ## Z Axis - Sharding
-The Payment service implements sharding.
+The Payment service implements sharding in MySQL. Sharding was implemented using MariaDB and MaxScale.
+![Sharding](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-20-Mysql_Sharding.png)
 
 # Demonstrating our application's ability to handle a network partition
 
