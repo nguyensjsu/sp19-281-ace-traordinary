@@ -2,7 +2,7 @@
 
 # Weekly Progress
 ----------------
-### Week 1 : 3/23 - 3/30  Brain Storming 
+## Week 1 : 3/23 - 3/30  Brain Storming 
 The project team met after the class. Every team member came up with an idea for the project. The options considered were Uber, Shopping Carts for general. But, we would like to do something different. 
 
 https://www.linux.com/news/7-essential-open-source-devops-projects  -- Something to explore and adapt ideas from.
@@ -22,7 +22,7 @@ A basic networking website for teaming up for different activities.
 Can be scaled outside campus by adding more activities
 
 
-### Week 2: 3/30 - 4/6 Idea of Picasso
+## Week 2: 3/30 - 4/6 Idea of Picasso
 The idea of picassa was brainstormed. it is a scalable containerized application to buy / sell image copy rights. We discussed the architecture in general and identified potential areas to explore. Assigned the folowing tasks to each member:
 #### What is Picasso?
 Picasso is a scalable containerized application that implements CQRS / ES design pattern. Picasso is designed using AWS-based Golang microservices backend architecture and a NodeJS frontend deployed on Heroku. 
@@ -75,28 +75,28 @@ The data storages to be used are:
 - Implement logging to keep track of the overall state of the system
 
 
-### Week 3: 4/6 - 4/13 What have everyone worked on?
+## Week 3: 4/6 - 4/13 What have everyone worked on?
 We met after the class and discussed the difficulties faced by each person. 
 
-Raviteja
+### Raviteja
 ----
 * Finished the rough draft of the UI using ReactJS
 
-Ramya
+### Ramya
 -----
 *
 
-Nasrajan
+### Nasrajan
 ----------
 * Created the DB design for the payment api and set up the go environment. 
 * Checked different payment gateways. 
 * The option for block chain was also discussed in the group. 
 * Since the scope of the project covers mostly the backend technologies, I have shortlisted stripe for the payment implementation.
 
-Masi
+### Masi
 ----------
 * Researched on CQRS / ES concepts and its implementation on AWS
-
+* created first version of overall project architecture 
 
 ### Week 4: 4/13 - 4/20 What have everyone worked on?
 
@@ -116,7 +116,10 @@ Nasrajan
 
 Masi
 -----
-
+* First draft of picscmdapi and picsqueryapi pushed to team repo
+* Set up S3 buckets and MongoDB Cluster on AWS
+* Set up Cloudfront on AWS
+* Researched on Kafka cluster implementation on AWS and Go implementation with Kafka
 
 ### Week 5: 4/20 - 4/27 What have everyone worked on?
 
@@ -134,7 +137,8 @@ Nasrajan
 
 Masi
 -----
-
+* Code snippets to GET/POST/DELETE to/from Amazon S3 buckets; initial version.
+* Handler functions tfor RESTFul APIs for picscmdapi and picsqueryapi; initial version
 
 ### Week 5: 4/27 - 5/3 What have everyone worked on?
 
@@ -153,7 +157,9 @@ Nasrajan
 
 Masi
 -----
-
+* Final debugging of picscmdapi and picsqueryapi with Ravi
+* Tried Confluent Kafka implementation on AWS
+* Tried Elasticssearch integration on AWS
 
 ### Week 6: 4/27 - 5/3 : Final Integrations and Demo
 * Project was demoed in the Student Union. 
@@ -203,7 +209,7 @@ The Payment service implements sharding.
 3. Once you sign in, you can see a list of images posted by all users.
 
 
-4. Upload a picture. It will be shown under My Images and also will be visible to all other users.
+4. Upload a picture. It will be shown under "My Images" and also will be visible to all other users.
 
 
 5. Purchase an image
