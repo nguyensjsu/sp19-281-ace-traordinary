@@ -52,5 +52,37 @@
     Response:
     - 204 No Content
     - 404 Not Found
+    
+   
+### Pictures Database Schema
+
+#### MongoDB
+
+    mongo
+
+    use cmpe281;
+
+    db.createUser( {
+        user: "cmpe281",
+        pwd:  "cmpe281",
+        roles: [{ role: "root", db: "admin" }]
+    });
+
+	CREATE TABLE Picture (
+		ImageId     string NOT NULL, 
+		UserId      string NOT NULL,
+		Title       varchar(255) NOT NULL, 
+		Price       int(11),  
+		Description string 
+		IsAvailable bool   
+		TumbnailUrl varchar(255) NOT NULL, 
+		OrigUrl     varchar(255) NOT NULL, 
+		PRIMARY KEY (ImageId),
+	);   
+    
+    
+#### Amazon S3
+
+
 
 
