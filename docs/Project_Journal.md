@@ -284,7 +284,7 @@ Figure: All the shard nodes are eventaully consistent with same data (document c
 ![Google](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-02-LoginWithGoogle.png)
 
 3. Once you sign in, you can see a list of images posted by all users.
-
+![Landing](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-03-ImagesUserLoggedIn-1.png)
 
 4. Upload a picture. It will be shown under "My Images" and also will be visible to all other users.
 
