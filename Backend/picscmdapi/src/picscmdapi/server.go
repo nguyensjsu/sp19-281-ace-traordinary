@@ -178,9 +178,10 @@ func DeletePictureHandler(w http.ResponseWriter, req *http.Request) {
 
 //UpdatePictureHandler Deletes pictureby ID
 func UpdatePictureHandler(w http.ResponseWriter, req *http.Request) {
+	glog.Info("Inside UpdatePictureHandler")
 	params := mux.Vars(req)
 	imageid := params["imageid"]
-	log.Println("PicsIn UpdatePictureHandler ImageID" + imageid)
+	glog.Info("PicsIn UpdatePictureHandler ImageID", imageid)
 	var picture Picture
 	_ = json.NewDecoder(req.Body).Decode(&picture)
 	session, err := mgo.Dial(mongodb_server)
@@ -195,6 +196,7 @@ func UpdatePictureHandler(w http.ResponseWriter, req *http.Request) {
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodb_database).C(mongodb_collection)
 	query := bson.M{"imageid": picture.ImageId}
+	glog.Info("PicsIn UpdatePictureHandler Picture", picture)
 	err = c.Update(query, picture)
 	if err != nil {
 		log.Println("Error while Updating Document in UpdatePictureHandler Password")
