@@ -35,6 +35,9 @@ A mechanism is implemented for collecting users reactions. The Picasso Reactions
 
 The Pictures service is implemented using CQRS / ES architecture. The reason for this decision is that the frequency and number of queries to the Picture's database to READ / VIEW pictures is expected to be significantly higher than the WRITE / UPLOAD requests. The Pictures service is implemented as two independent services: Pictures Command Service and Pictures Query Service. More notes on implementaion details is included in next sections.
 
+Two S3 buckets are used; One to store original size images and one to store tumbnail sized images that willl be displayed to users.
+
+
 #### Microservices
 - User Service: is responsible for user registration and login
 - Payments Service: is responsible for processing payments for picture purchases
@@ -53,7 +56,7 @@ CQRS segregates an application into two parts: Commands to perform an action to 
 
 * Nasrajan - Payments Service
 
- * Ramya - Reactions Service
+* Ramya - Reactions Service
 
 #### Databases
 The data storages to be used are:
@@ -160,7 +163,7 @@ Masi
 
 # WOW Factor!
 ## 1. CQRS : Command Query Resposnibility Segregation
-The Images service uses CQRS to separate the query and inserts of the images. 
+The Images service uses CQRS to separate the writes to DB when uploading / deleting images from reads from MongoDB to view images each as a separate standalone service. 
 
 ## 2. Logging with ElasticSearch
 Since micro services run totally separate from each other, logging helps  visualizing the total flow of the system. We are using ElasticSearch for logging.
@@ -172,7 +175,7 @@ The oauth authentication by Google and facebook is handled by Firebase.
 ------------------
 
 ## X Axis - Horizontal Duplication
-
+Each microservice within the Picasso App is deployed as dockerized images into multiple EC2 instances on AWS. The instances in each microservice are load balanced using Amazon Elastic Load Balancer.
 
 ## Y Axis - Split by function service
 Picasso App constitutes 5 Micro services.
@@ -183,6 +186,7 @@ Picasso App constitutes 5 Micro services.
 - Reactions Service: is responsible for managing user reactions on pictures
 
 ## Z Axis - Sharding
+The Payment service implements sharding.
 
 # Demonstrating our application's ability to handle a network partition
 
