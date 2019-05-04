@@ -169,6 +169,12 @@ The oauth authentication by Google and facebook is handled by Firebase.
 
 
 ## Y Axis - Split by function service
+Picasso App constitutes 5 Micro services.
+- User Service: is responsible for user registration and login
+- Payments Service: is responsible for processing payments for picture purchases
+- Pictures Command Service: is responsible for new picture uploads and deletes 
+- Pictures Query Service: is responsible for READ requests to the Pictures database
+- Reactions Service: is responsible for managing user reactions on pictures
 
 ## Z Axis - Sharding
 
