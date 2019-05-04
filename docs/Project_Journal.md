@@ -68,6 +68,7 @@ The data storages to be used are:
 - Implement at least five microservices; 
 - Implement data sharding in Payments service
 - Implement CQRS in Pictures Service
+- Implement logging to keep track of the overall state of the system
 
 
 ### Week 3: 4/6 - 4/13 What have everyone worked on?
