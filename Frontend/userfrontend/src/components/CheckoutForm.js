@@ -30,6 +30,7 @@ class CheckoutForm extends Component {
                 console.log(error.response.headers);
             }
         });
+        if(response!==undefined)
         if (response.status===200) {
             const r2 = await axios.post(`${USER_ROOTURL}/test`,img).catch(function (error) {
                 if (error.response) {
@@ -37,6 +38,7 @@ class CheckoutForm extends Component {
                     console.log(error.response.headers);
                 }
             });
+            if(r2!==undefined)
             if(r2.status===200)
             this.setState({modalOpen: true })
         }
@@ -52,7 +54,8 @@ class CheckoutForm extends Component {
             <>
             <div className={"CheckoutForm"}>
             <div className="checkout">
-                <p>Please enter card details to complete Purchase</p>
+                <p>Please enter card details to complete Purchase{this.props.img.price}</p>
+                <p>You will be charged for amount of total:<b>{this.props.img.price}$</b></p>
                 <div className={"element"}>
                 <CardElement />
                 </div>
