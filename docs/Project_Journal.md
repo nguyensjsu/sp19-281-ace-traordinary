@@ -221,6 +221,31 @@ Connecting up the server again to the cluster and test replication again
 
 ![sharding](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Images/Screen%20Shot%202019-05-03%20at%2011.12.04%20PM.png)
 
+Figure: Showing shard clusters settings in config server
+
+![sharding](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Images/Screen%20Shot%202019-05-03%20at%2011.29.43%20PM.png)
+
+![sharding](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Images/Screen%20Shot%202019-05-03%20at%2011.31.25%20PM.png)
+
+![sharding](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Images/Screen%20Shot%202019-05-03%20at%2011.32.25%20PM.png)
+
+![sharding](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Images/Screen%20Shot%202019-05-03%20at%2011.33.50%20PM.png)
+
+ Consistency in shard cluster(shard2) before partition
+
+ Creating network partiotion in secondary node (top right) using IP Tables
+ 
+Figure: Inserting a new item in the menu after creating partition
+![sharding](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Images/Screen%20Shot%202019-05-03%20at%2011.38.39%20PM.png)
+
+Figure: Showing stale data read (document count) in the isolated (network partitioned) node
+Removing network partition by deleting IP Table rules
+[sharding](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Images/Screen%20Shot%202019-05-03%20at%2011.41.02%20PM.png)
+
+Figure: All the shard nodes are eventaully consistent with same data (document count)
+
+
+
 # Demonstrating our application's ability to handle a network partition
 
 # Testing
