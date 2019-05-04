@@ -210,6 +210,17 @@ Picasso App constitutes 5 Micro services.
 The Payment service implements sharding in MySQL. Sharding was implemented using MariaDB and MaxScale.
 ![Sharding](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Screenshots/Screenshot-png-files/Picasso-20-Mysql_Sharding.png)
 
+### Mongodb sharding 
+All of our microservices have a MongoDb sharded database with 2 shard replica cluster of 3 nodes each.
+
+Steps for testing sharding
+
+Test consistency of data by inserting into primary and getting the documents from secodary.
+Isolate one secondary server from the other servers in the cluster and test reading stale data
+Connecting up the server again to the cluster and test replication again
+
+![sharding](https://github.com/nguyensjsu/sp19-281-ace-traordinary/blob/master/Images/Screen%20Shot%202019-05-03%20at%2011.12.04%20PM.png)
+
 # Demonstrating our application's ability to handle a network partition
 
 # Testing
